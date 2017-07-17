@@ -7,7 +7,15 @@ module.exports = {
      * 微信公众平台支付接口
      * 参数订单数据
      *
-     *
+     *  {
+            body: '参加活动付费1元',
+            attach: '{"活动":"费用"}',
+            out_trade_no: 'kfc' + (+new Date),
+            total_fee: 100,
+            spbill_create_ip: req.ip,
+            openid: req.session.player.openid,
+            trade_type: 'JSAPI'
+        };
      * 返回订单json
      */
     wechatPay: (order) => {

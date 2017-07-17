@@ -18,4 +18,10 @@
         <li>二维码收徒</li>
     </div>
 </div>
+
+{%endblock%} {%block script%}
+<script src="/lib/jquery-qrcode/jquery.qrcode.min.js"></script>
+<script>
+    $('#qrcode').qrcode()
+</script>
 {%endblock%}

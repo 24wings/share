@@ -6,13 +6,14 @@
 <div class="animated fadeInRight">
     <div class="center">
         {%for task in tasks%}
+
         <div class="center-box">
             <div class="center-box-cr">
-                <img src="/images/img1.jpg" alt="">
-                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
-                <span class="time">2017-07-13</span>
-                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
-                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+                <img src="{{task.imageUrl}}" alt="">
+                <p>{{task.title}}</p>
+                <span class="time">{{task.createDt | time}}</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥{{task.totalMoney}}元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>{{task.clickNum}}</span>
             </div>
         </div>
         {%endfor%}

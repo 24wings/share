@@ -1,45 +1,81 @@
 {%extends './layout/base.html'%} {%block content%}
 <div class="animated fadeInRight">
-    <form action="">
+    <form method="POST">
         <div class="release-box">
             <label for="">标题:</label>
             <span>新颖有趣的标题更吸引人的眼球</span>
-            <input type="text">
+            <input type="text" name="title" value="test" id="title">
         </div>
         <div class="release-box">
             <label for="">文章栏目:</label>
-            <ul>
-                <li class="active">搞笑</li>
-                <li>搞笑</li>
-                <li>搞笑</li>
-                <li>搞笑</li>
-                <li>搞笑</li>
-            </ul>
+            <ul class="tags">
+                {%for taskTag in taskTags%}
+                <li onclick="selectTaskTag(this)" taskTag="{{taskTag._id.toString()}}">搞笑</li>
+                {%endfor%}
 
+            </ul>
+            <input type="text" hidden="hidden" style="display:none" name="taskTag" value="{{taskTags[0]._id.toString()}}" id="taskTag">
         </div>
         <div class="release-box">
             <label for="">总出价:</label>
             <span>具有吸引力的价格能让更多人推广</span>
-            <input type="text">
+            <input type="number" name="totalMoney" min="0.1" max="100000" value="8" id="totalMoney">
         </div>
         <div class="release-box">
             <label for="">单条出价:</label>
             <span>具有吸引力的价格能让更多人推广</span>
-            <input type="text">
+            <input type="number" name="shareMoney" min="0.1" max="100" step="0.1" value="0.1" id="shareMoney">
         </div>
         <div class="release-box">
             <label for="">推广地址:</label>
             <span>你要推广什么就推广什么，记住是网址</span>
-            <input type="text">
+            <input type="url" name="websiteUrl" required value="http://www.baidu.com" id="websiteUrl">
         </div>
         <div class="release-box">
             <label for="">正文:</label>
-            <textarea name="" id=""></textarea>
+            <textarea id="content" name="content" value="正文"></textarea>
         </div>
         <div class="release-box vr">
-            <button type="submit" class="cs">发布</button>
+            <!-- <button type="submit" style="display:none;" class="cs" id="submit">发布</button> -->
+            <div onclick="payMoney()" class="cs" id="pay">支付</div>
             <button type="reset">重置</button>
         </div>
     </form>
 </div>
+{%endblock%} {%block script%}
+<script>
+    function payMoney() {
+        $.ajax('/share/payTaskMoney', {
+            method: 'POST',
+            data: {
+                totalMoney: $('input[name=totalMoney]').val()
+            },
+            success: function(rtn) {
+                if (rtn.ok) {
+                    var payargs = rtn.data;
+                    wechatPay(payargs, function() {
+                        // $('#submit').show();
+
+                        // $('#pay').trigger('click');
+                        document.forms[0].submit();
+
+                    })
+                } else {
+                    alert(rtn.data);
+                }
+            }
+        })
+    }
+
+    function selectTaskTag(li) {
+        $('.tags li').removeClass('active');
+        $(li).addClass('active')
+        var taskTag = $(li).attr('taskTag');
+        // alert(taskTag);
+        $('#taskTag').val(taskTag)
+
+
+    }
+</script>
+
 {%endblock%}

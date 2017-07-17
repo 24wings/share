@@ -10,7 +10,8 @@ var taskSchema = new mongoose.Schema({
     createDt: { type: Date, default: Date.now },
     publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     // 浏览数量
-    pv: { type: Number, default: 0 }
+    pv: { type: Number, default: 0 },
+    clickNum: { type: Number, default: 0 }
 });
 
 export var taskModel = mongoose.model('Task', taskSchema);
