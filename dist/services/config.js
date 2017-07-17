@@ -1,7 +1,8 @@
-import path = require('path');
-import fs = require('fs');
-
-export const CONFIG = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+const fs = require("fs");
+exports.CONFIG = {
     oldAuth: 'shop.xxbuy.net',
     newAuth: '',
     domain: 'http://3a4f7962.ngrok.io',
@@ -21,4 +22,4 @@ export const CONFIG = {
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
     }
     // wechatClient: ''
-}
+};

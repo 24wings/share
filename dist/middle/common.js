@@ -1,10 +1,16 @@
 "use strict";
-const config_1 = require("../config");
+const service = require("../services");
+const fs = require("fs");
+const path = require("path");
 var wechat = require('wechat');
 var OAuth = require('wechat-oauth');
-const models_1 = require("../models");
-var client = new OAuth(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret);
+var client = new OAuth(service.CONFIG.wechat.appid, service.CONFIG.wechat.appsecret);
 module.exports = {
+    notFound: (req, res, next) => {
+        var err = new Error('Not Found');
+        err['status'] = 404;
+        next(err);
+    },
     crossDomain: (req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
@@ -39,14 +45,46 @@ module.exports = {
             console.log('token=' + accessToken);
             console.log('openid=' + openid);
             client.getUser(openid, async function (err, result) {
-                let user = await models_1.db.userModel.findOne({ openid }).exec();
-                if (user) {
-                }
-                else {
-                    user = await new models_1.db.userModel(result).save();
-                }
+                let user = await service.db.userModel.findOne({ openid }).exec();
+                user = user ? user : await new service.db.userModel(result).save();
                 res.redirect('/?openid=' + openid);
             });
         });
+    },
+    replyAuthUrl: wechat(service.CONFIG.wechat, (req, res, next) => {
+        var url = client.getAuthorizeURL(`http://wq8.youqulexiang.com/wechat/oauth`, '', 'snsapi_userinfo');
+        res.reply({
+            content: url,
+            type: 'text'
+        });
+    }),
+    /**
+     * 上传文件
+     */
+    uploadBase64: async (req, res, next) => {
+        let base64 = req.body.base64;
+        function uploadFile(file, filename) {
+            return new Promise((resolve, reject) => {
+                if (file.indexOf('base64,') != -1) {
+                    file = file.substring(file.indexOf('base64,') + 7);
+                }
+                let randomFilename = new Date().getTime() + filename;
+                let distpath = path.resolve(__dirname, '../../public/upload/' + randomFilename);
+                fs.writeFile(distpath, new Buffer(file, 'base64'), (err) => {
+                    err ? resolve(false) : resolve('/upload/' + randomFilename);
+                });
+            });
+        }
+        let url = await uploadFile(base64, req.body.filename || 'test.png');
+        res.json({ ok: true, data: service.CONFIG.IP + url });
+    },
+    errorHandler: (err, req, res, next) => {
+        // set locals, only providing error in development
+        res.locals.message = err.message;
+        res.locals.error = req.app.get('env') === 'development' ? err : {};
+        console.log(err);
+        // render the error page
+        res.status(err.status || 500);
+        res.render('error');
     }
 };

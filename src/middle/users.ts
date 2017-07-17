@@ -1,6 +1,6 @@
 var express = require('express');
-import { CONFIG } from '../config';
-import { db } from '../models';
+import service  =require('../services');
+
 var userRouter = express.Router();
 
 /* GET users listing. */
@@ -8,7 +8,7 @@ userRouter.get('/', function (req, res, next) {
   res.json({ ok: true });
 });
 userRouter.get('/detail', async (req, res, next) => {
-  let user = await db.userModel.findOne({ openid: req.query.openid }).exec();
+  let user = await service.db.userModel.findOne({ openid: req.query.openid }).exec();
   if (user) {
     res.json({ ok: true, data: user });
   } else {
@@ -33,10 +33,10 @@ userRouter.get('/task', async (req, res, next) => {
 })
   .post('/postTask', async (req, res, next) => {
     let openid = req.query.openid;
-    let user = await db.userModel.findOne({ openid }).exec();
+    let user = await service.db.userModel.findOne({ openid }).exec();
     req.body.publisher = user._id;
     if (user) {
-      let newTask = await new db.taskModel(req.body).save();
+      let newTask = await new service.db.taskModel(req.body).save();
       res.json({
         ok: true,
         data: newTask

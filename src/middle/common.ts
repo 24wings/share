@@ -50,13 +50,13 @@ export = {
             console.log('token=' + accessToken);
             console.log('openid=' + openid);
             client.getUser(openid, async function (err, result) {
-                let user = await db.userModel.findOne({ openid }).exec();
-                user = user ? user : await new db.userModel(result).save();
+                let user = await service.db.userModel.findOne({ openid }).exec();
+                user = user ? user : await new service.db.userModel(result).save();
                 res.redirect('/?openid=' + openid);
             });
         }
     },
-    replyAuthUrl: wechat(CONFIG.wechat, (req, res, next) => {
+    replyAuthUrl: wechat(service.CONFIG.wechat, (req, res, next) => {
         var url = client.getAuthorizeURL(`http://wq8.youqulexiang.com/wechat/oauth`, '', 'snsapi_userinfo');
         res.reply({
             content: url,
@@ -70,10 +70,7 @@ export = {
     uploadBase64: async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         let base64 = req.body.base64;
         function uploadFile(file, filename) {
-
             return new Promise((resolve, reject) => {
-
-
                 if (file.indexOf('base64,') != -1) {
                     file = file.substring(file.indexOf('base64,') + 7);
                 }
@@ -100,8 +97,6 @@ export = {
         // render the error page
         res.status(err.status || 500);
         res.render('error');
-
-
     }
 
 

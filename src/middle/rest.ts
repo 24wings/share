@@ -1,12 +1,24 @@
 import mongoose = require('mongoose');
-import { db } from '../models';
+import service  = require('../services');
 import express = require('express');
 var restRouter = express.Router();
 
 //获取列表
-restRouter.get('/:modelName', async (req, res, next) => {
+restRouter.get('/:modelName',
+// 获取详细信息
+restRouter.get('/:modelName/:_id', );
+
+
+
+
+export ={
+    /**
+     * 获取列表
+     * url  :modelName
+     */
+getList: async (req, res, next) => {
     var model: mongoose.Model<mongoose.Document>;
-    model = db[req.params.modelName + 'Model'];
+    model = service.db[req.params.modelName + 'Model'];
 
     if (model) {
         let datas = await model.find().exec();
@@ -20,11 +32,11 @@ restRouter.get('/:modelName', async (req, res, next) => {
             data: '数据模型不存在'
         })
     }
-})
-// 获取详细信息
-restRouter.get('/:modelName/:_id', async (req, res, next) => {
+},
+
+getDetail:async (req, res, next) => {
     var model: mongoose.Model<mongoose.Document>;
-    model = db[req.params.modelName + 'Model'];
+    model = service.db[req.params.modelName + 'Model'];
 
     if (model) {
         let data = await model.findById(req.params._id).exec();
@@ -35,13 +47,15 @@ restRouter.get('/:modelName/:_id', async (req, res, next) => {
     } else {
         res.json({ ok: false, data: '该数据模型不存在' })
     }
-});
-
-
-// 添加一条数据
-restRouter.post('/:modelName', async (req, res, next) => {
+},
+/**
+ * 添加一条数据
+ * method post
+ *  /:modelName
+ */
+postOne:async (req, res, next) => {
     var model: mongoose.Model<mongoose.Document>;
-    model = db[req.params.modelName + 'Model'];
+    model = service.db[req.params.modelName + 'Model'];
     if (model) {
 
         let newData = await new model(req.body).save();
@@ -53,12 +67,14 @@ restRouter.post('/:modelName', async (req, res, next) => {
         res.json({ ok: true, data: '该数据模型不存在' });
     }
 
-});
-
-//删除一条数据
-restRouter.delete('/:modelName/:_id', async (req, res, next) => {
+},
+/**
+ * 删除一条数据
+ * /:modelName/:_id
+ */
+deleteOne: async (req, res, next) => {
     var model: mongoose.Model<mongoose.Document>;
-    model = db[req.params.modelName + 'Model'];
+    model = service.db[req.params.modelName + 'Model'];
     if (model) {
         let action = model.findByIdAndRemove(req.params._id).exec();
         res.json({
@@ -72,6 +88,5 @@ restRouter.delete('/:modelName/:_id', async (req, res, next) => {
             data: '数据模型不存在'
         });
     }
-
-})
-export { restRouter }
+}
+}
