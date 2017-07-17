@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-import { app } from './app';
+import  app=  require( './app');
 var debug = require('debug')('express-youqu:server');
 var http = require('http');
 
@@ -17,7 +17,7 @@ app.set('port', port);
 
 /**
  * Create HTTP server.
- */
+ */ 
 
 var server = http.createServer(app);
 
@@ -25,7 +25,10 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(80,()=>{
+console.log(port)
+  
+});
 server.on('error', onError);
 server.on('listening', onListening);
 

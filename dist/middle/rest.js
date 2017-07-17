@@ -1,11 +1,5 @@
 "use strict";
 const service = require("../services");
-const express = require("express");
-var restRouter = express.Router();
-//获取列表
-restRouter.get('/:modelName', 
-// 获取详细信息
-restRouter.get('/:modelName/:_id'));
 module.exports = {
     /**
      * 获取列表

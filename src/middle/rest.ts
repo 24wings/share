@@ -1,14 +1,6 @@
 import mongoose = require('mongoose');
 import service  = require('../services');
 import express = require('express');
-var restRouter = express.Router();
-
-//获取列表
-restRouter.get('/:modelName',
-// 获取详细信息
-restRouter.get('/:modelName/:_id', );
-
-
 
 
 export ={
@@ -90,3 +82,4 @@ deleteOne: async (req, res, next) => {
     }
 }
 }
+

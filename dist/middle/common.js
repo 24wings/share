@@ -6,6 +6,9 @@ var wechat = require('wechat');
 var OAuth = require('wechat-oauth');
 var client = new OAuth(service.CONFIG.wechat.appid, service.CONFIG.wechat.appsecret);
 module.exports = {
+    /**
+     * 404 Not Found 默认页面
+     */
     notFound: (req, res, next) => {
         var err = new Error('Not Found');
         err['status'] = 404;
@@ -36,7 +39,7 @@ module.exports = {
 ]
 } */
         var code = req.query.code;
-        console.log(req.query, code);
+        // console.log(req.query, code);
         client.getAccessToken(code, (err, result) => {
             console.dir(err);
             console.dir(result);
@@ -52,14 +55,14 @@ module.exports = {
         });
     },
     replyAuthUrl: wechat(service.CONFIG.wechat, (req, res, next) => {
-        var url = client.getAuthorizeURL(`http://wq8.youqulexiang.com/wechat/oauth`, '', 'snsapi_userinfo');
+        var url = client.getAuthorizeURL(`${service.CONFIG.domain}/wechat/oauth`, '', 'snsapi_userinfo');
         res.reply({
             content: url,
             type: 'text'
         });
     }),
     /**
-     * 上传文件
+     * 上传文件 测试接口
      */
     uploadBase64: async (req, res, next) => {
         let base64 = req.body.base64;
@@ -78,6 +81,7 @@ module.exports = {
         let url = await uploadFile(base64, req.body.filename || 'test.png');
         res.json({ ok: true, data: service.CONFIG.IP + url });
     },
+    /**错误显示的页面  */
     errorHandler: (err, req, res, next) => {
         // set locals, only providing error in development
         res.locals.message = err.message;

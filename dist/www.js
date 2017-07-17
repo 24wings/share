@@ -1,22 +1,24 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./app");
+const app = require("./app");
 var debug = require('debug')('express-youqu:server');
 var http = require('http');
 /**
  * Get port from environment and store in Express.
  */
 var port = normalizePort(process.env.PORT || '80');
-app_1.app.set('port', port);
+app.set('port', port);
 /**
  * Create HTTP server.
  */
-var server = http.createServer(app_1.app);
+var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port);
+server.listen(80, () => {
+    console.log(port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 /**

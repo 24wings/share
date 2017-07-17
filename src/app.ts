@@ -11,28 +11,46 @@ import services = require('./services');
 
 
 
-export var app = express();
-app.use(middle.common.crossDomain);
+var app = express();
+
 nunjucks.configure(path.resolve(__dirname, '../views'), { // 设置模板文件的目录，为views
     autoescape: true,
-    express: app
-});
-app.set('view engine', 'html');
+    express: app,
+    noCache: true
 
-//app.use(favicon(path.resolve(__dirname, '../public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.resolve(__dirname, '../public')));
-app.use('/payment', (req, res, next) => { });
-app.get('/', (req, res) => res.redirect('/share'))
+})
+
+app.use(middle.common.crossDomain)
+    .set('view engine', 'html')
+    //app.use(favicon(path.resolve(__dirname, '../public', 'favicon.ico')));
+    .use(logger('dev'))
+    .use(bodyParser.json({ limit: '50mb' }))
+    .use(bodyParser.urlencoded({ extended: false }))
+    .use(cookieParser())
+    // 静态文件服务器
+    .use(express.static(path.resolve(__dirname, '../public')))
+
+    // 下面是路由
     .use('/wechat/oauth', middle.common.wechatOauth)
+    .use('/payment', (req, res, next) => { })
+    .get('/', (req, res) => res.redirect('/share'))
+    .get('/share', middle.share.index)
     .all('/check', middle.common.replyAuthUrl)
+
+    // share
     .get('/share', middle.share.index)
-    // 上传图片测试接口
+    .get('/share/recruit-student', middle.share.recruitStudent)
+    .get('/share/person-center', middle.share.personCenter)
+    .get('/share/full-info', middle.share.fullInfo)
+    .get('/share/detail/:_id', middle.share.detail)
+    .get('/share/publish', middle.share.publish)
+    .get('/share/shop-center', middle.share.shopCenter)
+    //  restful  api 
     .post('/api/uploadImage', middle.common.uploadBase64)
-    .get('/share', middle.share.index)
-    // catch 404 and forward to error handler
+    .get('/rest/:modelName', middle.rest.getList)
+    .post('/rest/:modelName', middle.rest.postOne)
+    .get('/rest/:modelName/:_id', middle.rest.getDetail)
+    .delete('/rest/:modelName/:_id', middle.rest.deleteOne)
     .use(middle.common.notFound)
     .use(middle.common.errorHandler);
+export =app;

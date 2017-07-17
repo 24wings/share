@@ -19,11 +19,11 @@ userRouter.get('/task', async (req, res, next) => {
   let { page, taskTag } = req.query;
   let tasks = [];
   if (taskTag) {
-    tasks = await db.taskModel.find({ taskTag }).skip(10 * page).limit(10).exec();
+    tasks = await service.db.taskModel.find({ taskTag }).skip(10 * page).limit(10).exec();
   }
   //返回推荐的,后面改接口
   else {
-    tasks = await db.taskModel.find().skip(10 * page).limit(10).exec();
+    tasks = await service.db.taskModel.find().skip(10 * page).limit(10).exec();
   }
   res.json({
     ok: true,
