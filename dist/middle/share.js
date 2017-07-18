@@ -21,14 +21,15 @@ module.exports = {
         else {
             tasks = await service.db.taskModel.find().limit(100).exec();
         }
-        await res.render('share/index', { taskTag, tasks, taskTags });
+        await res.render('share/index', { taskTag, tasks, taskTags, user });
     },
     recruitStudent: async (req, res) => {
         await res.render('share/recruit-student');
     },
     /**个人中心 */
-    personCenter: (req, res) => {
+    personCenter: async (req, res) => {
         let user = req.session.user;
+        user = await service.db.userModel.findById(user._id.toString()).exec();
         console.log(user);
         res.render('share/person-center', {
             user
@@ -77,7 +78,7 @@ module.exports = {
         var params = await service.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
         var userId = req.query._id;
         let task = await service.db.taskModel.findById(req.params._id).exec();
-        let user = await service.db.userModel.findById(_id).populate('parent').exec();
+        let user = await service.db.userModel.findById(userId).populate('parent').exec();
         ;
         var ip = service.tools.pureIp(req.ip); // 纯ip
         var isHaveVisited = task.ips.some(visitedIp => {
@@ -90,11 +91,11 @@ module.exports = {
             //发布任务的人获得奖金 上级 5%   上上级 10% 上上上级 15%
             var taskAllMoney = task.shareMoney;
             if (user) {
+                var parents = [];
                 /**
                  * 有师傅
                  */
                 if (user.parent) {
-                    var parents = [];
                     // 有师傅
                     parents.push(user.parent);
                     await user.parent.populate('parent').execPopulate();
@@ -107,27 +108,52 @@ module.exports = {
                         parents.push(user.parent.parent.parent);
                     // 三级师傅的算法
                     console.log(parents);
-                }
-                else {
-                    //一个师傅都没有
-                    console.log(`一个师傅都没有
-                     totalMoney: ${user.totalMoney + taskAllMoney},
-                            todayMoney: ${user.todayMoney + taskAllMoney},
-                            historyMoney: ${user.historyMoney + taskAllMoney}
-                    
-                    `);
-                    await user.update({
-                        $set: {
-                            totalMoney: user.totalMoney + taskAllMoney,
-                            todayMoney: user.todayMoney + taskAllMoney,
-                            historyMoney: user.historyMoney + taskAllMoney
-                        }
-                    }).exec();
+                    switch (parents.length) {
+                        // 一个师傅都没有
+                        case 0:
+                            console.log('一个师傅都没有');
+                            break;
+                        case 1://5%
+                            let firstParent = parents[0];
+                            //第一个人
+                            let firstMoney = taskAllMoney * 0.05;
+                            // 余额
+                            taskAllMoney = taskAllMoney * 0.95;
+                            await firstParent.update({ $ic: { totalMoney: firstMoney, todayMoney: firstMoney, historyMoney: firstMoney } }).exec();
+                            await user.update({ $inc: { taskAllMoney: taskAllMoney, firstMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                            break;
+                        //两个师傅  5% 10%     本人 85%
+                        case 2:
+                            let oneParent = parents[0];
+                            let twoParent = parents[1];
+                            let oneMoney = 0.05 * taskAllMoney;
+                            let twoMoney = 0.10 * taskAllMoney;
+                            // 余额
+                            taskAllMoney *= 0.85;
+                            await service.db.userModel.findByIdAndUpdate(oneParent._id.toString(), { $inc: { totalMoney: oneMoney, todayMoney: oneMoney, historyMoney: oneMoney } }).exec();
+                            await service.db.userModel.findByIdAndUpdate(twoParent._id.toString(), { $inc: { totalMoney: twoMoney, todayMoney: twoMoney, historyMoney: twoMoney } }).exec();
+                            await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                            break;
+                        case 3:
+                            let iParent = parents[0];
+                            let iiParent = parents[1];
+                            let iiiParent = parents[2];
+                            let iMoney = 0.05 * taskAllMoney;
+                            let iiMoney = 0.10 * taskAllMoney;
+                            let iiiMoney = 0.15 * taskAllMoney;
+                            // 余额
+                            taskAllMoney *= 0.70;
+                            await service.db.userModel.findByIdAndUpdate(iParent._id.toString(), { $inc: { totalMoney: iMoney, todayMoney: iMoney, historyMoney: iMoney } }).exec();
+                            await service.db.userModel.findByIdAndUpdate(iiParent._id.toString(), { $inc: { totalMoney: iiMoney, todayMoney: iiMoney, historyMoney: iiMoney } }).exec();
+                            await service.db.userModel.findByIdAndUpdate(iiiParent._id.toString(), { $inc: { totalMoney: iiiMoney, todayMoney: iiiMoney, historyMoney: iiiMoney } }).exec();
+                            await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                            break;
+                    }
                 }
             }
         }
         else {
-            console.log('没有_id,没有推广人');
+            console.log('已经访问过了');
         }
         /**
          * 若有推广人
