@@ -9,8 +9,111 @@
 <div class="con">
     {{task.content}}
 </div>
-<iframe src="{{task.websiteUrl}}" style="width:100vw;height:100vh;"></iframe> {%endblock%} {%block script%}
+
+<!-- <button style="padding:20px;background:red;color:#fff;position:fixed;left:50px;bottom:50px;">发给朋友</button> -->
+<!-- <button style="padding:20px;background:red;color:#fff;position:fixed;right:50px;bottom:50px;" onclick="shareFriend()" id="onMenuShareTimeline">分享到朋友圈</button> -->
+
+
+<iframe src="{{task.websiteUrl}}" style="width:100vw;height:100vh;"></iframe
+
+
+<!-- <button style="height:300px;width:300px;background:red;color:#fff;" onclick="weixinSendAppMessage()">分想到朋友</button> -->
+<!-- <button style="height:300px;width:300px;background:red;color:#fff;z-index:99999;" id="">分想到朋友圈</button> -->
+<div id="config">{{params | json}}</div>
+{%endblock%} {%block script%}
+
 <script>
-    alert('{{task.websiteUrl}}')
+/*
+var config = {};
+    var config = JSON.parse($('#config').text());
+    alert(JSON.stringify(config));
+    wx.config(config);
+    wx.ready(function() {
+        wx.checkJsApi({
+            jsApiList: [
+                'getNetworkType',
+                'previewImage'
+            ],
+            success: function(res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        // 5 图片接口
+        // 5.1 拍照、本地选图
+        var images = {
+            localId: [],
+            serverId: []
+        };
+        wx.onMenuShareTimeline({
+            title: '', // 分享标题
+            link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '', // 分享图标
+            success: function() {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function() {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+
+
+
+        // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+        document.querySelector('#onMenuShareTimeline').onclick = function() {
+            wx.onMenuShareTimeline({
+                title: '互联网之子',
+                link: 'http://movie.douban.com/subject/25785114/',
+                imgUrl: 'http://demo.open.weixin.qq.com/jssdk/images/p2166127561.jpg',
+                trigger: function(res) {
+                    // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                    alert('用户点击分享到朋友圈');
+                },
+                success: function(res) {
+                    alert('已分享');
+                },
+                cancel: function(res) {
+                    alert('已取消');
+                },
+                fail: function(res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+            alert('已注册获取“分享到朋友圈”状态事件');
+        };
+
+
+
+    })
+    wx.error(function(err) {
+        alert(JSON.stringify(err))
+    })
+
+    function shareFriend() {
+        WeixinJSBridge.invoke('sendAppMessage', {
+            "appid": config.appId,
+            "img_url": 'http://www.baidu.com',
+            "img_width": "200",
+            "img_height": "200",
+            "link": location.href,
+            "desc": '',
+            "title": '百度'
+        }, function(res) {
+            alert(JSON.stringify(res));
+            //_report('send_msg', res.err_msg);
+        })
+    }
+
+    function weixinSendAppMessage(title, desc, link, imgUrl) {
+        WeixinJSBridge.invoke('sendAppMessage', {
+            //"appid":appId,
+            "img_url": '',
+            //"img_width":"640",
+            //"img_height":"640",
+            "link": 'https://www.baidu.com',
+            "desc": '',
+            "title": ''
+        });
+    }
+    */
 </script>
 {%endblock%}

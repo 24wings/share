@@ -28,6 +28,8 @@ exports.userModel = mongoose.model('User', new mongoose.Schema({
     country: String,
     headimgurl: String,
     privilege: [String],
+    // access_token
+    accessToken: String,
     // 师傅
     parent: { type: mongoose.Schema.Types.ObjectId, ref: 'User', },
     // 注册日期
@@ -39,4 +41,5 @@ exports.userModel = mongoose.model('User', new mongoose.Schema({
     historyMoney: { type: Number, default: 0 },
     todayStudent: { type: Number, default: 0 },
     totalStudent: { type: Number, default: 0 },
+    visitTasks: { type: [mongoose.Schema.Types.ObjectId], ref: 'Task' }
 }));

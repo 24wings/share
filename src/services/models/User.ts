@@ -1,6 +1,6 @@
 import mongoose = require('mongoose');
 
-interface IUser extends mongoose.Document {
+export interface IUser extends mongoose.Document {
     nickname: string;
     openid: string;
     avatar: string;
@@ -13,6 +13,14 @@ interface IUser extends mongoose.Document {
     privilege: String[];
     createDt: Date;
     money: Number;
+    parent: IUser;
+    // 余额
+    totalMoney: number;
+    todayMoney: number;
+    /**
+     * 历史盈利
+     */
+    historyMoney: number;
 }
 
 /*
@@ -43,6 +51,8 @@ export var userModel = mongoose.model<IUser>('User', new mongoose.Schema({
     country: String,
     headimgurl: String,
     privilege: [String],
+    // access_token
+    accessToken: String,
     // 师傅
     parent: { type: mongoose.Schema.Types.ObjectId, ref: 'User', },
     // 注册日期
@@ -54,4 +64,7 @@ export var userModel = mongoose.model<IUser>('User', new mongoose.Schema({
     historyMoney: { type: Number, default: 0 },
     todayStudent: { type: Number, default: 0 },
     totalStudent: { type: Number, default: 0 },
+    visitTasks: { type: [mongoose.Schema.Types.ObjectId], ref: 'Task' }
+
+
 }));

@@ -1,5 +1,5 @@
 var express = require('express');
-import service  =require('../services');
+import service = require('../services');
 
 var userRouter = express.Router();
 
@@ -41,16 +41,12 @@ userRouter.get('/task', async (req, res, next) => {
         ok: true,
         data: newTask
       });
-
     } else {
       res.json({
         ok: false,
         data: '错误'
       })
     }
-
-
-
   })
 
 export { userRouter };

@@ -19,6 +19,11 @@ export const CONFIG = {
         mchId: "1447627402",
         notifyUrl: "http://wq8.youqulexiang.com/payment/",
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
+    },
+    jssdk: {
+        "wechatToken": "sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR",
+        "appId": "wx8bdcc982b8477839",
+        "appSecret": "ffe69aaff2487a7f1557f4e2e33952e6",
     }
     // wechatClient: ''
 }

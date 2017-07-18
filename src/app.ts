@@ -14,15 +14,19 @@ import moment = require('moment');
 
 var app = express();
 
-nunjucks.configure(path.resolve(__dirname, '../views'), { // 设置模板文件的目录，为views
+var njk = nunjucks.configure(path.resolve(__dirname, '../views'), { // 设置模板文件的目录，为views
     autoescape: true,
     express: app,
     noCache: true,
 
 })
-    .addFilter('time', function (obj: Date) {
-        return moment(obj).format('YYYY-MM-DD');
-    })
+//
+njk.addFilter('time', function (obj: Date) {
+    return moment(obj).format('YYYY-MM-DD');
+})
+njk.addFilter('json', function (obj) {
+    return JSON.stringify(obj)
+})
 
 
 // app.set('trust proxy', 1) // trust first proxy 
@@ -53,7 +57,7 @@ app.use(middle.common.crossDomain)
 
 
     .get('/share', middle.share.index)
-    .all('/check', middle.common.replyAuthUrl)
+    .all('/', middle.common.replyAuthUrl)
 
     // share
     .get('/share', middle.share.index)
@@ -65,13 +69,22 @@ app.use(middle.common.crossDomain)
     .post('/share/payTaskMoney', middle.share.payTaskMoney)
     .post('/share/publish', middle.share.publishTask)
     .get('/share/shop-center', middle.share.shopCenter)
-    .get('/share/task/:_id', middle.share.taskDetail)
+    .get('/task/:_id', middle.share.taskDetail)
+    // test api
+    .get('/share/test', async (req, res) => {
+        var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
+        console.log(params);
+        res.render('share/test', { params });
+    })
+    // common api
+    .post('/api/uploadBase64', middle.common.uploadBase64)
+    .get('/api/jssdk', async (req, res) => { var params = await services.wechat.getJSSDKApiParams({ url: req.query.url || 'http://' + req.hostname + req.originalUrl }); res.json({ ok: true, data: params }) })
     //  restful  api 
-    .post('/api/uploadImage', middle.common.uploadBase64)
     .get('/rest/:modelName', middle.rest.getList)
     .post('/rest/:modelName', middle.rest.postOne)
     .get('/rest/:modelName/:_id', middle.rest.getDetail)
     .delete('/rest/:modelName/:_id', middle.rest.deleteOne)
+
     .use(middle.common.notFound)
     .use(middle.common.errorHandler);
-export =app;
+export =app; 

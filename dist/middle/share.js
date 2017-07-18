@@ -74,8 +74,64 @@ module.exports = {
         res.json({ ok: true, data: payargs });
     },
     taskDetail: async (req, res) => {
-        var _id = req.params._id;
-        let task = await service.db.taskModel.findById(_id).exec();
-        await res.render('share/detail', { task });
+        var params = await service.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
+        var userId = req.query._id;
+        let task = await service.db.taskModel.findById(req.params._id).exec();
+        let user = await service.db.userModel.findById(_id).populate('parent').exec();
+        ;
+        var ip = service.tools.pureIp(req.ip); // 纯ip
+        var isHaveVisited = task.ips.some(visitedIp => {
+            return ip == visitedIp;
+        });
+        // 新的观看的人 
+        if (!isHaveVisited) {
+            // 任务 增加点击数量,ip访问数量,任务消耗数量
+            task.update({ $inc: { clickNum: 1 }, $push: { ips: ip }, $set: { totalMoney: task.totalMoney - task.shareMoney } }).exec();
+            //发布任务的人获得奖金 上级 5%   上上级 10% 上上上级 15%
+            var taskAllMoney = task.shareMoney;
+            if (user) {
+                /**
+                 * 有师傅
+                 */
+                if (user.parent) {
+                    var parents = [];
+                    // 有师傅
+                    parents.push(user.parent);
+                    await user.parent.populate('parent').execPopulate();
+                    if (user.parent.parent) {
+                        parents.push(user.parent.parent);
+                        await user.parent.parent.populate('parent').execPopulate();
+                    }
+                    // 三级师傅
+                    if (user.parent.parent.parent)
+                        parents.push(user.parent.parent.parent);
+                    // 三级师傅的算法
+                    console.log(parents);
+                }
+                else {
+                    //一个师傅都没有
+                    console.log(`一个师傅都没有
+                     totalMoney: ${user.totalMoney + taskAllMoney},
+                            todayMoney: ${user.todayMoney + taskAllMoney},
+                            historyMoney: ${user.historyMoney + taskAllMoney}
+                    
+                    `);
+                    await user.update({
+                        $set: {
+                            totalMoney: user.totalMoney + taskAllMoney,
+                            todayMoney: user.todayMoney + taskAllMoney,
+                            historyMoney: user.historyMoney + taskAllMoney
+                        }
+                    }).exec();
+                }
+            }
+        }
+        else {
+            console.log('没有_id,没有推广人');
+        }
+        /**
+         * 若有推广人
+         */
+        await res.render('share/detail', { task, params });
     }
 };

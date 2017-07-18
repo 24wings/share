@@ -2,6 +2,9 @@ import service = require('../services');
 import express = require('express');
 import fs = require('fs');
 import path = require('path');
+var wx = require('wechat-jssdk');
+// wx.initialize(service.CONFIG.jssdk);
+
 var wechat = require('wechat');
 var OAuth = require('wechat-oauth');
 
@@ -37,11 +40,16 @@ export = {
             var accessToken = result.data.access_token;
             var openid = result.data.openid;
             console.log('token=' + accessToken);
+            req.session.accessToken = accessToken;
+            res.locals.accessToken = accessToken;
+
             console.log('openid=' + openid);
             client.getUser(openid, async function (err, result) {
                 let user = await service.db.userModel.findOne({ openid }).exec();
                 if (user) {
+                    await user.update({ accessToken }).exec();
                 } else {
+                    result.accessToken = accessToken;
                     if (parent) result.parent = parent;
                     user = await new service.db.userModel(result).save();
                 }
@@ -99,8 +107,21 @@ export = {
         if (req.session.user) {
             // console.log('session user:', req.session.user);
             res.locals.user = req.session.user;
+
+        }
+        if (req.session.accessToken) {
+            res.locals.accessToken = req.session.accessToken;
         }
         next();
+    },
+    /**
+     * jssdk
+     */
+    getJSSDKSignature: function (req, res) {
+
+        wx.jssdk.getSignatureByURL(req.query.url, function (signatureData) {
+            res.json(signatureData);
+        });
     }
 
 

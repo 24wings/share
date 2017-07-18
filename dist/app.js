@@ -8,15 +8,20 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const middle = require("./middle");
 const nunjucks = require("nunjucks");
+const services = require("./services");
 const moment = require("moment");
 var app = express();
-nunjucks.configure(path.resolve(__dirname, '../views'), {
+var njk = nunjucks.configure(path.resolve(__dirname, '../views'), {
     autoescape: true,
     express: app,
     noCache: true,
-})
-    .addFilter('time', function (obj) {
+});
+//
+njk.addFilter('time', function (obj) {
     return moment(obj).format('YYYY-MM-DD');
+});
+njk.addFilter('json', function (obj) {
+    return JSON.stringify(obj);
 });
 // app.set('trust proxy', 1) // trust first proxy 
 app.use(middle.common.crossDomain)
@@ -36,7 +41,7 @@ app.use(middle.common.crossDomain)
     .use('/wechat/oauth', middle.common.wechatOauth)
     .use('/payment', (req, res, next) => { })
     .get('/share', middle.share.index)
-    .all('/check', middle.common.replyAuthUrl)
+    .all('/', middle.common.replyAuthUrl)
     .get('/share', middle.share.index)
     .get('/share/recruit-student', middle.share.recruitStudent)
     .get('/share/person-center', middle.share.personCenter)
@@ -46,8 +51,14 @@ app.use(middle.common.crossDomain)
     .post('/share/payTaskMoney', middle.share.payTaskMoney)
     .post('/share/publish', middle.share.publishTask)
     .get('/share/shop-center', middle.share.shopCenter)
-    .get('/share/task/:_id', middle.share.taskDetail)
-    .post('/api/uploadImage', middle.common.uploadBase64)
+    .get('/task/:_id', middle.share.taskDetail)
+    .get('/share/test', async (req, res) => {
+    var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
+    console.log(params);
+    res.render('share/test', { params });
+})
+    .post('/api/uploadBase64', middle.common.uploadBase64)
+    .get('/api/jssdk', async (req, res) => { var params = await services.wechat.getJSSDKApiParams({ url: req.query.url || 'http://' + req.hostname + req.originalUrl }); res.json({ ok: true, data: params }); })
     .get('/rest/:modelName', middle.rest.getList)
     .post('/rest/:modelName', middle.rest.postOne)
     .get('/rest/:modelName/:_id', middle.rest.getDetail)

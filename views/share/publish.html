@@ -6,7 +6,13 @@
             <span>新颖有趣的标题更吸引人的眼球</span>
             <input type="text" name="title" value="test" id="title">
         </div>
-        <input type="text" onchange="previewImage(this.files[0])">
+        <!--预览图  -->
+        <div class="release-box">
+            <label for="">预览图片</label>
+            <input type="file" onchange="previewImage(this.files[0])">
+            <img src="" alt="" id="preview" style="max-width:100%;">
+            <input type="text" name="imageUrl" hidden style="display:none;">
+        </div>
         <div class="release-box">
             <label for="">文章栏目:</label>
             <ul class="tags">
@@ -42,6 +48,7 @@
         </div>
     </form>
 </div>
+
 {%endblock%} {%block script%}
 <script>
     function payMoney() {
@@ -76,12 +83,29 @@
      * 
      */
     function previewImage(file) {
+        alert(file.name);
         if (!file) return;
 
-        var readerr = new FileReader();
+        var reader = new FileReader();
         reader.onload = function(event) {
             var base64 = event.target.result;
+            $('#preview').attr('src', base64);
+            $.ajax({
+                url: "/api/uploadBase64",
+                method: 'POST',
+                data: {
+                    base64: base64
+                },
+                success: function(rtn) {
+                    if (rtn.ok) {
+                        alert(rtn.data);
+                        $('input[name=imageUrl]').val(rtn.data);
+                    } else {
+                        alert(rtn.data)
+                    }
 
+                }
+            })
         }
         reader.readAsDataURL(file);
 

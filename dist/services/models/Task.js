@@ -12,6 +12,10 @@ var taskSchema = new mongoose.Schema({
     publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     // 浏览数量
     pv: { type: Number, default: 0 },
-    clickNum: { type: Number, default: 0 }
+    clickNum: { type: Number, default: 0 },
+    /**
+     * 已经浏览过的ip
+     */
+    ips: { type: [String], default: [] }
 });
 exports.taskModel = mongoose.model('Task', taskSchema);
