@@ -15,8 +15,6 @@ export ={
             console.log('openid :', openid);
             user = await service.db.userModel.findOne({ openid }).exec();
         }
-
-
         let taskTags = await service.db.taskTagModel.find().exec();
         let tasks = [];
         if (taskTag) {
@@ -61,9 +59,9 @@ export ={
 
     },
     publishTask: async (req: express.Request, res: express.Response) => {
-        let { title, content, imageUrl, taskTag, shareMoney, totalMoney } = req.body;
+        let { title, content, imageUrl, taskTag, shareMoney, totalMoney, websiteUrl } = req.body;
 
-        let newTask = await new service.db.taskModel({ title, taskTag, content, imageUrl, totalMoney, shareMoney }).save();
+        let newTask = await new service.db.taskModel({ title, taskTag, content, imageUrl, totalMoney, shareMoney, websiteUrl }).save();
         res.redirect('/share');
     },
 
@@ -78,6 +76,11 @@ export ={
             total_fee: req.body.totalMoney * 100, attach: '任务费用', out_trade_no: 'kfc' + (+new Date)
         });
         res.json({ ok: true, data: payargs });
+    },
 
+    taskDetail: async (req: express.Request, res: express.Response) => {
+        var _id = req.params._id;
+        let task = await service.db.taskModel.findById(_id).exec();
+        await res.render('share/detail', { task });
     }
 }

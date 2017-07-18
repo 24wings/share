@@ -6,13 +6,13 @@
             <span>新颖有趣的标题更吸引人的眼球</span>
             <input type="text" name="title" value="test" id="title">
         </div>
+        <input type="text" onchange="previewImage(this.files[0])">
         <div class="release-box">
             <label for="">文章栏目:</label>
             <ul class="tags">
-                {%for taskTag in taskTags%}
-                <li onclick="selectTaskTag(this)" taskTag="{{taskTag._id.toString()}}">搞笑</li>
+                {%for taskTag,index in taskTags%}
+                <li onclick="selectTaskTag(this)" {%if loop.index==1 %} class="active" {%endif%} taskTag="{{taskTag._id.toString()}}">{{taskTag.name}}</li>
                 {%endfor%}
-
             </ul>
             <input type="text" hidden="hidden" style="display:none" name="taskTag" value="{{taskTags[0]._id.toString()}}" id="taskTag">
         </div>
@@ -55,10 +55,8 @@
                     var payargs = rtn.data;
                     wechatPay(payargs, function() {
                         // $('#submit').show();
-
                         // $('#pay').trigger('click');
                         document.forms[0].submit();
-
                     })
                 } else {
                     alert(rtn.data);
@@ -72,8 +70,20 @@
         $(li).addClass('active')
         var taskTag = $(li).attr('taskTag');
         // alert(taskTag);
-        $('#taskTag').val(taskTag)
+        $('#taskTag').val(taskTag);
+    }
+    /**
+     * 
+     */
+    function previewImage(file) {
+        if (!file) return;
 
+        var readerr = new FileReader();
+        reader.onload = function(event) {
+            var base64 = event.target.result;
+
+        }
+        reader.readAsDataURL(file);
 
     }
 </script>

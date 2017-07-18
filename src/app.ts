@@ -65,6 +65,7 @@ app.use(middle.common.crossDomain)
     .post('/share/payTaskMoney', middle.share.payTaskMoney)
     .post('/share/publish', middle.share.publishTask)
     .get('/share/shop-center', middle.share.shopCenter)
+    .get('/share/task/:_id', middle.share.taskDetail)
     //  restful  api 
     .post('/api/uploadImage', middle.common.uploadBase64)
     .get('/rest/:modelName', middle.rest.getList)
