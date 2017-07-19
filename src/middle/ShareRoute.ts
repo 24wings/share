@@ -114,6 +114,11 @@ export class ShareRoute extends BaseRoute {
         res.json({ ok: true, data: payargs });
     }
 
+    /**
+     * 三级分销
+     * @param req 
+     * @param res 
+     */
     async  taskDetail(req: Request, res: Response) {
         var taskId = req.params._id;
         // 如果是
