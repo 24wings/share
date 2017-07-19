@@ -124,7 +124,7 @@ export ={
                 return user._id.toString() == visitedUser;
             });
             // 新的观看的人 
-            if (!isHaveVisited) {
+            if (!isHaveVisite d) {
                 // 任务算新点击一次
                 await task.update({ $inc: { clickNum: 1 } }).exec();
 
@@ -234,42 +234,42 @@ export ={
              * 若有推广人
              */
             await res.render('share/detail', { task, params });
-        }
+}
     },
-    studentMoney: async (req: express.Request, res: express.Response) => {
-        var user = req.session.user;
-        res.render('share/student-money', {
-            user
-        });
-    },
+studentMoney: async (req: express.Request, res: express.Response) => {
+    var user = req.session.user;
+    res.render('share/student-money', {
+        user
+    });
+},
     myMoney: async (req: express.Request, res: express.Response) => {
         res.render('share/myMoney', {});
     },
 
-    getMoney: async (req: express.Request, res: express.Response) => {
-        res.render('share/getMoney', { user: req.session.user });
-    },
-    guide: async (req: express.Request, res: express.Response) => {
-        res.render('share/guide', {})
-    },
-    taskList: async (req: express.Request, res: express.Response) => {
-        var active = !req.query.active;
-        let tasks = [];
-        if (active) {
-            tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
-        } else {
-            tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
-        }
-        res.render('share/task-list', { tasks });
-    },
-    /**钱的记录 */
-    getMoneyRecord: (req: express.Request, res: express.Response) => {
-        res.render('share/get-money-record', { user: req.session.user });
-    },
-    fansMoney: async (req: express.Request, res: express.Response) => {
-        res.render('share/fans-money', { user: req.session.user, })
-    },
-    moneyLog: async (req: express.Request, res: express.Response) => {
-        res.render('share/money-log', {});
-    }
+        getMoney: async (req: express.Request, res: express.Response) => {
+            res.render('share/getMoney', { user: req.session.user });
+        },
+            guide: async (req: express.Request, res: express.Response) => {
+                res.render('share/guide', {})
+            },
+                taskList: async (req: express.Request, res: express.Response) => {
+                    var active = !req.query.active;
+                    let tasks = [];
+                    if (active) {
+                        tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
+                    } else {
+                        tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
+                    }
+                    res.render('share/task-list', { tasks });
+                },
+                    /**钱的记录 */
+                    getMoneyRecord: (req: express.Request, res: express.Response) => {
+                        res.render('share/get-money-record', { user: req.session.user });
+                    },
+                        fansMoney: async (req: express.Request, res: express.Response) => {
+                            res.render('share/fans-money', { user: req.session.user, })
+                        },
+                            moneyLog: async (req: express.Request, res: express.Response) => {
+                                res.render('share/money-log', {});
+                            }
 } 

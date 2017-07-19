@@ -1,5 +1,48 @@
 "use strict";
 const service = require("../services");
+studentMoney: async (req, res) => {
+    var user = req.session.user;
+    res.render('share/student-money', {
+        user
+    });
+},
+    myMoney;
+async (req, res) => {
+    res.render('share/myMoney', {});
+},
+    getMoney;
+async (req, res) => {
+    res.render('share/getMoney', { user: req.session.user });
+},
+    guide;
+async (req, res) => {
+    res.render('share/guide', {});
+},
+    taskList;
+async (req, res) => {
+    var active = !req.query.active;
+    let tasks = [];
+    if (active) {
+        tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
+    }
+    else {
+        tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
+    }
+    res.render('share/task-list', { tasks });
+},
+    /**钱的记录 */
+    getMoneyRecord;
+(req, res) => {
+    res.render('share/get-money-record', { user: req.session.user });
+},
+    fansMoney;
+async (req, res) => {
+    res.render('share/fans-money', { user: req.session.user, });
+},
+    moneyLog;
+async (req, res) => {
+    res.render('share/money-log', {});
+};
 module.exports = {
     /**
      * 分享赚钱的首页
@@ -113,7 +156,9 @@ module.exports = {
                 return user._id.toString() == visitedUser;
             });
             // 新的观看的人 
-            if (!isHaveVisited) {
+            if (!isHaveVisite)
+                d;
+            {
                 // 任务算新点击一次
                 await task.update({ $inc: { clickNum: 1 } }).exec();
                 user = await service.db.userModel.findById(req.session.user._id).exec();
@@ -214,49 +259,16 @@ module.exports = {
                     }
                 }
             }
-            else {
-                console.log('已经访问过了');
-            }
-            /**
-             * 若有推广人
-             */
-            await res.render('share/detail', { task, params });
         }
-    },
-    studentMoney: async (req, res) => {
-        var user = req.session.user;
-        res.render('share/student-money', {
-            user
-        });
-    },
-    myMoney: async (req, res) => {
-        res.render('share/myMoney', {});
-    },
-    getMoney: async (req, res) => {
-        res.render('share/getMoney', { user: req.session.user });
-    },
-    guide: async (req, res) => {
-        res.render('share/guide', {});
-    },
-    taskList: async (req, res) => {
-        var active = !req.query.active;
-        let tasks = [];
-        if (active) {
-            tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
-        }
-        else {
-            tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
-        }
-        res.render('share/task-list', { tasks });
-    },
-    /**钱的记录 */
-    getMoneyRecord: (req, res) => {
-        res.render('share/get-money-record', { user: req.session.user });
-    },
-    fansMoney: async (req, res) => {
-        res.render('share/fans-money', { user: req.session.user, });
-    },
-    moneyLog: async (req, res) => {
-        res.render('share/money-log', {});
+    }, else: {
+        console: .log('已经访问过了')
     }
+    /**
+     * 若有推广人
+     */
+    ,
+    /**
+     * 若有推广人
+     */
+    await: res.render('share/detail', { task, params })
 };
