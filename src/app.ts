@@ -18,7 +18,6 @@ var njk = nunjucks.configure(path.resolve(__dirname, '../views'), { // 设置模
     autoescape: true,
     express: app,
     noCache: true,
-
 })
 //
 njk.addFilter('time', function (obj: Date) {
@@ -40,7 +39,6 @@ app.use(middle.common.crossDomain)
     .use(express.static(path.resolve(__dirname, '../public')))
     .set('view engine', 'html')
     //app.use(favicon(path.resolve(__dirname, '../public', 'favicon.ico')));
-
     .use(logger('dev'))
     .use(bodyParser.json({ limit: '50mb' }))
     .use(bodyParser.urlencoded({ extended: false }))
@@ -57,8 +55,6 @@ app.use(middle.common.crossDomain)
     .use('/wechat/oauth', middle.common.wechatOauth)
     .use('/payment', (req, res, next) => { })
     // .get('/', (req, res) => res.redirect('/share'))
-
-
     .get('/share', middle.share.index)
     .all('/', middle.common.replyAuthUrl)
 
