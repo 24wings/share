@@ -8,7 +8,11 @@ import bodyParser = require('body-parser');
 import middle = require('./middle');
 import nunjucks = require('nunjucks');
 import services = require('./services');
+import { RouteBuilder } from './route';
+
 import moment = require('moment');
+
+import { ShareRoute } from './middle/ShareRoute';
 
 
 
@@ -55,37 +59,38 @@ app.use(middle.common.crossDomain)
     .use('/wechat/oauth', middle.common.wechatOauth)
     .use('/payment', (req, res, next) => { })
     // .get('/', (req, res) => res.redirect('/share'))
-    .get('/share', middle.share.index)
+    // .get('/share', middle.share.index)
     .all('/', middle.common.replyAuthUrl)
-
-    // share
-    .get('/share', middle.share.index)
-    .get('/share/recruit-student', middle.share.recruitStudent)
-    .get('/share/person-center', middle.share.personCenter)
-    .get('/share/full-info', middle.share.fullInfoPage)
-    .post('/share/full-info', middle.share.fixFullInfo)
-    .get('/share/detail/:_id', middle.share.detail)
-    .get('/share/publish', middle.share.publishPage)
-    .post('/share/payTaskMoney', middle.share.payTaskMoney)
-    .post('/share/publish', middle.share.publishTask)
-    .get('/share/shop-center', middle.share.shopCenter)
-    .get('/share/student-money', middle.share.studentMoney)
-    .get('/share/myMoney', middle.share.myMoney)
-    .get('/task/:_id', middle.share.taskDetail)
-    .get('/share/getMoney', middle.share.getMoney)
-    .get('/share/guide', middle.share.guide)
-    .get('/share/task-list', middle.share.taskList)
-    .get('/share/get-money-record', middle.share.getMoneyRecord)
-    .get('/share/fansMoney', middle.share.fansMoney)
-    .get('/share/money-log', middle.share.moneyLog)
-    // test api
-    .get('/share/test', async (req, res) => {
-        var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
-        console.log(params);
-        res.render('share/test', { params });
-    })
-
-
+    .use('/share/:action', RouteBuilder.buildRoute(ShareRoute))
+    /*
+     // share
+     .get('/share', middle.share.index)
+     .get('/share/recruit-student', middle.share.recruitStudent)
+     .get('/share/person-center', middle.share.personCenter)
+     .get('/share/full-info', middle.share.fullInfoPage)
+     .post('/share/full-info', middle.share.fixFullInfo)
+     .get('/share/detail/:_id', middle.share.detail)
+     .get('/share/publish', middle.share.publishPage)
+     .post('/share/payTaskMoney', middle.share.payTaskMoney)
+     .post('/share/publish', middle.share.publishTask)
+     .get('/share/shop-center', middle.share.shopCenter)
+     .get('/share/student-money', middle.share.studentMoney)
+     .get('/share/myMoney', middle.share.myMoney)
+     .get('/task/:_id', middle.share.taskDetail)
+     .get('/share/getMoney', middle.share.getMoney)
+     .get('/share/guide', middle.share.guide)
+     .get('/share/task-list', middle.share.taskList)
+     .get('/share/get-money-record', middle.share.getMoneyRecord)
+     .get('/share/fansMoney', middle.share.fansMoney)
+     .get('/share/money-log', middle.share.moneyLog)
+     // test api
+     .get('/share/test', async (req, res) => {
+         var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
+         console.log(params);
+         res.render('share/test', { params });
+     })
+ 
+ */
     // common api
     .post('/api/uploadBase64', middle.common.uploadBase64)
     .get('/api/jssdk', async (req, res) => { var params = await services.wechat.getJSSDKApiParams({ url: req.query.url || 'http://' + req.hostname + req.originalUrl }); res.json({ ok: true, data: params }) })

@@ -1,71 +1,77 @@
-import service = require('../services');
-import express = require('express');
-import { IUser } from '../services/models/User';
+import { IRoute, BaseRoute, Request, Response } from '../route';
 
-export ={
-    /**
-     * 分享赚钱的首页
-     */
-    index: async (req: express.Request, res: express.Response) => {
+export class ShareRoute extends BaseRoute {
+    doAction(action: string, method: string) {
+        switch (action) {
+            case 'home':
+                return this.home;
 
+            default:
+                return this.home;
+        }
+
+
+    }
+
+    async home(req: Request, res: Response) {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
         console.log('user', user);
         if (openid) {
             console.log('openid :', openid);
-            user = await service.db.userModel.findOne({ openid }).exec();
+            user = await this.service.db.userModel.findOne({ openid }).exec();
         }
-        let taskTags = await service.db.taskTagModel.find().exec();
+        let taskTags = await this.service.db.taskTagModel.find().exec();
         let tasks = [];
         if (taskTag) {
-            tasks = await service.db.taskModel.find({ taskTag }).limit(100).exec();
+            tasks = await this.service.db.taskModel.find({ taskTag }).limit(100).exec();
         } else {
-            tasks = await service.db.taskModel.find().limit(100).exec();
+            tasks = await this.service.db.taskModel.find().limit(100).exec();
         }
         await res.render('share/index', { taskTag, tasks, taskTags, user });
-    },
-    recruitStudent: async (req: express.Request, res: express.Response) => {
-        var user = req.session.user;
-        var authUrl = await service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
-        await res.render('share/recruit-student', { authUrl, user });
+    }
 
-    },
+    async recruitStudent(req: Request, res: Response) {
+        var user = req.session.user;
+        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
+        await res.render('share/recruit-student', { authUrl, user });
+    }
+
+
     /**个人中心 */
-    personCenter: async (req: express.Request, res: express.Response) => {
+    async  personCenter(req: Request, res: Response) {
         let user = req.session.user;
-        user = await service.db.userModel.findById(user._id.toString()).exec();
+        user = await this.service.db.userModel.findById(user._id.toString()).exec();
 
         console.log(user);
         res.render('share/person-center', {
             user
         });
-    },
+    }
+
 
     /**完善信息 */
-    fullInfoPage: (req: express.Request, res: express.Response) => {
-
+    fullInfoPage(req: Request, res: Response) {
         res.render('share/full-info')
-
-    },
-    fixFullInfo: async (req, res) => {
+    }
+    async fixFullInfo(req, res) {
         let { qq, phone, weixinId } = req.body
-        await service.db.userModel.findById(req.session.user._id.toString()).update({ qq, phone, weixinId, isFinish: true }).exec();
+        await this.service.db.userModel.findById(req.session.user._id.toString()).update({ qq, phone, weixinId, isFinish: true }).exec();
         res.redirect('/share/person-center')
-    },
+    }
     /**文章详情页面 */
-    detail: (req: express.Request, res: express.Response) => {
-
+    async  detail(req: Request, res: Response) {
         res.render('share/detail')
-    },
-    publishPage: async (req: express.Request, res: express.Response) => {
-        let taskTags = await service.db.taskTagModel.find().exec();
+    }
+    async  publishPage(req: Request, res: Response) {
+        let taskTags = await this.service.db.taskTagModel.find().exec();
         res.render('share/publish', { taskTags })
-    },
+    }
     /**商户中心 */
-    shopCenter: async (req: express.Request, res: express.Response) => {
+    async  shopCenter(req: Request, res: Response) {
 
-        var tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
+        var tasks = await this.service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
         let activeNum = tasks.filter(task => task.active).length;
         var totalClickNum = 0;
         var totalFee = 0;
@@ -81,24 +87,24 @@ export ={
             totalClickNum,
             totalFee
         })
-    },
+    }
     /**
      * 检查openid是否存在,若用户已经存在,则登陆,若用户不存在,则创建新用户
      * 若有上级parentId存在则作为用户的师傅
      */
-    checkOpenIdExisit: (req: express.Request, res: express.Response) => {
+    checkOpenIdExisit: (req: Request, res: Response)  {
 
-    },
-    publishTask: async (req: express.Request, res: express.Response) => {
+    }
+    async   publishTask(req: Request, res: Response) {
         let { title, content, imageUrl, taskTag, shareMoney, totalMoney, websiteUrl } = req.body;
-        let newTask = await new service.db.taskModel({ title, taskTag, content, imageUrl, totalMoney, fee: totalMoney, shareMoney, websiteUrl, publisher: req.session.user._id.toString(), active: true, msg: '审核通过' }).save();
+        let newTask = await new this.service.db.taskModel({ title, taskTag, content, imageUrl, totalMoney, fee: totalMoney, shareMoney, websiteUrl, publisher: req.session.user._id.toString(), active: true, msg: '审核通过' }).save();
         res.redirect('/share');
-    },
+    }
 
-    payTaskMoney: async (req: express.Request, res: express.Response) => {
+    async  payTaskMoney(req: Request, res: Response) {
         let ip = req.ip.indexOf('::ffff:') == 0 ? req.ip.substring(req.ip.indexOf('::ffff:') + 7) : req.ip;
         console.log(ip);
-        var payargs = await service.wechat.wechatPay({
+        var payargs = await this.service.wechat.wechatPay({
             body: '支付活动费用',
             spbill_create_ip: ip,
             openid: req.session.user.openid,
@@ -106,21 +112,21 @@ export ={
             total_fee: req.body.totalMoney * 100, attach: '任务费用', out_trade_no: 'kfc' + (+new Date)
         });
         res.json({ ok: true, data: payargs });
-    },
+    }
 
-    taskDetail: async (req: express.Request, res: express.Response) => {
+    async  taskDetail(req: Request, res: Response) {
         var taskId = req.params._id;
         // 如果是
         var user = req.session.user;
         // 若不是注册的用户 , 则跳转到登陆页面, 并转载parent,taskId, 该用户会自动注册,拜师,然后返回这个任务做任务
         if (!user) {
-            var url = await service.wechat.getAuthorizeURL({ parent: req.query._id, taskId: req.params._id })
+            var url = await this.service.wechat.getAuthorizeURL({ parent: req.query._id, taskId: req.params._id })
             res.redirect(url);
 
         } else {
-            var params = await service.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
+            var params = await this.service.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
             var userId = req.session.user._id.toString();
-            let task = await service.db.taskModel.findById(taskId).exec();
+            let task = await this.service.db.taskModel.findById(taskId).exec();
             // let user = await service.db.userModel.findById(userId).populate('parent').exec();;
             var isHaveVisited = task.users.some(visitedUser => {
                 return user._id.toString() == visitedUser;
@@ -130,7 +136,7 @@ export ={
                 // 任务算新点击一次
                 await task.update({ $inc: { clickNum: 1 } }).exec();
 
-                user = await service.db.userModel.findById(req.session.user._id).exec();
+                user = await this.service.db.userModel.findById(req.session.user._id).exec();
                 // 任务 增加点击数量,ip访问数量,任务消耗数量, 
                 /**
                  * 
@@ -139,9 +145,7 @@ export ={
                  */
                 if (task.totalMoney - task.shareMoney < 0) {
                     await task.update({ $set: { active: false } }).exec();
-
                 } else {
-
                     task.update({ $inc: { clickNum: 1 }, $push: { users: user._id.toString() }, $set: { totalMoney: task.totalMoney - task.shareMoney } }).exec();
                     //发布任务的人获得奖金 上级 5%   上上级 10% 上上上级 15%
                     var taskAllMoney = task.shareMoney;
@@ -170,7 +174,7 @@ export ={
                                 case 0:
                                     console.log('一个师傅都没有');
                                     // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }]);
+                                    await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }]);
                                     break;
                                 case 1: //5%
                                     console.log('一位师傅开始返利');
@@ -180,9 +184,9 @@ export ={
                                     // 余额
                                     taskAllMoney = taskAllMoney * 0.95;
                                     // 
-                                    await service.db.userModel.findById(firstParent).update({ $inc: { totalMoney: firstMoney, todayMoney: firstMoney, historyMoney: firstMoney } }).exec();
+                                    await this.service.db.userModel.findById(firstParent).update({ $inc: { totalMoney: firstMoney, todayMoney: firstMoney, historyMoney: firstMoney } }).exec();
                                     // await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await service.dbDo.returnMoney([
+                                    await this.service.dbDo.returnMoney([
                                         { userId: firstParent, money: firstMoney, task: taskId },
                                         { userId: userId, money: taskAllMoney, task: taskId }]);
                                     break
@@ -197,7 +201,7 @@ export ={
                                     // await service.db.userModel.findByIdAndUpdate(oneParent._id.toString(), { $inc: { totalMoney: oneMoney, todayMoney: oneMoney, historyMoney: oneMoney } }).exec();
                                     // await service.db.userModel.findByIdAndUpdate(twoParent._id.toString(), { $inc: { totalMoney: twoMoney, todayMoney: twoMoney, historyMoney: twoMoney } }).exec();
                                     // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await service.dbDo.returnMoney([
+                                    await this.service.dbDo.returnMoney([
                                         { money: oneMoney, task: taskId, userId: oneParent },
                                         { money: twoMoney, task: taskId, userId: twoParent },
                                         { money: taskAllMoney, task: taskId, userId: userId }
@@ -237,41 +241,41 @@ export ={
              */
             await res.render('share/detail', { task, params });
         }
-    },
-    studentMoney: async (req: express.Request, res: express.Response) => {
+    }
+    studentMoney(req: Request, res: Response) {
         var user = req.session.user;
         res.render('share/student-money', {
             user
         });
-    },
-    myMoney: async (req: express.Request, res: express.Response) => {
+    }
+    async myMoney(req: Request, res: Response) {
         res.render('share/myMoney', {});
-    },
+    }
 
-    getMoney: async (req: express.Request, res: express.Response) => {
+    async    getMoney(req: Request, res: Response) {
         res.render('share/getMoney', { user: req.session.user });
-    },
-    guide: async (req: express.Request, res: express.Response) => {
+    }
+    async　guide(req: Request, res: Response) {
         res.render('share/guide', {})
-    },
-    taskList: async (req: express.Request, res: express.Response) => {
+    }
+    async　taskList(req: Request, res: Response) {
         var active = !req.query.active;
         let tasks = [];
         if (active) {
-            tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
+            tasks = await this.service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
         } else {
-            tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
+            tasks = await this.service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
         }
         res.render('share/task-list', { tasks });
-    },
+    }
     /**钱的记录 */
-    getMoneyRecord: (req: express.Request, res: express.Response) => {
+    getMoneyRecord(req: Request, res: Response) {
         res.render('share/get-money-record', { user: req.session.user });
-    },
-    fansMoney: async (req: express.Request, res: express.Response) => {
+    }
+    async fansMoney(req: Request, res: Response) {
         res.render('share/fans-money', { user: req.session.user, })
-    },
-    moneyLog: async (req: express.Request, res: express.Response) => {
+    }
+    async moneyLog(req: Request, res: Response) {
         res.render('share/money-log', {});
     }
-} 
+}
