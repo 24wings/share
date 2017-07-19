@@ -27,13 +27,21 @@ njk.addFilter('time', function (obj: Date) {
 njk.addFilter('json', function (obj) {
     return JSON.stringify(obj)
 })
+njk.addFilter('money', function (money: number) {
+    return money.toFixed(2);
+})
+njk.addFilter('boolean', function (ok) {
+    return !!ok;
+})
 
 
 // app.set('trust proxy', 1) // trust first proxy 
 
 app.use(middle.common.crossDomain)
+    .use(express.static(path.resolve(__dirname, '../public')))
     .set('view engine', 'html')
     //app.use(favicon(path.resolve(__dirname, '../public', 'favicon.ico')));
+
     .use(logger('dev'))
     .use(bodyParser.json({ limit: '50mb' }))
     .use(bodyParser.urlencoded({ extended: false }))
@@ -44,11 +52,10 @@ app.use(middle.common.crossDomain)
         // saveUninitialized: true,
         cookie: { maxAge: 60 * 60 * 24 * 1000 }
     }))
+    // 静态文件服务器
+
     .use(middle.common.storeUser)
 
-
-    // 静态文件服务器
-    .use(express.static(path.resolve(__dirname, '../public')))
 
     // 下面是路由
     .use('/wechat/oauth', middle.common.wechatOauth)
@@ -63,19 +70,27 @@ app.use(middle.common.crossDomain)
     .get('/share', middle.share.index)
     .get('/share/recruit-student', middle.share.recruitStudent)
     .get('/share/person-center', middle.share.personCenter)
-    .get('/share/full-info', middle.share.fullInfo)
+    .get('/share/full-info', middle.share.fullInfoPage)
+    .post('/share/full-info', middle.share.fixFullInfo)
     .get('/share/detail/:_id', middle.share.detail)
     .get('/share/publish', middle.share.publishPage)
     .post('/share/payTaskMoney', middle.share.payTaskMoney)
     .post('/share/publish', middle.share.publishTask)
     .get('/share/shop-center', middle.share.shopCenter)
+    .get('/share/student-money', middle.share.studentMoney)
+    .get('/share/myMoney', middle.share.myMoney)
     .get('/task/:_id', middle.share.taskDetail)
+    .get('/share/getMoney', middle.share.getMoney)
+    .get('/share/guide', middle.share.guide)
+    .get('/share/task-list', middle.share.taskList)
     // test api
     .get('/share/test', async (req, res) => {
         var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
         console.log(params);
         res.render('share/test', { params });
     })
+
+
     // common api
     .post('/api/uploadBase64', middle.common.uploadBase64)
     .get('/api/jssdk', async (req, res) => { var params = await services.wechat.getJSSDKApiParams({ url: req.query.url || 'http://' + req.hostname + req.originalUrl }); res.json({ ok: true, data: params }) })
@@ -87,4 +102,4 @@ app.use(middle.common.crossDomain)
 
     .use(middle.common.notFound)
     .use(middle.common.errorHandler);
-export =app; 
+export =app;  

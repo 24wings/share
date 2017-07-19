@@ -33,7 +33,7 @@ export interface IUser extends mongoose.Document {
 "country": "COUNTRY",
 "headimgurl": "http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46",
 "privilege": [
-  "PRIVILEGE1"
+  "PRIVILEGE1" 
   "PRIVILEGE2"
 ]
 } 
@@ -64,7 +64,11 @@ export var userModel = mongoose.model<IUser>('User', new mongoose.Schema({
     historyMoney: { type: Number, default: 0 },
     todayStudent: { type: Number, default: 0 },
     totalStudent: { type: Number, default: 0 },
-    visitTasks: { type: [mongoose.Schema.Types.ObjectId], ref: 'Task' }
+    visitTasks: { type: [mongoose.Schema.Types.ObjectId], ref: 'Task' },
 
-
+    //详细信息
+    qq: { type: String, default: '' },
+    phone: { type: String, default: '' },
+    weixinId: { type: String, default: '' },
+    isFinish: { type: Boolean, default: false }
 }));

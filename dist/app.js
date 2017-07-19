@@ -23,8 +23,15 @@ njk.addFilter('time', function (obj) {
 njk.addFilter('json', function (obj) {
     return JSON.stringify(obj);
 });
+njk.addFilter('money', function (money) {
+    return money.toFixed(2);
+});
+njk.addFilter('boolean', function (ok) {
+    return !!ok;
+});
 // app.set('trust proxy', 1) // trust first proxy 
 app.use(middle.common.crossDomain)
+    .use(express.static(path.resolve(__dirname, '../public')))
     .set('view engine', 'html')
     .use(logger('dev'))
     .use(bodyParser.json({ limit: '50mb' }))
@@ -37,7 +44,6 @@ app.use(middle.common.crossDomain)
     cookie: { maxAge: 60 * 60 * 24 * 1000 }
 }))
     .use(middle.common.storeUser)
-    .use(express.static(path.resolve(__dirname, '../public')))
     .use('/wechat/oauth', middle.common.wechatOauth)
     .use('/payment', (req, res, next) => { })
     .get('/share', middle.share.index)
@@ -45,13 +51,19 @@ app.use(middle.common.crossDomain)
     .get('/share', middle.share.index)
     .get('/share/recruit-student', middle.share.recruitStudent)
     .get('/share/person-center', middle.share.personCenter)
-    .get('/share/full-info', middle.share.fullInfo)
+    .get('/share/full-info', middle.share.fullInfoPage)
+    .post('/share/full-info', middle.share.fixFullInfo)
     .get('/share/detail/:_id', middle.share.detail)
     .get('/share/publish', middle.share.publishPage)
     .post('/share/payTaskMoney', middle.share.payTaskMoney)
     .post('/share/publish', middle.share.publishTask)
     .get('/share/shop-center', middle.share.shopCenter)
+    .get('/share/student-money', middle.share.studentMoney)
+    .get('/share/myMoney', middle.share.myMoney)
     .get('/task/:_id', middle.share.taskDetail)
+    .get('/share/getMoney', middle.share.getMoney)
+    .get('/share/guide', middle.share.guide)
+    .get('/share/task-list', middle.share.taskList)
     .get('/share/test', async (req, res) => {
     var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
     console.log(params);

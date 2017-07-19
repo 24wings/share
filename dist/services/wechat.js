@@ -2,7 +2,9 @@
 const config_1 = require("./config");
 const WechatAPI = require('wechat-api');
 const crypto = require("crypto");
+var OAuth = require('wechat-oauth');
 var api = new WechatAPI(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret);
+var client = new OAuth(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret);
 var Payment = require('wechat-pay').Payment;
 var payment = new Payment(config_1.CONFIG.wechatPay);
 class WeChatService {
@@ -103,6 +105,12 @@ class WeChatService {
         var signature = await this.getSignature({ noncestr: params['nonceStr'], timestamp: params['timestamp'], url: opt.url });
         params['signature'] = signature;
         return params;
+    }
+    async getAuthorizeURL(query) {
+        var queryStr = `?`;
+        queryStr += query.parent ? 'parent=' + query.parent : '';
+        queryStr += query.taskId ? "&taskId=" + query.taskId : '';
+        return client.getAuthorizeURL(`${config_1.CONFIG.domain}${config_1.CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
     }
 }
 module.exports = new WeChatService();

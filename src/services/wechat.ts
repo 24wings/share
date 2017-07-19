@@ -1,7 +1,9 @@
 import { CONFIG } from './config';
 const WechatAPI = require('wechat-api');
 import crypto = require('crypto');
+var OAuth = require('wechat-oauth');
 var api = new WechatAPI(CONFIG.wechat.appid, CONFIG.wechat.appsecret);
+var client = new OAuth(CONFIG.wechat.appid, CONFIG.wechat.appsecret);
 
 
 var Payment = require('wechat-pay').Payment;
@@ -120,7 +122,13 @@ class WeChatService {
         return params;
     }
 
+    async  getAuthorizeURL(query: { parent: string, taskId?: string }) {
+        var queryStr = `?`;
+        queryStr += query.parent ? 'parent=' + query.parent : '';
+        queryStr += query.taskId ? "&taskId=" + query.taskId : '';
 
+        return client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
+    }
 }
 
 export = new WeChatService();

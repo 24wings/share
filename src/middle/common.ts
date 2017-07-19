@@ -8,6 +8,7 @@ var wx = require('wechat-jssdk');
 var wechat = require('wechat');
 var OAuth = require('wechat-oauth');
 
+
 var client = new OAuth(service.CONFIG.wechat.appid, service.CONFIG.wechat.appsecret);
 
 export = {
@@ -33,13 +34,14 @@ export = {
     wechatOauth: (req: express.Request, res: express.Response) => {
         var code = req.query.code;
         var parent = req.query.parent;
+        var taskId = req.query.taskId;
         // console.log(req.query, code);
         client.getAccessToken(code, (err, result) => {
-            console.dir(err);
-            console.dir(result);
+            // console.dir(err);
+            // console.dir(result);
             var accessToken = result.data.access_token;
             var openid = result.data.openid;
-            console.log('token=' + accessToken);
+            // console.log('token=' + accessToken);
             req.session.accessToken = accessToken;
             res.locals.accessToken = accessToken;
 
@@ -50,13 +52,25 @@ export = {
                     await user.update({ accessToken }).exec();
                 } else {
                     result.accessToken = accessToken;
-                    if (parent) result.parent = parent;
+                    if (parent) {
+                        result.parent = parent;
+                        console.log('新用户的师傅是' + parent);
+                        await service.db.userModel.findByIdAndUpdate(parent, { $inc: { todayStudent: 1, totalStudent: 1 } }).exec();
+                    } else {
+
+                        console.log('新用户没有师傅')
+                    }
                     user = await new service.db.userModel(result).save();
+
                 }
                 req.session.user = user;
                 res.locals.user = user;
                 // console.log('session user', req.session.user);
-                res.redirect('/share/?openid=' + openid);
+                if (taskId) {
+                    res.redirect('/task/' + taskId)
+                } else {
+                    res.redirect('/share/?openid=' + openid);
+                }
             });
         });
     },

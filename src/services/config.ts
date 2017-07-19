@@ -5,6 +5,7 @@ export const CONFIG = {
     oldAuth: 'shop.xxbuy.net',
     newAuth: '',
     domain: 'http://wq8.youqulexiang.com',
+    oauthPath: '/wechat/oauth',
     IP: 'http://47.92.87.28',
     wechat: {
         token: 'sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR',

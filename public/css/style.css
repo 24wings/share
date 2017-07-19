@@ -3,18 +3,40 @@ html {
     width: 100%;
     height: 100%;
 }
-body,dd,dl,dt,fieldset,h1,h2,h3,h4,h5,h6,hr,legend,li,ol,p,pre,td,th,ul{
-moz-user-select: -moz-none;
--moz-user-select: none;
--o-user-select:none;
--khtml-user-select:none;
--webkit-user-select:none;
--ms-user-select:none;
-user-select:none;
+
+body,
+dd,
+dl,
+dt,
+fieldset,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+legend,
+li,
+ol,
+p,
+pre,
+td,
+th,
+ul {
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
-body{
+
+body {
     background: #fff;
 }
+
 @media screen and (min-width: 375px) {
     html {
         /* iPhone6的375px尺寸作为16px基准，414px正好18px大小, 600 20px */
@@ -22,6 +44,7 @@ body{
         font-size: calc(16px + 2 * (100vw - 375px) / 39);
     }
 }
+
 @media screen and (min-width: 414px) {
     html {
         /* 414px-1000px每100像素宽字体增加1px(18px-22px) */
@@ -29,6 +52,7 @@ body{
         font-size: calc(18px + 4 * (100vw - 414px) / 586);
     }
 }
+
 @media screen and (min-width: 600px) {
     html {
         /* 600px-1000px每100像素宽字体增加1px(20px-24px) */
@@ -36,6 +60,7 @@ body{
         font-size: calc(20px + 4 * (100vw - 600px) / 400);
     }
 }
+
 @media screen and (min-width: 1000px) {
     html {
         /* 1000px往后是每100像素0.5px增加 */
@@ -44,9 +69,7 @@ body{
     }
 }
 
-
-
-.footer{
+.footer {
     width: 100%;
     height: 60px;
     border-top: 1px solid #edefee;
@@ -55,28 +78,34 @@ body{
     z-index: 99;
     bottom: 0;
 }
-.footer-box{
+
+.footer-box {
     width: 25%;
     float: left;
     height: 60px;
     text-align: center;
 }
-.footer-box i{
+
+.footer-box i {
     font-size: 1.2rem;
     margin: 4px 0;
 }
-.footer-box i,.footer-box span{
+
+.footer-box i,
+.footer-box span {
     display: block;
     color: #4c4c4c;
-    
 }
-.footer-box span{
+
+.footer-box span {
     font-size: 0.9rem;
 }
-.active{
+
+.active {
     color: #fd6c00!important;
 }
-.nav{
+
+.nav {
     width: 100%;
     height: 40px;
     background: #fafafa;
@@ -85,37 +114,42 @@ body{
     overflow: hidden;
     z-index: 999;
 }
-.nav a{
+
+.nav a {
     width: 15.5%;
     text-align: center;
     line-height: 40px;
     font-size: 0.9rem;
     display: inline-block;
 }
-.center{
+
+.center {
     width: 100%;
     padding-top: 40px;
     padding-bottom: 60px;
-
 }
-.center-box{
+
+.center-box {
     width: 100%;
     height: 5rem;
     border-bottom: 1px solid #ccc;
 }
-.center-box-cr{
+
+.center-box-cr {
     width: 95%;
     height: 100%;
-    margin:0 auto;
+    margin: 0 auto;
     overflow: hidden;
 }
-.center-box-cr>img{
-    width:30%;
-    height:3.825rem;
+
+.center-box-cr>img {
+    width: 30%;
+    height: 3.825rem;
     float: left;
     margin-top: 0.625rem;
 }
-.center-box-cr>p{
+
+.center-box-cr>p {
     font-size: 0.9rem;
     line-height: 20px;
     color: #4d4d4d;
@@ -125,56 +159,67 @@ body{
     margin-left: 3%;
     margin-bottom: 2%;
 }
-.time{
+
+.time {
     margin-left: 3%;
     font-size: 0.8rem;
     color: #999999;
 }
-.cost{
-    margin-left:8%;
+
+.cost {
+    margin-left: 8%;
     font-size: 0.8rem;
     color: #feb280;
 }
-.cost i,.click i{
+
+.cost i,
+.click i {
     font-size: 0.8rem;
 }
-.click{
+
+.click {
     margin-left: 1%;
     font-size: 0.8rem;
     color: #999999;
 }
-.icon{
+
+.icon {
     width: 100%;
     height: 8rem;
     background: url(../images/bg.jpg)no-repeat;
     background-size: 100%;
 }
-.icon-box{
+
+.icon-box {
     width: 85%;
     height: 100%;
-    margin:0 auto;
+    margin: 0 auto;
     position: relative;
 }
-.iconImg{
+
+.iconImg {
     width: 4.4rem;
     height: 4.4rem;
     border-radius: 50%;
-    border:1px solid #fab57c;
+    border: 1px solid #fab57c;
     float: left;
     margin-top: 1.8rem;
 }
-.iconImgs{
+
+.iconImgs {
     width: 3.4rem;
     height: 3.4rem;
     border-radius: 50%;
     overflow: hidden;
-    margin:0.5rem 0 0 0.5rem;
+    margin: 0.5rem 0 0 0.5rem;
 }
-.iconImgs img{
+
+.iconImgs img {
     width: 3.4rem;
     height: 3.4rem;
 }
-.name{
+
+.name {
     float: left;
     color: #fff;
     width: 65%;
@@ -182,7 +227,8 @@ body{
     margin-top: 2.4rem;
     margin-left: 0.6rem;
 }
-.id{
+
+.id {
     float: left;
     width: 65%;
     color: #fff;
@@ -190,10 +236,12 @@ body{
     margin-left: 0.6rem;
     margin-top: 0.4rem;
 }
-.id span{
+
+.id span {
     margin-left: 0.2rem;
 }
-.icon-box>i{
+
+.icon-box>i {
     font-size: 1rem;
     color: #fff;
     position: absolute;
@@ -201,89 +249,108 @@ body{
     top: 50%;
     margin-top: -2rem;
 }
-.bill{
+
+.bill {
     width: 100%;
     height: 6.75rem;
     border-bottom: 1px solid #ffa463;
 }
-.bill-box{
+
+.bill-box {
     width: 24.5%;
     float: left;
     height: 2rem;
     margin-top: 2.8rem;
     text-align: center;
 }
-.bill-box+.bill-box{
+
+.bill-box+.bill-box {
     border-left: 1px solid #eee3dd;
 }
-.bill-box p{
+
+.bill-box p {
     line-height: 1.2rem;
 }
-.bill-box span,.bill-box p{
+
+.bill-box span,
+.bill-box p {
     font-size: 0.8rem;
     color: #bbbbbb;
 }
-.bill-box i{
+
+.bill-box i {
     display: block;
     font-size: 1.6rem;
     color: #fca464;
     margin-top: -1.6rem;
 }
-.operation{
+
+.operation {
     width: 100%;
     height: 12.18rem;
 }
-.operation-box{
+
+.operation-box {
     float: left;
     width: 25%;
     margin-top: 1.375rem;
     height: 4.4rem;
     text-align: center;
 }
-.operation-box p{
+
+.operation-box p {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    margin:0 auto;
+    margin: 0 auto;
     text-align: center;
 }
-.operation-box a span{
+
+.operation-box a span {
     font-size: 0.8rem;
     color: #4d4d4d;
     line-height: 1.6rem;
-
 }
-.operation-box p i{
+
+.operation-box p i {
     color: #fff;
     font-size: 1.4rem;
     line-height: 2.5rem;
-    
 }
-.p1{
-        background: #f9b552;
+
+.p1 {
+    background: #f9b552;
 }
-.p2{
-        background: #b4d465;
+
+.p2 {
+    background: #b4d465;
 }
-.p3{
-        background: #f29ec2;
+
+.p3 {
+    background: #f29ec2;
 }
-.p4{
-        background: #7ecef3;
+
+.p4 {
+    background: #7ecef3;
 }
-.p5{
-        background: #f29c9f;
+
+.p5 {
+    background: #f29c9f;
 }
-.p6{
-        background: #f39b77;
+
+.p6 {
+    background: #f39b77;
 }
-.p7{
-        background: #84ccc9;
+
+.p7 {
+    background: #84ccc9;
 }
-.p8{
-        background: #a596db;
+
+.p8 {
+    background: #a596db;
 }
-.tishi{
+
+.tishi {
     width: 100%;
     height: 2rem;
     line-height: 2rem;
@@ -294,157 +361,185 @@ body{
     position: fixed;
     bottom: 61px;
 }
-.shuoming{
+
+.shuoming {
     width: 100%;
-    height:11.2rem;
+    height: 11.2rem;
 }
-.shuoming img{
+
+.shuoming img {
     width: 100%;
     height: 100%;
     display: block;
 }
-.a1{
+
+.a1 {
     width: 90%;
     font-size: 0.9rem;
-    color:#856c47;
-    margin:0 auto;
+    color: #856c47;
+    margin: 0 auto;
     line-height: 1.4rem;
     margin-bottom: 2rem;
 }
+
 .sm {
-    padding-bottom:90px;
+    padding-bottom: 90px;
 }
-.sm p+p{
+
+.sm p+p {
     width: 90%;
     text-align: center;
     font-size: 0.9rem;
-    color:#856c47;
-    margin:0 auto;
+    color: #856c47;
+    margin: 0 auto;
     line-height: 1.4rem;
 }
-.sm p+p>span{
+
+.sm p+p>span {
     font-size: 1rem;
     color: #fa8b30;
     font-weight: bold;
     margin-top: 1rem;
-    display:inline-block;
+    display: inline-block;
 }
-.sm li{
+
+.sm li {
     width: 30%;
-    height:1.8rem;
+    height: 1.8rem;
     line-height: 1.8rem;
     border-radius: 10px;
     text-align: center;
-    margin:0 auto;
+    margin: 0 auto;
     background: #f5ce39;
     margin-top: 30px;
     box-shadow: 0 3px 0 #c68429;
     font-weight: bold;
     color: #333;
 }
-.title-box{
+
+.title-box {
     width: 100%;
     height: 2rem;
     background: #ff9140;
 }
-.title{
+
+.title {
     width: 90%;
     height: 2rem;
-    margin:0 auto;
+    margin: 0 auto;
     font-size: 0.9rem;
-    color: #fff; 
+    color: #fff;
     line-height: 2rem;
-
 }
-.shuju{
+
+.shuju {
     width: 100%;
     height: 12.8rem;
-    background:#ff9140;
+    background: #ff9140;
     text-align: center;
 }
-.money{
+
+.money {
     font-size: 2rem;
     color: #fff;
 }
-.moneya{
+
+.moneya {
     font-size: 1rem;
     color: #fff;
 }
-.shuju-box1{
+
+.shuju-box1 {
     width: 100%;
     float: left;
 }
-.shuju-box{
+
+.shuju-box {
     width: 50%;
     float: left;
     height: 5.2rem;
     text-align: center;
 }
-.shuju-box:nth-child(2){
+
+.shuju-box:nth-child(2) {
     border-bottom: 1px solid #fff;
 }
-.shuju-box:nth-child(3){
+
+.shuju-box:nth-child(3) {
     border-left: 1px solid #fff;
     border-bottom: 1px solid #fff;
     margin-left: -1px;
 }
-.shuju-box:nth-child(5){
+
+.shuju-box:nth-child(5) {
     border-left: 1px solid #fff;
     margin-left: -1px;
 }
-.shuju-box li{
+
+.shuju-box li {
     color: #fff;
     font-size: 1rem;
     line-height: 3rem;
 }
-.shuju-box span{
+
+.shuju-box span {
     color: #fff;
     font-size: 1rem;
 }
-.liebiao{
+
+.liebiao {
     padding-bottom: 61px;
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
 }
-.liebiao li{
+
+.liebiao li {
     height: 3rem;
     width: 100%;
     line-height: 3rem;
     font-size: 0.9rem;
 }
-.liebiao li i{
+
+.liebiao li i {
     font-size: 1.2rem;
     line-height: 3rem;
     float: left;
-
 }
-.liebiao li span{
+
+.liebiao li span {
     float: left;
     text-indent: 1rem;
     font-size: 0.9rem;
     display: inline-block;
     color: #333;
 }
-.liebiao li i:nth-child(3){
+
+.liebiao li i:nth-child(3) {
     float: right;
     margin-right: 5%;
 }
-.i1{
+
+.i1 {
     color: #1e8dff;
 }
-.i2{
+
+.i2 {
     color: #e81a4b;
 }
-.i3{
+
+.i3 {
     color: #0bb21a;
 }
-.i4{
+
+.i4 {
     color: #f7a528;
 }
-.i5{
+
+.i5 {
     color: #8541cc;
 }
-.fuzhi{
+
+.fuzhi {
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -453,87 +548,101 @@ body{
     height: 60px;
     box-shadow: 0 -2px 20px #fff;
 }
-.fuzhi-nox{
+
+.fuzhi-nox {
     width: 100%;
     background: #ff9140;
-    
 }
-.fuzhi-nox p{
+
+.fuzhi-nox p {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     color: #fff;
     line-height: 1.5rem;
     font-size: 0.9rem;
 }
-.fuzhiianjie{
+
+.fuzhiianjie {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     line-height: 2.25rem;
     font-size: 0.9rem;
 }
-.fuzhiianjie a{
+
+.fuzhiianjie a {
     color: #02b176;
-    text-decoration:underline
+    text-decoration: underline
 }
-.fuzhiianjie p{
+
+.fuzhiianjie p {
     display: inline-block;
-    background:  #02b176;
+    background: #02b176;
     border-radius: 15px;
     padding: 0 5px;
     line-height: 1.2rem;
     color: #fff;
-    float:right;
+    float: right;
     margin-top: 0.5rem;
 }
-.biaotio{
+
+.biaotio {
     width: 100%;
     height: 5.625rem;
     border-bottom: 1px solid #ccc;
 }
-.biaotio h3{
-    margin:0 auto;
+
+.biaotio h3 {
+    margin: 0 auto;
     font-size: 1rem;
     line-height: 2em;
     width: 90%;
     color: #333;
+}
 
-}
-.shij{
+.shij {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
 }
-.shij span{
+
+.shij span {
     color: #ccc;
 }
-.con{
+
+.con {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     padding-bottom: 60px;
 }
-.con p{
+
+.con p {
     font-size: 0.9rem;
     color: #323232;
     text-indent: 1.8rem;
     line-height: 2rem;
 }
-.con img{
+
+.con img {
     width: 100%;
     height: auto;
 }
-.bgac{
+
+.bgac {
     background: #f5f5f5;
     height: 100%;
 }
-.bgc{
+
+.bgc {
     background: #fff;
     width: 100%;
 }
-.bgf{
+
+.bgf {
     background: #fff;
     padding-bottom: 0;
     margin-top: 1rem;
 }
-.bgf b{
+
+.bgf b {
     width: 3px;
     height: 1rem;
     display: inline-block;
@@ -541,31 +650,38 @@ body{
     margin-top: 1rem;
     float: left;
 }
-.co1{
+
+.co1 {
     color: #fe9041!important;
 }
-.ba1{
+
+.ba1 {
     background: #00b7ed!important;
 }
-.ba2{
+
+.ba2 {
     background: #32b16c!important;
 }
-.pa1{
+
+.pa1 {
     padding-bottom: 93px;
 }
-.form{
+
+.form {
     width: 100%;
     padding-bottom: 90px;
 }
-.form-box{
+
+.form-box {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     position: relative;
     margin-top: 1rem;
     height: 2.2rem;
     overflow: auto;
 }
-.form-box input{
+
+.form-box input {
     width: 98%;
     height: 2rem;
     border: none;
@@ -585,7 +701,8 @@ body{
     top: 0;
     display: block;
 }
-.form-box i{
+
+.form-box i {
     display: block;
     position: absolute;
     left: 1rem;
@@ -597,8 +714,7 @@ body{
     color: #ff9140;
 }
 
-
-.form-box button{
+.form-box button {
     width: 98%;
     height: 2rem;
     border: none;
@@ -619,25 +735,29 @@ body{
     top: 0;
     display: block;
 }
-.zuobi{
+
+.zuobi {
     width: 100%;
     padding-bottom: 1rem;
     text-align: center;
     border-bottom: 1px solid #ebebeb;
 }
-.zuobi p{
-    margin:0 auto;
+
+.zuobi p {
+    margin: 0 auto;
     text-align: center;
     font-size: 1rem;
     color: #fc2425;
     line-height: 3rem;
 }
-.zuobi span{
+
+.zuobi span {
     display: inline-block;
     color: #333;
     font-size: 0.6rem;
 }
-.yue{
+
+.yue {
     width: 100%;
     background: #fff;
     text-align: center;
@@ -646,19 +766,22 @@ body{
     line-height: 2.5rem;
     border-bottom: 1px solid #ebebeb;
 }
-.tixianfangshi{
+
+.tixianfangshi {
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #ebebeb;
 }
-.zhifufangshi-box{
+
+.zhifufangshi-box {
     width: 90%;
     height: 2.5rem;
-    margin:0 auto;
+    margin: 0 auto;
     overflow: hidden;
 }
-.zhifufangshi-box p{
-    display:inline-block;
+
+.zhifufangshi-box p {
+    display: inline-block;
     height: 1rem;
     line-height: 1rem;
     text-indent: 1rem;
@@ -668,8 +791,9 @@ body{
     overflow: hidden;
     border-left: 3px solid #ff9142;
 }
-.zhifufangshi-box span{
-    display:inline-block;
+
+.zhifufangshi-box span {
+    display: inline-block;
     height: 1rem;
     line-height: 1rem;
     text-indent: 1rem;
@@ -677,20 +801,23 @@ body{
     float: left;
     margin-top: 0.5125rem;
 }
-.tixian-form{
+
+.tixian-form {
     width: 90%;
     height: 2.5rem;
-    margin:0 auto;
+    margin: 0 auto;
     overflow: hidden;
     position: relative;
     border-bottom: 1px solid #ebebeb;
 }
-.tixianfangshi1 form{
+
+.tixianfangshi1 form {
     width: 100%;
     background: #fff;
     overflow: hidden;
 }
-.tixian-form input{
+
+.tixian-form input {
     width: 98%;
     height: 100%;
     border: none;
@@ -708,32 +835,35 @@ body{
     top: 0;
     display: block;
 }
-.tixian-form label{
+
+.tixian-form label {
     position: absolute;
     z-index: 2;
     font-size: 1rem;
     top: 0.7rem;
 }
-.tixianfangshi2{
+
+.tixianfangshi2 {
     width: 100%;
     background: #fff;
     height: 4rem;
     overflow: hidden;
     padding-bottom: 90px;
 }
-.tixianfangshi2 button{
+
+.tixianfangshi2 button {
     width: 90%;
     height: 2rem;
     background: #ff9140;
     color: #fff;
     border-radius: 15px;
-    margin:0 auto;
+    margin: 0 auto;
     border: none;
     line-height: 2rem;
     background: #ff9240;
     border: 1px solid #ff9240;
-    border-radius:0;
-    border-radius:15px;
+    border-radius: 0;
+    border-radius: 15px;
     text-align: center;
     -webkit-appearance: none;
     font-size: 1rem;
@@ -742,27 +872,31 @@ body{
     display: block;
     margin-top: 1rem;
 }
-.release-box{
+
+.release-box {
     width: 90%;
     height: auto;
     overflow: auto;
-    margin:0 auto;
+    margin: 0 auto;
     margin-top: 1rem;
 }
-.release-box label{
+
+.release-box label {
     font-size: 0.9rem;
     color: #323232;
     float: left;
     display: inline-block;
 }
-.release-box span{
+
+.release-box span {
     font-size: 0.8rem;
     color: #cccccc;
     float: right;
 }
-.release-box input{
+
+.release-box input {
     width: 98%;
-    height:1.5rem;
+    height: 1.5rem;
     border: none;
     border: 1px solid #ebebeb;
     background: #f5f5f5;
@@ -779,13 +913,15 @@ body{
     border-radius: 10px;
     margin-top: 10px;
 }
-.release-box ul{
+
+.release-box ul {
     width: 100%;
     margin-top: 25px;
     overflow: auto;
 }
-.release-box ul li{
-    width:17%;
+
+.release-box ul li {
+    width: 17%;
     margin-left: 2%;
     border: 1px solid #ebebeb;
     border-radius: 5px;
@@ -795,29 +931,32 @@ body{
     text-align: center;
     color: #989898;
 }
-.release-box textarea{
+
+.release-box textarea {
     width: 98%;
     height: 8rem;
     font-size: 0.8rem;
-    resize:none;
+    resize: none;
     text-indent: 1rem;
     line-height: 20px;
-    outline:none;
+    outline: none;
     border-radius: 0;
     border: none;
     border: 1px solid #ccc;
-    -webkit-appearance:none;
-    resize:none;
-    border-radius:5px;
+    -webkit-appearance: none;
+    resize: none;
+    border-radius: 5px;
     background: #f5f5f5;
     margin-top: 15px;
 }
-.vr{
-    padding-bottom:90px;
+
+.vr {
+    padding-bottom: 90px;
 }
-.release-box button{
+
+.release-box button {
     width: 40%;
-    height:2rem;
+    height: 2rem;
     background: #999999;
     float: left;
     margin-left: 5%;
@@ -833,41 +972,48 @@ body{
     border-radius: 15px;
     color: #fff;
 }
-.cs{
+
+.cs {
     background: #ff9140!important;
 }
-.text{
+
+.text {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     margin-top: 1rem;
 }
-.text h3{
+
+.text h3 {
     font-size: 0.9rem;
     color: #fc0000;
 }
-.text p{
+
+.text p {
     font-size: 0.8rem;
     color: #333;
     line-height: 1.2rem;
 }
-.ma{
+
+.ma {
     width: 90%;
-    height:2rem;
+    height: 2rem;
     text-align: center;
     line-height: 2rem;
     color: #fff;
     background: #ff9140;
-    margin:0 auto;
+    margin: 0 auto;
     border-radius: 15px;
     margin-top: 1rem;
 }
-.padding{
+
+.padding {
     padding-bottom: 80px;
 }
-.text-box{
+
+.text-box {
     width: 100%;
     height: 100%;
-    position:fixed;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
@@ -875,32 +1021,38 @@ body{
     background-size: 100%;
     background-position: 0;
 }
-.texta{
+
+.texta {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     margin-top: 1rem;
 }
-.texta h3{
+
+.texta h3 {
     font-size: 0.9rem;
     color: #31893b;
 }
-.texta p{
+
+.texta p {
     font-size: 0.8rem;
     color: #333;
     line-height: 1.8rem;
 }
-.texta span{
+
+.texta span {
     font-size: 0.8rem;
-    color:#E56600;
+    color: #E56600;
     line-height: 1.2rem;
 }
-.gongnue{
+
+.gongnue {
     width: 90%;
-    margin:0 auto;
+    margin: 0 auto;
     margin-top: 1rem;
     position: relative;
 }
-.gongnue img{
+
+.gongnue img {
     width: 8rem;
     height: 6rem;
     display: block;
@@ -908,7 +1060,8 @@ body{
     left: 50%;
     margin-left: -4rem;
 }
-.gongnue span{
+
+.gongnue span {
     width: 8rem;
     height: 4rem;
     display: block;
@@ -921,6 +1074,116 @@ body{
     font-weight: bold;
     color: #489239;
 }
-.padding-t{
+
+.padding-t {
     padding-top: 5rem;
+}
+
+.tixiansm {
+    width: 100%;
+    height: 3rem;
+    background: #fff;
+    border-bottom: 1px solid #ebebeb;
+    padding: 0.5rem 0;
+}
+
+.tixiansm p {
+    width: 90%;
+    margin: 0 auto;
+    font-size: 0.8rem;
+    line-height: 1.4rem;
+}
+
+.tixiansm p a {
+    color: #308dec;
+}
+
+.tixianye {
+    width: 100%;
+    height: 3rem;
+    background: #fff;
+    border-bottom: 1px solid #ff9140;
+    padding: 0.5rem 0;
+}
+
+.tixianye-box {
+    width: 90%;
+    margin: 0 auto;
+    font-size: 0.8rem;
+    line-height: 3rem;
+}
+
+.tixianye-box span,
+.tixianye-box p,
+.tixianye-box a {
+    display: inline-block;
+}
+
+.tixianye-box span {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.tixianye-box p {
+    font-size: 1.2rem;
+    color: #fe0000;
+}
+
+.tixianye-box a {
+    width: 5rem;
+    height: 1.8rem;
+    background: #ff9140;
+    color: #fff;
+    text-align: center;
+    line-height: 1.8rem;
+    border-radius: 15px;
+    float: right;
+    margin-top: 0.5rem;
+}
+
+.biao1 {
+    width: 100%;
+    background: #fff;
+}
+
+.biao1 tr {
+    height: 2rem;
+}
+
+.biao1 tr th {
+    text-align: center;
+    line-height: 2.4rem;
+    color: #333333;
+    font-size: 0.9rem;
+}
+
+.biao1 tr td {
+    text-align: center;
+    line-height: 2.2rem;
+    color: #999999;
+    font-size: 0.8rem;
+}
+
+.zt {
+    width: 3rem;
+    height: 1.5rem;
+    background: #dcdcdc;
+    color: #a3a3a3;
+    text-align: center;
+    line-height: 1.5rem;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.tf {
+    width: 3rem;
+    height: 1.5rem;
+    background: #ff9140;
+    color: #fff;
+    text-align: center;
+    line-height: 1.5rem;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-left: 0.5rem;
 }

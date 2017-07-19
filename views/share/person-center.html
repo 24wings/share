@@ -8,24 +8,24 @@
         </div>
         <p class="name">{{user.nickname}}</p>
         <div class="id">编号:<span>{{user._id.toString().substring(0,5)}}</span></div>
-        <i class="iconfont">&#xe618;</i>
+        {%if user.isFinish%} <a href="/share/full-info/"><i class="iconfont">&#xe618;</i></a>{%endif%}
     </div>
 </div>
 <div class="bill">
     <div class="bill-box">
         <i class="iconfont">&#xe608;</i>
         <p>今日收益</p>
-        <span>￥{{user.todayMoney}}</span>
+        <span>￥{{user.todayMoney | money}}</span>
     </div>
     <div class="bill-box">
         <i class="iconfont">&#xe65b;</i>
         <p>账户余额</p>
-        <span>￥{{user.totalMoney}}</span>
+        <span>￥{{user.totalMoney | money}}</span>
     </div>
     <div class="bill-box">
         <i class="iconfont">&#xe620;</i>
         <p>今日收徒</p>
-        <span>{{user.todayStudent}}人</span>
+        <span>{{user.todayStudent }}人</span>
     </div>
     <div class="bill-box">
         <i class="iconfont">&#xe65d;</i>
@@ -41,13 +41,13 @@
         </a>
     </div>
     <div class="operation-box">
-        <a href="wallet.html">
+        <a href="/share/myMoney">
             <p class="p2"><i class="iconfont">&#xe8d3;</i></p>
             <span>我的钱包</span>
         </a>
     </div>
     <div class="operation-box">
-        <a href="">
+        <a href="/share/student-money">
             <p class="p3"><i class="iconfont">&#xe61a;</i></p>
             <span>收徒赚钱</span>
         </a>
@@ -71,7 +71,7 @@
         </a>
     </div>
     <div class="operation-box">
-        <a href="">
+        <a href="/share/guide">
             <p class="p7"><i class="iconfont">&#xe63d;</i></p>
             <span>用户指南</span>
         </a>
@@ -85,9 +85,10 @@
 </div>
 
 </div>
+{% if user.isFinish==false %}
 <a href="/share/full-info/">
     <div class="tishi">
         温馨提示:完善个人信息后才能提现哟！~
     </div>
 </a>
-{%endblock%}
+{%endif%} {%endblock%}

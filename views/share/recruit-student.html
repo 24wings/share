@@ -12,16 +12,28 @@
         <p>徒弟越多，收入越高！</p>
         <p>
             <span>我的邀请码:</span>
-            <span>19200</span>
+            <span>{{user._id.toString().substring(0,5) }}</span>
         </p>
         <li>收徒拿奖励</li>
+
+        <div id="qrcode" style="display:none"></div>
+        <img src="{{user.headimgurl}}" alt="" id="codeImage" class="img-responsive">
+        <div id="url">{{authUrl}}</div>
         <li>二维码收徒</li>
     </div>
 </div>
 
 {%endblock%} {%block script%}
-<script src="/lib/jquery-qrcode/jquery.qrcode.min.js"></script>
+
+
 <script>
-    $('#qrcode').qrcode()
+    try {
+
+        $('#qrcode').qrcode($('#url').text());
+        var base64 = $('#qrcode canvas').get(0).toDataURL("image/png");
+        $('#codeImage').attr('src', base64);
+    } catch (error) {
+        alert(error)
+    }
 </script>
 {%endblock%}
