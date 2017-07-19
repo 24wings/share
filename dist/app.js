@@ -64,6 +64,9 @@ app.use(middle.common.crossDomain)
     .get('/share/getMoney', middle.share.getMoney)
     .get('/share/guide', middle.share.guide)
     .get('/share/task-list', middle.share.taskList)
+    .get('/share/get-money-record', middle.share.getMoneyRecord)
+    .get('/share/fansMoney', middle.share.fansMoney)
+    .get('/share/money-log', middle.share.moneyLog)
     .get('/share/test', async (req, res) => {
     var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
     console.log(params);

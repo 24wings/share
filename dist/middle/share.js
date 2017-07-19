@@ -96,6 +96,7 @@ module.exports = {
         res.json({ ok: true, data: payargs });
     },
     taskDetail: async (req, res) => {
+        var taskId = req.params._id;
         // 如果是
         var user = req.session.user;
         // 若不是注册的用户 , 则跳转到登陆页面, 并转载parent,taskId, 该用户会自动注册,拜师,然后返回这个任务做任务
@@ -105,8 +106,8 @@ module.exports = {
         }
         else {
             var params = await service.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
-            var userId = req.query._id;
-            let task = await service.db.taskModel.findById(req.params._id).exec();
+            var userId = req.session.user._id.toString();
+            let task = await service.db.taskModel.findById(taskId).exec();
             // let user = await service.db.userModel.findById(userId).populate('parent').exec();;
             var isHaveVisited = task.users.some(visitedUser => {
                 return user._id.toString() == visitedUser;
@@ -153,7 +154,8 @@ module.exports = {
                                 // 一个师傅都没有
                                 case 0:
                                     console.log('一个师傅都没有');
-                                    await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    await service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }]);
                                     break;
                                 case 1://5%
                                     console.log('一位师傅开始返利');
@@ -164,7 +166,11 @@ module.exports = {
                                     taskAllMoney = taskAllMoney * 0.95;
                                     // 
                                     await service.db.userModel.findById(firstParent).update({ $inc: { totalMoney: firstMoney, todayMoney: firstMoney, historyMoney: firstMoney } }).exec();
-                                    await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    // await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    await service.dbDo.returnMoney([
+                                        { userId: firstParent, money: firstMoney, task: taskId },
+                                        { userId: userId, money: taskAllMoney, task: taskId }
+                                    ]);
                                     break;
                                 //两个师傅  5% 10%     本人 85%
                                 case 2:
@@ -174,9 +180,14 @@ module.exports = {
                                     let twoMoney = 0.10 * taskAllMoney;
                                     // 余额
                                     taskAllMoney *= 0.85;
-                                    await service.db.userModel.findByIdAndUpdate(oneParent._id.toString(), { $inc: { totalMoney: oneMoney, todayMoney: oneMoney, historyMoney: oneMoney } }).exec();
-                                    await service.db.userModel.findByIdAndUpdate(twoParent._id.toString(), { $inc: { totalMoney: twoMoney, todayMoney: twoMoney, historyMoney: twoMoney } }).exec();
-                                    await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    // await service.db.userModel.findByIdAndUpdate(oneParent._id.toString(), { $inc: { totalMoney: oneMoney, todayMoney: oneMoney, historyMoney: oneMoney } }).exec();
+                                    // await service.db.userModel.findByIdAndUpdate(twoParent._id.toString(), { $inc: { totalMoney: twoMoney, todayMoney: twoMoney, historyMoney: twoMoney } }).exec();
+                                    // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    await service.dbDo.returnMoney([
+                                        { money: oneMoney, task: taskId, userId: oneParent },
+                                        { money: twoMoney, task: taskId, userId: twoParent },
+                                        { money: taskAllMoney, task: taskId, userId: userId }
+                                    ]);
                                     break;
                                 case 3:
                                     let iParent = parents[0];
@@ -187,10 +198,16 @@ module.exports = {
                                     let iiiMoney = 0.15 * taskAllMoney;
                                     // 余额
                                     taskAllMoney *= 0.70;
-                                    await service.db.userModel.findByIdAndUpdate(iParent._id.toString(), { $inc: { totalMoney: iMoney, todayMoney: iMoney, historyMoney: iMoney } }).exec();
-                                    await service.db.userModel.findByIdAndUpdate(iiParent._id.toString(), { $inc: { totalMoney: iiMoney, todayMoney: iiMoney, historyMoney: iiMoney } }).exec();
-                                    await service.db.userModel.findByIdAndUpdate(iiiParent._id.toString(), { $inc: { totalMoney: iiiMoney, todayMoney: iiiMoney, historyMoney: iiiMoney } }).exec();
-                                    await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    // await service.db.userModel.findByIdAndUpdate(iParent._id.toString(), { $inc: { totalMoney: iMoney, todayMoney: iMoney, historyMoney: iMoney } }).exec();
+                                    // await service.db.userModel.findByIdAndUpdate(iiParent._id.toString(), { $inc: { totalMoney: iiMoney, todayMoney: iiMoney, historyMoney: iiMoney } }).exec();
+                                    // await service.db.userModel.findByIdAndUpdate(iiiParent._id.toString(), { $inc: { totalMoney: iiiMoney, todayMoney: iiiMoney, historyMoney: iiiMoney } }).exec();
+                                    // await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                    await service.dbDo.returnMoney([
+                                        { task: taskId, userId: iParent, money: iMoney },
+                                        { task: taskId, userId: iiParent, money: iiMoney },
+                                        { task: taskId, userId: iiiParent, money: iiiMoney },
+                                        { task: taskId, userId, money: taskAllMoney }
+                                    ]);
                                     break;
                             }
                         }
@@ -231,5 +248,15 @@ module.exports = {
             tasks = await service.db.taskModel.find({ publisher: req.session.user._id.toString(), active: true }).exec();
         }
         res.render('share/task-list', { tasks });
+    },
+    /**钱的记录 */
+    getMoneyRecord: (req, res) => {
+        res.render('share/get-money-record', { user: req.session.user });
+    },
+    fansMoney: async (req, res) => {
+        res.render('share/fans-money', { user: req.session.user, });
+    },
+    moneyLog: async (req, res) => {
+        res.render('share/money-log', {});
     }
 };

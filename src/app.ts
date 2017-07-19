@@ -32,8 +32,7 @@ njk.addFilter('money', function (money: number) {
 })
 njk.addFilter('boolean', function (ok) {
     return !!ok;
-})
-
+});
 
 // app.set('trust proxy', 1) // trust first proxy 
 
@@ -53,10 +52,7 @@ app.use(middle.common.crossDomain)
         cookie: { maxAge: 60 * 60 * 24 * 1000 }
     }))
     // 静态文件服务器
-
     .use(middle.common.storeUser)
-
-
     // 下面是路由
     .use('/wechat/oauth', middle.common.wechatOauth)
     .use('/payment', (req, res, next) => { })
@@ -83,6 +79,9 @@ app.use(middle.common.crossDomain)
     .get('/share/getMoney', middle.share.getMoney)
     .get('/share/guide', middle.share.guide)
     .get('/share/task-list', middle.share.taskList)
+    .get('/share/get-money-record', middle.share.getMoneyRecord)
+    .get('/share/fansMoney', middle.share.fansMoney)
+    .get('/share/money-log', middle.share.moneyLog)
     // test api
     .get('/share/test', async (req, res) => {
         var params = await services.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
@@ -99,7 +98,6 @@ app.use(middle.common.crossDomain)
     .post('/rest/:modelName', middle.rest.postOne)
     .get('/rest/:modelName/:_id', middle.rest.getDetail)
     .delete('/rest/:modelName/:_id', middle.rest.deleteOne)
-
     .use(middle.common.notFound)
     .use(middle.common.errorHandler);
 export =app;  
