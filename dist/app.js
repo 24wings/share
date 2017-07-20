@@ -2,16 +2,12 @@
 const express = require("express");
 const path = require("path");
 var favicon = require('serve-favicon');
-const logger = require("morgan");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const bodyParser = require("body-parser");
-const middle = require("./middle");
 const nunjucks = require("nunjucks");
-const services = require("./services");
+const service = require("./services");
 const route_1 = require("./route");
+const middleware_1 = require("./middleware");
 const moment = require("moment");
-const ShareRoute_1 = require("./middle/ShareRoute");
+const middle_1 = require("./middle");
 var app = express();
 var njk = nunjucks.configure(path.resolve(__dirname, '../views'), {
     autoescape: true,
@@ -32,30 +28,25 @@ njk.addFilter('boolean', function (ok) {
     return !!ok;
 });
 // app.set('trust proxy', 1) // trust first proxy 
-app.use(middle.common.crossDomain)
-    .use(express.static(path.resolve(__dirname, '../public')))
+app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(middle_1.CommonMiddle))
     .set('view engine', 'html')
-    .use(logger('dev'))
-    .use(bodyParser.json({ limit: '50mb' }))
-    .use(bodyParser.urlencoded({ extended: false }))
-    .use(cookieParser())
-    .use(session({
-    secret: 'keyboard cat',
-    // resave: false,
-    // saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 24 * 1000 }
+    .all('/', service.wechat.wechat(service.CONFIG.wechat, (req, res, next) => {
+    var parent = req.query.parent;
+    console.log(req.query);
+    var url = service.wechat.client.getAuthorizeURL(`${service.CONFIG.domain}/wechat/oauth` + (parent ? '?parent=' + parent : ''), '', 'snsapi_userinfo');
+    res.reply({ content: url, type: 'text' });
 }))
-    .use(middle.common.storeUser)
-    .use('/wechat/oauth', middle.common.wechatOauth)
-    .use('/payment', (req, res, next) => { })
-    .all('/', middle.common.replyAuthUrl)
-    .use('/share/:action', route_1.RouteBuilder.buildRoute(ShareRoute_1.ShareRoute))
-    .post('/api/uploadBase64', middle.common.uploadBase64)
-    .get('/api/jssdk', async (req, res) => { var params = await services.wechat.getJSSDKApiParams({ url: req.query.url || 'http://' + req.hostname + req.originalUrl }); res.json({ ok: true, data: params }); })
-    .get('/rest/:modelName', middle.rest.getList)
-    .post('/rest/:modelName', middle.rest.postOne)
-    .get('/rest/:modelName/:_id', middle.rest.getDetail)
-    .delete('/rest/:modelName/:_id', middle.rest.deleteOne)
-    .use(middle.common.notFound)
-    .use(middle.common.errorHandler);
+    .use('/wechat/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.WechatRoute))
+    .use('/share/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.ShareRoute))
+    .use('/api/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.ApiRoute))
+    .use('/share-admin/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.ShareAdminRoute))
+    .use((err, req, res, next) => {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    console.log(err);
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+});
 module.exports = app;

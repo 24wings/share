@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs = require("fs");
 exports.CONFIG = {
+    port: 80,
     oldAuth: 'shop.xxbuy.net',
+    uploadDir: path.resolve(__dirname, '../../public/upload'),
     newAuth: '',
     domain: 'http://wq8.youqulexiang.com',
     oauthPath: '/wechat/oauth',
@@ -26,6 +28,8 @@ exports.CONFIG = {
         "wechatToken": "sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR",
         "appId": "wx8bdcc982b8477839",
         "appSecret": "ffe69aaff2487a7f1557f4e2e33952e6",
-    }
+    },
     // wechatClient: ''
+    // 静态文件服务器
+    publicDirs: [path.resolve(__dirname, '../../public')]
 };

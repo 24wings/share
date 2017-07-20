@@ -1,19 +1,51 @@
-import { IRoute, BaseRoute, Request, Response } from '../route';
+import { Route } from '../route';
 
-export class ShareRoute extends BaseRoute {
+export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     doAction(action: string, method: string) {
         switch (action) {
-            case 'home':
-                return this.home;
-
+            case 'index':
+                return this.index;
+            case 'recruit-student':
+                return this.recruitStudent;
+            case 'person-center':
+                return this.personCenter;
+            case 'full-info':
+                return method == this.GET ? this.fullInfoPage : this.fixFullInfo;
+            case 'detail':
+                return this.detail;
+            case 'publish':
+                return method == this.GET ? this.publishPage : this.publishTask;
+            case 'payTaskMoney':
+                return this.payTaskMoney;
+            case 'shop-center':
+                return this.shopCenter;
+            case 'student-money':
+                return this.studentMoney;
+            case 'myMoney':
+                return this.myMoney;
+            case 'taskDetail':
+                return this.taskDetail;
+            case 'getMoney':
+                return this.getMoney;
+            case 'guide':
+                return this.guide;
+            case 'task-list':
+                return this.taskList;
+            case 'get-money-record':
+                return this.getMoneyRecord;
+            case 'fansMoney':
+                return this.fansMoney;
+            case 'money-log':
+                return this.moneyLog;
             default:
-                return this.home;
+                return this.index;
         }
-
-
+    }
+    constructor() {
+        super();
     }
 
-    async home(req: Request, res: Response) {
+    async index(req: Route.Request, res: Route.Response) {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
@@ -32,7 +64,7 @@ export class ShareRoute extends BaseRoute {
         await res.render('share/index', { taskTag, tasks, taskTags, user });
     }
 
-    async recruitStudent(req: Request, res: Response) {
+    async recruitStudent(req: Route.Request, res: Route.Response) {
         var user = req.session.user;
         var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
         await res.render('share/recruit-student', { authUrl, user });
@@ -40,7 +72,7 @@ export class ShareRoute extends BaseRoute {
 
 
     /**个人中心 */
-    async  personCenter(req: Request, res: Response) {
+    async  personCenter(req: Route.Request, res: Route.Response) {
         let user = req.session.user;
         user = await this.service.db.userModel.findById(user._id.toString()).exec();
 
@@ -52,7 +84,7 @@ export class ShareRoute extends BaseRoute {
 
 
     /**完善信息 */
-    fullInfoPage(req: Request, res: Response) {
+    fullInfoPage(req: Route.Request, res: Route.Response) {
         res.render('share/full-info')
     }
     async fixFullInfo(req, res) {
@@ -61,15 +93,15 @@ export class ShareRoute extends BaseRoute {
         res.redirect('/share/person-center')
     }
     /**文章详情页面 */
-    async  detail(req: Request, res: Response) {
+    async  detail(req: Route.Request, res: Route.Response) {
         res.render('share/detail')
     }
-    async  publishPage(req: Request, res: Response) {
+    async  publishPage(req: Route.Request, res: Route.Response) {
         let taskTags = await this.service.db.taskTagModel.find().exec();
         res.render('share/publish', { taskTags })
     }
     /**商户中心 */
-    async  shopCenter(req: Request, res: Response) {
+    async  shopCenter(req: Route.Request, res: Route.Response) {
 
         var tasks = await this.service.db.taskModel.find({ publisher: req.session.user._id.toString() }).exec();
         let activeNum = tasks.filter(task => task.active).length;
@@ -92,16 +124,16 @@ export class ShareRoute extends BaseRoute {
      * 检查openid是否存在,若用户已经存在,则登陆,若用户不存在,则创建新用户
      * 若有上级parentId存在则作为用户的师傅
      */
-    checkOpenIdExisit: (req: Request, res: Response)  {
+    checkOpenIdExisit(req: Route.Request, res: Route.Response) {
 
     }
-    async   publishTask(req: Request, res: Response) {
+    async   publishTask(req: Route.Request, res: Route.Response) {
         let { title, content, imageUrl, taskTag, shareMoney, totalMoney, websiteUrl } = req.body;
         let newTask = await new this.service.db.taskModel({ title, taskTag, content, imageUrl, totalMoney, fee: totalMoney, shareMoney, websiteUrl, publisher: req.session.user._id.toString(), active: true, msg: '审核通过' }).save();
-        res.redirect('/share');
+        res.redirect('/share/index');
     }
 
-    async  payTaskMoney(req: Request, res: Response) {
+    async  payTaskMoney(req: Route.Request, res: Route.Response) {
         let ip = req.ip.indexOf('::ffff:') == 0 ? req.ip.substring(req.ip.indexOf('::ffff:') + 7) : req.ip;
         console.log(ip);
         var payargs = await this.service.wechat.wechatPay({
@@ -119,13 +151,14 @@ export class ShareRoute extends BaseRoute {
      * @param req 
      * @param res 
      */
-    async  taskDetail(req: Request, res: Response) {
-        var taskId = req.params._id;
+    async  taskDetail(req: Route.Request, res: Route.Response) {
+        var taskId = req.query.taskId;
+        var shareUserId = req.query.shareUserId;
         // 如果是
         var user = req.session.user;
         // 若不是注册的用户 , 则跳转到登陆页面, 并转载parent,taskId, 该用户会自动注册,拜师,然后返回这个任务做任务
         if (!user) {
-            var url = await this.service.wechat.getAuthorizeURL({ parent: req.query._id, taskId: req.params._id })
+            var url = await this.service.wechat.getAuthorizeURL({ parent: shareUserId, taskId: req.params._id })
             res.redirect(url);
 
         } else {
@@ -137,11 +170,12 @@ export class ShareRoute extends BaseRoute {
                 return user._id.toString() == visitedUser;
             });
             // 新的观看的人 
-            if (!isHaveVisited) {
+            if (!isHaveVisited) { 
+                console.log('新的观看的人');
                 // 任务算新点击一次
                 await task.update({ $inc: { clickNum: 1 } }).exec();
 
-                user = await this.service.db.userModel.findById(req.session.user._id).exec();
+                user = await this.service.db.userModel.findById(req.session.user._id.toString()).exec();
                 // 任务 增加点击数量,ip访问数量,任务消耗数量, 
                 /**
                  * 
@@ -150,11 +184,15 @@ export class ShareRoute extends BaseRoute {
                  */
                 if (task.totalMoney - task.shareMoney < 0) {
                     await task.update({ $set: { active: false } }).exec();
+                    console.log('钱不够');
                 } else {
+                    console.log('任务被点击一次');
                     task.update({ $inc: { clickNum: 1 }, $push: { users: user._id.toString() }, $set: { totalMoney: task.totalMoney - task.shareMoney } }).exec();
                     //发布任务的人获得奖金 上级 5%   上上级 10% 上上上级 15%
                     var taskAllMoney = task.shareMoney;
                     if (user) {
+                        //
+                        console.log('有用户');
                         var parents = [];
                         /**
                          * 有师傅
@@ -179,7 +217,7 @@ export class ShareRoute extends BaseRoute {
                                 case 0:
                                     console.log('一个师傅都没有');
                                     // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }]);
+                                    await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }],task.shareMoney);
                                     break;
                                 case 1: //5%
                                     console.log('一位师傅开始返利');
@@ -193,7 +231,7 @@ export class ShareRoute extends BaseRoute {
                                     // await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
                                     await this.service.dbDo.returnMoney([
                                         { userId: firstParent, money: firstMoney, task: taskId },
-                                        { userId: userId, money: taskAllMoney, task: taskId }]);
+                                        { userId: userId, money: taskAllMoney, task: taskId }],task.shareMoney);
                                     break
                                 //两个师傅  5% 10%     本人 85%
                                 case 2:
@@ -210,7 +248,7 @@ export class ShareRoute extends BaseRoute {
                                         { money: oneMoney, task: taskId, userId: oneParent },
                                         { money: twoMoney, task: taskId, userId: twoParent },
                                         { money: taskAllMoney, task: taskId, userId: userId }
-                                    ])
+                                    ],task.shareMoney)
                                     break;
                                 case 3:
                                     let iParent = parents[0];
@@ -225,12 +263,12 @@ export class ShareRoute extends BaseRoute {
                                     // await service.db.userModel.findByIdAndUpdate(iiParent._id.toString(), { $inc: { totalMoney: iiMoney, todayMoney: iiMoney, historyMoney: iiMoney } }).exec();
                                     // await service.db.userModel.findByIdAndUpdate(iiiParent._id.toString(), { $inc: { totalMoney: iiiMoney, todayMoney: iiiMoney, historyMoney: iiiMoney } }).exec();
                                     // await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await service.dbDo.returnMoney([
+                                    await this.service.dbDo.returnMoney([
                                         { task: taskId, userId: iParent, money: iMoney },
                                         { task: taskId, userId: iiParent, money: iiMoney },
                                         { task: taskId, userId: iiiParent, money: iiiMoney },
                                         { task: taskId, userId, money: taskAllMoney }
-                                    ])
+                                    ],task.shareMoney)
                                     break;
                                 // 三个师傅 
                             }
@@ -247,23 +285,23 @@ export class ShareRoute extends BaseRoute {
             await res.render('share/detail', { task, params });
         }
     }
-    studentMoney(req: Request, res: Response) {
+    studentMoney(req: Route.Request, res: Route.Response) {
         var user = req.session.user;
         res.render('share/student-money', {
             user
         });
     }
-    async myMoney(req: Request, res: Response) {
+    async myMoney(req: Route.Request, res: Route.Response) {
         res.render('share/myMoney', {});
     }
 
-    async    getMoney(req: Request, res: Response) {
+    async    getMoney(req: Route.Request, res: Route.Response) {
         res.render('share/getMoney', { user: req.session.user });
     }
-    async　guide(req: Request, res: Response) {
+    async　guide(req: Route.Request, res: Route.Response) {
         res.render('share/guide', {})
     }
-    async　taskList(req: Request, res: Response) {
+    async　taskList(req: Route.Request, res: Route.Response) {
         var active = !req.query.active;
         let tasks = [];
         if (active) {
@@ -274,13 +312,13 @@ export class ShareRoute extends BaseRoute {
         res.render('share/task-list', { tasks });
     }
     /**钱的记录 */
-    getMoneyRecord(req: Request, res: Response) {
+    getMoneyRecord(req: Route.Request, res: Route.Response) {
         res.render('share/get-money-record', { user: req.session.user });
     }
-    async fansMoney(req: Request, res: Response) {
+    async fansMoney(req: Route.Request, res: Route.Response) {
         res.render('share/fans-money', { user: req.session.user, })
     }
-    async moneyLog(req: Request, res: Response) {
+    async moneyLog(req: Route.Request, res: Route.Response) {
         res.render('share/money-log', {});
     }
 }

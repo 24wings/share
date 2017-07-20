@@ -6,7 +6,7 @@
 <div class="animated fadeInRight">
     <div class="center">
         {%for task in tasks%}
-        <a class="center-box" href="/task/{{task._id.toString()}}?_id={{user._id.toString()}}">
+        <a class="center-box" href="/share/taskDetail?taskId={{task._id.toString()}}&shareUserId={{user._id.toString()}}">
             <div class="center-box-cr">
                 <img src="{{task.imageUrl}}" alt="">
                 <p>{{task.title}}</p>

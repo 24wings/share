@@ -5,4 +5,4 @@ var taskTagSchema = new mongoose.Schema({
     name: String,
     createDt: { type: Date, default: Date.now }
 });
-exports.taskTagModel = mongoose.model('TaskModel', taskTagSchema);
+exports.taskTagModel = mongoose.model('TaskTag', taskTagSchema);

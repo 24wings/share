@@ -1,11 +1,12 @@
 import { CONFIG } from './config';
 const WechatAPI = require('wechat-api');
+var wechat = require('wechat');
 import crypto = require('crypto');
 var OAuth = require('wechat-oauth');
 var api = new WechatAPI(CONFIG.wechat.appid, CONFIG.wechat.appsecret);
 var client = new OAuth(CONFIG.wechat.appid, CONFIG.wechat.appsecret);
 
-
+var wx = require('wechat-jssdk');
 var Payment = require('wechat-pay').Payment;
 
 var payment = new Payment(CONFIG.wechatPay);
@@ -21,6 +22,10 @@ interface WeixinOrder {
 }
 
 class WeChatService {
+    wx = wx;
+    client = client;
+    wechat = wechat;
+    payment = payment;
     /**
      * 微信公众平台支付接口
      * 参数订单数据

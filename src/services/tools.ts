@@ -1,4 +1,4 @@
-import { IRoute } from '../route';
+
 import express = require('express');
 export = {
     pureIp: (ip: string) => {

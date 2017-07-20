@@ -1,13 +1,21 @@
 "use strict";
 const config_1 = require("./config");
 const WechatAPI = require('wechat-api');
+var wechat = require('wechat');
 const crypto = require("crypto");
 var OAuth = require('wechat-oauth');
 var api = new WechatAPI(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret);
 var client = new OAuth(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret);
+var wx = require('wechat-jssdk');
 var Payment = require('wechat-pay').Payment;
 var payment = new Payment(config_1.CONFIG.wechatPay);
 class WeChatService {
+    constructor() {
+        this.wx = wx;
+        this.client = client;
+        this.wechat = wechat;
+        this.payment = payment;
+    }
     /**
      * 微信公众平台支付接口
      * 参数订单数据

@@ -9,4 +9,4 @@ var taskTagSchema = new mongoose.Schema({
 
 
 
-export var taskTagModel = mongoose.model('TaskModel', taskTagSchema);
+export var taskTagModel = mongoose.model('TaskTag', taskTagSchema);
