@@ -1,5 +1,35 @@
-{%extends './layout/base.html'%} {%block content%}
-<div class="animated fadeInRight">
+{%extends './layout/base.html'%} {%block head %}
+<style>
+    .img-response {
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .qrcode-img {
+        position: fixed;
+        right: 42px;
+        bottom: 116px;
+        width: 101px;
+        height: 104px;
+    }
+    
+    .qrcode-img h2 {
+        position: absolute;
+        top: 40vh;
+        color: red;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .background {
+        height: 100vh;
+        width: 100vw;
+        background: url('/images/jnooo2.jpg') no-repeat;
+        background-size: cover;
+    }
+</style>
+{%endblock%} {%block content%}
+<div class="animated fadeInRight base-page">
     <div class="shuoming">
         <img src="/images/st.jpg" alt="">
     </div>
@@ -14,26 +44,57 @@
             <span>我的邀请码:</span>
             <span>{{user._id.toString().substring(0,5) }}</span>
         </p>
-        <li>收徒拿奖励</li>
+        <li onclick="toggleQrcode()">收徒拿奖励</li>
 
         <div id="qrcode" style="display:none"></div>
-        <img src="{{user.headimgurl}}" alt="" id="codeImage" class="img-responsive">
+        <img src="{{user}}" alt="" id="codeImage" class="img-responsive">
         <!-- <div id="url">{{authUrl}}</div> -->
         <li>二维码收徒</li>
     </div>
+    <div id="images">
+
+    </div>
+</div>
+
+<div class="qrcode-page" style="display:none;">
+    <h2>已经有 54321 人正在赚钱了</h2>
+    <div class="background"></div>
 </div>
 
 {%endblock%} {%block script%}
 
 
 <script>
-    try {
+    $('#qrcode').qrcode('dsasd')
+    var base64 = $('#qrcode canvas').get(0).toDataURL("image/png");
+    // $('#codeImage').attr('src', base64);
 
-        $('#qrcode').qrcode($('#url').text());
-        var base64 = $('#qrcode canvas').get(0).toDataURL("image/png");
-        $('#codeImage').attr('src', base64);
-    } catch (error) {
-        alert(error)
+    $('#qrcode').remove();
+    var image = new Image();
+    image.src = base64;
+    image.width = 256;
+    $(image).addClass('qrcode-img').css({
+        position: 'fixed',
+        right: 20,
+        bottom: 150
+    }).appendTo('body').hide();
+    $('.qrcode-page').click(function() {
+        toggleQrcode();
+    })
+
+    var showQrcode = false;
+
+    function toggleQrcode() {
+        if (showQrcode) {
+
+            $('.base-page').show();
+            $('.qrcode-page, .qrcode-img').hide();
+        } else {
+            $('.base-page').hide();
+            $('.qrcode-page, .qrcode-img').show();
+        }
+        showQrcode = !showQrcode;
+
     }
 </script>
 {%endblock%}

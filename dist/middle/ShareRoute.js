@@ -62,12 +62,12 @@ class ShareRoute extends route_1.Route.BaseRoute {
         else {
             tasks = await this.service.db.taskModel.find().limit(100).exec();
         }
-        await res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
+        await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
     }
     async recruitStudent(req, res) {
-        var user = req.session.user;
-        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
-        await res.render('share/recruit-student', { authUrl, user });
+        // var user = req.session.user;
+        // var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
+        await res.render('share/recruit-student', {});
     }
     /**个人中心 */
     async personCenter(req, res) {
@@ -78,10 +78,14 @@ class ShareRoute extends route_1.Route.BaseRoute {
             user
         });
     }
-    /**完善信息 */
+    /**完善信息页面 */
     fullInfoPage(req, res) {
         res.render('share/full-info');
     }
+    /**
+     *
+     * 提交表单
+     */
     async fixFullInfo(req, res) {
         let { qq, phone, weixinId } = req.body;
         await this.service.db.userModel.findById(req.session.user._id.toString()).update({ qq, phone, weixinId, isFinish: true }).exec();
@@ -138,8 +142,7 @@ class ShareRoute extends route_1.Route.BaseRoute {
     }
     /**
      * 三级分销
-     * @param req
-     * @param res
+     *
      */
     async taskDetail(req, res) {
         var taskId = req.query.taskId;

@@ -61,13 +61,16 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
         } else {
             tasks = await this.service.db.taskModel.find().limit(100).exec();
         }
-        await res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
+        await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
     }
 
     async recruitStudent(req: Route.Request, res: Route.Response) {
-        var user = req.session.user;
-        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
-        await res.render('share/recruit-student', { authUrl, user });
+        // var user = req.session.user;
+        // var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
+        await res.render('share/recruit-student', {
+            // authUrl,
+            // user
+        });
     }
 
 
@@ -83,10 +86,16 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     }
 
 
-    /**完善信息 */
+    /**完善信息页面 */
+
     fullInfoPage(req: Route.Request, res: Route.Response) {
         res.render('share/full-info')
     }
+
+    /**
+     * 
+     * 提交表单
+     */
     async fixFullInfo(req, res) {
         let { qq, phone, weixinId } = req.body
         await this.service.db.userModel.findById(req.session.user._id.toString()).update({ qq, phone, weixinId, isFinish: true }).exec();
@@ -148,8 +157,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
 
     /**
      * 三级分销
-     * @param req 
-     * @param res 
+     * 
      */
     async  taskDetail(req: Route.Request, res: Route.Response) {
         var taskId = req.query.taskId;
