@@ -1,7 +1,7 @@
  {%extends './layout/base.html'%}{%block content%}
 <nav class="nav">
-    <a href="/share/" class="active">推荐</a> {% for tag in taskTags%}
-    <a href="/share/?taskTag={{tag._id.toString()}}">{{tag.name}}</a> {%endfor%}
+    <a href="/share/index" {%if queryTaskTag | myFault %} class="active" {%endif%}>推荐</a> {% for tag in taskTags%}
+    <a href="/share/index?taskTag={{tag._id.toString()}}" {%if queryTaskTag==tag._id.toString() %} class="active" {%endif%}>{{tag.name}}</a> {%endfor%}
 </nav>
 <div class="animated fadeInRight">
     <div class="center">

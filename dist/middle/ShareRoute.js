@@ -62,7 +62,7 @@ class ShareRoute extends route_1.Route.BaseRoute {
         else {
             tasks = await this.service.db.taskModel.find().limit(100).exec();
         }
-        await res.render('share/index', { taskTag, tasks, taskTags, user });
+        await res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
     }
     async recruitStudent(req, res) {
         var user = req.session.user;

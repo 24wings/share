@@ -1,5 +1,5 @@
 import mongoose = require('mongoose');
-import {IUser} from './User';
+import { IUser } from './User';
 
 var taskRecordSchema = new mongoose.Schema({
     task: { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
@@ -15,22 +15,22 @@ var taskRecordSchema = new mongoose.Schema({
 });
 
 
-export interface ITaskRecord extends mongoose.Document{
-    task:ITaskRecord | string;
-    totalFee:number;
-    shareDetail:{money:number,user:IUser | string}[];
-    createDt?:Date;
+export interface ITaskRecord extends mongoose.Document {
+    task: ITaskRecord | string;
+    totalFee: number;
+    shareDetail: { money: number, user: IUser | string }[];
+    createDt?: Date;
 
-    
-}
-
-export interface TaskRecord{
-        task:ITaskRecord | string;
-    totalFee:number;
-    shareDetail:{money:number,user:IUser | string}[];
-    createDt?:Date;
 
 }
 
+export interface TaskRecord {
+    task: ITaskRecord | string;
+    totalFee: number;
+    shareDetail: { money: number, user: IUser | string }[];
+    createDt?: Date;
 
-export var  taskRecodeModel =  mongoose.model<ITaskRecord>('TaskRecord',taskRecordSchema);
+}
+
+
+export var taskRecordModel = mongoose.model<ITaskRecord>('TaskRecord', taskRecordSchema);

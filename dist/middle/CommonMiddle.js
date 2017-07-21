@@ -56,6 +56,8 @@ class CommonMiddle extends middleware_1.Middleware.BaseMiddleware {
         if (req.session.accessToken) {
             res.locals.accessToken = req.session.accessToken;
         }
+        req.session.path = res.locals.path = req.path;
+        console.log(req.path);
         next();
     }
     errorHandle(err, req, res, next) {

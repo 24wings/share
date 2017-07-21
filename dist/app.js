@@ -27,6 +27,9 @@ njk.addFilter('money', function (money) {
 njk.addFilter('boolean', function (ok) {
     return !!ok;
 });
+njk.addFilter('myFault', function (ok) {
+    return !ok;
+});
 // app.set('trust proxy', 1) // trust first proxy 
 app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(middle_1.CommonMiddle))
     .set('view engine', 'html')

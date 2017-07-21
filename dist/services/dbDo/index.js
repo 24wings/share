@@ -9,12 +9,11 @@ module.exports = {
     returnMoney: async (orders, totalFee) => {
         for (var order of orders) {
             await models_1.db.userModel.findById(order.userId).update({ $inc: { todayMoney: order.money, totalMoney: order.money, historyMoney: order.money } }).exec();
-            await new models_1.db.taskOrder({ task: order.task, money: order.money, toPeople: order.userId }).save();
         }
         var shareDetail = orders.map(order => { return { user: order.userId, money: order.money }; });
         // 每次插入一个订单
         let taskRecord = { task: order.task, shareDetail: shareDetail, totalFee: totalFee };
         console.log(taskRecord);
-        await new models_1.db.taskRecodeModel(taskRecord).save();
+        await new models_1.db.taskRecordModel(taskRecord).save();
     }
 };

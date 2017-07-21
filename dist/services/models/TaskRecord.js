@@ -12,4 +12,4 @@ var taskRecordSchema = new mongoose.Schema({
     },
     createDt: { type: Date, default: Date.now },
 });
-exports.taskRecodeModel = mongoose.model('TaskRecord', taskRecordSchema);
+exports.taskRecordModel = mongoose.model('TaskRecord', taskRecordSchema);

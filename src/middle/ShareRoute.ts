@@ -61,7 +61,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
         } else {
             tasks = await this.service.db.taskModel.find().limit(100).exec();
         }
-        await res.render('share/index', { taskTag, tasks, taskTags, user });
+        await res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
     }
 
     async recruitStudent(req: Route.Request, res: Route.Response) {
@@ -170,7 +170,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
                 return user._id.toString() == visitedUser;
             });
             // 新的观看的人 
-            if (!isHaveVisited) { 
+            if (!isHaveVisited) {
                 console.log('新的观看的人');
                 // 任务算新点击一次
                 await task.update({ $inc: { clickNum: 1 } }).exec();
@@ -217,7 +217,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
                                 case 0:
                                     console.log('一个师傅都没有');
                                     // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }],task.shareMoney);
+                                    await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }], task.shareMoney);
                                     break;
                                 case 1: //5%
                                     console.log('一位师傅开始返利');
@@ -231,7 +231,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
                                     // await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
                                     await this.service.dbDo.returnMoney([
                                         { userId: firstParent, money: firstMoney, task: taskId },
-                                        { userId: userId, money: taskAllMoney, task: taskId }],task.shareMoney);
+                                        { userId: userId, money: taskAllMoney, task: taskId }], task.shareMoney);
                                     break
                                 //两个师傅  5% 10%     本人 85%
                                 case 2:
@@ -248,7 +248,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
                                         { money: oneMoney, task: taskId, userId: oneParent },
                                         { money: twoMoney, task: taskId, userId: twoParent },
                                         { money: taskAllMoney, task: taskId, userId: userId }
-                                    ],task.shareMoney)
+                                    ], task.shareMoney)
                                     break;
                                 case 3:
                                     let iParent = parents[0];
@@ -268,7 +268,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
                                         { task: taskId, userId: iiParent, money: iiMoney },
                                         { task: taskId, userId: iiiParent, money: iiiMoney },
                                         { task: taskId, userId, money: taskAllMoney }
-                                    ],task.shareMoney)
+                                    ], task.shareMoney)
                                     break;
                                 // 三个师傅 
                             }

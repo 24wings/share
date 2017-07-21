@@ -1,4 +1,5 @@
-{%extends './layout/base.html'%} {%block content%}
+{%extends './layout/base.html'%} {%block title%} 订单列表 {%endblock%} {%block content%}
+
 <div class="content-page">
     <div class="content">
         <div class="card-box">
@@ -7,7 +8,7 @@
                 <div class="am-u-sm-12 am-u-md-6">
                     <div class="am-btn-toolbar">
                         <div class="am-btn-group am-btn-group-xs">
-                            <a href="/share-admin/taskTag-new" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</a>
+                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
                             <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
                             <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
                             <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
@@ -44,18 +45,17 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    {%for taskTag in taskTags%}
+                                    {%for taskRecord in taskRecords%}
                                     <td><input type="checkbox" /></td>
-                                    <td>{{taskTag._id.toString()}}</td>
-                                    <td><a href="/share-admin/taskTag-detail?_id={{taskTag._id.toString()}}">{{taskTag.name}}</a></td>
-
-                                    <td class="am-hide-sm-only">{{taskTag.createDt | time}}</td>
+                                    <td><a href="/share-admin/taskRecord-detail?_id={{taskRecord._id.toString()}}">{{taskRecord._id.toString()}}</a></td>
+                                    <td><a href="/share-admin/taskRecord-detail?_id={{taskRecord._id.toString()}}">{{taskRecord.task.title}}</a></td>
+                                    <td class="am-hide-sm-only">{{taskRecord.createDt | time}}</td>
                                     <td>
                                         <div class="am-btn-toolbar">
                                             <div class="am-btn-group am-btn-group-xs">
                                                 <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
                                                 <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span class="am-icon-copy"></span> 复制</button>
-                                                <a href="/share-admin/taskTag-delete?_id={{taskTag._id.toString()}}" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only "><span class="am-icon-trash-o "></span> 删除</button>
+                                                <a href="/share-admin/taskRecord-delete?_id={{task._id.toString()}}" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span> 删除</a>
                                             </div>
                                         </div>
                                     </td>
@@ -64,22 +64,22 @@
 
                             </tbody>
                         </table>
-                        <div class="am-cf ">
-                            共 {{taskTags.length}} 条记录
-                            <div class="am-fr ">
-                                <ul class="am-pagination ">
-                                    <li class="am-disabled "><a href="# ">«</a></li>
-                                                <li class="am-active "><a href="# ">1</a></li>
-                                                <li><a href="# ">2</a></li>
-                                                <li><a href="# ">3</a></li>
-                                                <li><a href="# ">4</a></li>
-                                                <li><a href="# ">5</a></li>
-                                                <li><a href="# ">»</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <p>注：.....</p>
+                        <div class="am-cf">
+                            共 {{tasks.length}} 条记录
+                            <div class="am-fr">
+                                <ul class="am-pagination">
+                                    <li class="am-disabled"><a href="#">«</a></li>
+                                    <li class="am-active"><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#">»</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr />
+                        <p>注：.....</p>
                     </form>
                 </div>
 
