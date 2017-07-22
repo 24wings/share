@@ -6,18 +6,28 @@ class WechatRoute extends route_1.Route.BaseRoute {
     doAction(action, method, next) {
         console.log(action);
         switch (action) {
-            case 'oauth':
-                console.log('返回oauth');
-                return this.oauth;
-            case 'jssdk':
-                return this.getJSSDKSignature;
-            default:
-                return this.notFound;
+            case 'oauth': return this.oauth;
+            case 'jssdk': return this.getJSSDKSignature;
+            case 'payment': return this.service.wechat.getPayReply();
+            default: return this.notFound;
         }
     }
     constructor() {
         super();
         // console.log('Wechat Service', service);
+    }
+    async payment() {
+        let money = this.req.body;
+        let ip = this.service.tools.pureIp(this.req.ip);
+        var payargs = await this.service.wechat.wechatReturnMoney({
+            attach: '',
+            spbill_create_ip: ip,
+            out_trade_no: '' + new Date().toString(),
+            trade_type: 'JSAPI',
+            openid: this.req.session.user.openid, body: '', total_fee: money
+        });
+        console.log(payargs);
+        this.res.end(payargs);
     }
     oauth(req, res) {
         var code = req.query.code;

@@ -3,6 +3,12 @@ import fs = require('fs');
 
 export const CONFIG = {
     port: 80,
+    //随机字符串
+    randomStr: 'random',
+    /**
+     * 商户名称
+     */
+    wechatName: '武汉铭禄科技有限公司',
     oldAuth: 'shop.xxbuy.net',
     uploadDir: path.resolve(__dirname, '../../public/upload'),
     newAuth: '',
@@ -10,6 +16,7 @@ export const CONFIG = {
     oauthPath: '/wechat/oauth',
     IP: 'http://47.92.87.28',
     wechat: {
+
         token: 'sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR',
         appid: 'wx8bdcc982b8477839',
         appsecret: 'ffe69aaff2487a7f1557f4e2e33952e6',
@@ -21,7 +28,17 @@ export const CONFIG = {
         appId: 'wx8bdcc982b8477839',
         mchId: "1447627402",
         notifyUrl: "http://wq8.youqulexiang.com/payment/",
+
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
+    },
+    wechatPayment: {
+        appid: 'wx8bdcc982b8477839',
+        mch_id: '1447627402',
+        apiKey: 'minglu12minglu12minglu12minglu12', //微信商户平台API密钥 
+        notify_url: 'http://wq8.youqulexiang.com/payment/',
+        trade_type: 'APP', //APP, JSAPI, NATIVE etc. 
+        pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12')) //微信商户平台证书 (optional，部分API需要使用) 
+
     },
     jssdk: {
         "wechatToken": "sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR",

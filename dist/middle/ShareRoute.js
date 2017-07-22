@@ -4,42 +4,23 @@ const route_1 = require("../route");
 class ShareRoute extends route_1.Route.BaseRoute {
     doAction(action, method) {
         switch (action) {
-            case 'index':
-                return this.index;
-            case 'recruit-student':
-                return this.recruitStudent;
-            case 'person-center':
-                return this.personCenter;
-            case 'full-info':
-                return method == this.GET ? this.fullInfoPage : this.fixFullInfo;
-            case 'detail':
-                return this.detail;
-            case 'publish':
-                return method == this.GET ? this.publishPage : this.publishTask;
-            case 'payTaskMoney':
-                return this.payTaskMoney;
-            case 'shop-center':
-                return this.shopCenter;
-            case 'student-money':
-                return this.studentMoney;
-            case 'myMoney':
-                return this.myMoney;
-            case 'taskDetail':
-                return this.taskDetail;
-            case 'getMoney':
-                return this.getMoney;
-            case 'guide':
-                return this.guide;
-            case 'task-list':
-                return this.taskList;
-            case 'get-money-record':
-                return this.getMoneyRecord;
-            case 'fansMoney':
-                return this.fansMoney;
-            case 'money-log':
-                return this.moneyLog;
-            default:
-                return this.index;
+            case 'index': return this.index;
+            case 'recruit-student': return this.recruitStudent;
+            case 'person-center': return this.personCenter;
+            case 'full-info': return method == this.GET ? this.fullInfoPage : this.fixFullInfo;
+            case 'publish': return method == this.GET ? this.publishPage : this.publishTask;
+            case 'payTaskMoney': return this.payTaskMoney;
+            case 'shop-center': return this.shopCenter;
+            case 'student-money': return this.studentMoney;
+            case 'myMoney': return this.myMoney;
+            case 'taskDetail': return this.taskDetail;
+            case 'getMoney': return this.GET == method ? this.getMoney : this.getMoneyDo;
+            case 'guide': return this.guide;
+            case 'task-list': return this.taskList;
+            case 'get-money-record': return this.getMoneyRecord;
+            case 'fansMoney': return this.fansMoney;
+            case 'money-log': return this.moneyLog;
+            default: return this.index;
         }
     }
     constructor() {
@@ -90,10 +71,6 @@ class ShareRoute extends route_1.Route.BaseRoute {
         let { qq, phone, weixinId } = req.body;
         await this.service.db.userModel.findById(req.session.user._id.toString()).update({ qq, phone, weixinId, isFinish: true }).exec();
         res.redirect('/share/person-center');
-    }
-    /**文章详情页面 */
-    async detail(req, res) {
-        res.render('share/detail');
     }
     async publishPage(req, res) {
         let taskTags = await this.service.db.taskTagModel.find().exec();
@@ -204,67 +181,67 @@ class ShareRoute extends route_1.Route.BaseRoute {
                                     parents.push(user.parent.parent.parent);
                                 }
                             }
-                            console.log(parents.length + '位师傅');
-                            switch (parents.length) {
-                                // 一个师傅都没有
-                                case 0:
-                                    console.log('一个师傅都没有');
-                                    // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: req.params._id }], task.shareMoney);
-                                    break;
-                                case 1://5%
-                                    console.log('一位师傅开始返利');
-                                    let firstParent = parents[0];
-                                    //第一个人
-                                    let firstMoney = taskAllMoney * 0.05;
-                                    // 余额
-                                    taskAllMoney = taskAllMoney * 0.95;
-                                    // 
-                                    await this.service.db.userModel.findById(firstParent).update({ $inc: { totalMoney: firstMoney, todayMoney: firstMoney, historyMoney: firstMoney } }).exec();
-                                    // await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await this.service.dbDo.returnMoney([
-                                        { userId: firstParent, money: firstMoney, task: taskId },
-                                        { userId: userId, money: taskAllMoney, task: taskId }
-                                    ], task.shareMoney);
-                                    break;
-                                //两个师傅  5% 10%     本人 85%
-                                case 2:
-                                    let oneParent = parents[0];
-                                    let twoParent = parents[1];
-                                    let oneMoney = 0.05 * taskAllMoney;
-                                    let twoMoney = 0.10 * taskAllMoney;
-                                    // 余额
-                                    taskAllMoney *= 0.85;
-                                    // await service.db.userModel.findByIdAndUpdate(oneParent._id.toString(), { $inc: { totalMoney: oneMoney, todayMoney: oneMoney, historyMoney: oneMoney } }).exec();
-                                    // await service.db.userModel.findByIdAndUpdate(twoParent._id.toString(), { $inc: { totalMoney: twoMoney, todayMoney: twoMoney, historyMoney: twoMoney } }).exec();
-                                    // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await this.service.dbDo.returnMoney([
-                                        { money: oneMoney, task: taskId, userId: oneParent },
-                                        { money: twoMoney, task: taskId, userId: twoParent },
-                                        { money: taskAllMoney, task: taskId, userId: userId }
-                                    ], task.shareMoney);
-                                    break;
-                                case 3:
-                                    let iParent = parents[0];
-                                    let iiParent = parents[1];
-                                    let iiiParent = parents[2];
-                                    let iMoney = 0.05 * taskAllMoney;
-                                    let iiMoney = 0.10 * taskAllMoney;
-                                    let iiiMoney = 0.15 * taskAllMoney;
-                                    // 余额
-                                    taskAllMoney *= 0.70;
-                                    // await service.db.userModel.findByIdAndUpdate(iParent._id.toString(), { $inc: { totalMoney: iMoney, todayMoney: iMoney, historyMoney: iMoney } }).exec();
-                                    // await service.db.userModel.findByIdAndUpdate(iiParent._id.toString(), { $inc: { totalMoney: iiMoney, todayMoney: iiMoney, historyMoney: iiMoney } }).exec();
-                                    // await service.db.userModel.findByIdAndUpdate(iiiParent._id.toString(), { $inc: { totalMoney: iiiMoney, todayMoney: iiiMoney, historyMoney: iiiMoney } }).exec();
-                                    // await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
-                                    await this.service.dbDo.returnMoney([
-                                        { task: taskId, userId: iParent, money: iMoney },
-                                        { task: taskId, userId: iiParent, money: iiMoney },
-                                        { task: taskId, userId: iiiParent, money: iiiMoney },
-                                        { task: taskId, userId, money: taskAllMoney }
-                                    ], task.shareMoney);
-                                    break;
-                            }
+                        }
+                        console.log(parents.length + '位师傅');
+                        switch (parents.length) {
+                            // 一个师傅都没有
+                            case 0:
+                                console.log('一个师傅都没有');
+                                // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                await this.service.dbDo.returnMoney([{ userId: req.session.user._id.toString(), money: taskAllMoney, task: taskId }], task.shareMoney);
+                                break;
+                            case 1://5%
+                                console.log('一位师傅开始返利');
+                                let firstParent = parents[0];
+                                //第一个人
+                                let firstMoney = taskAllMoney * 0.05;
+                                // 余额
+                                taskAllMoney = taskAllMoney * 0.95;
+                                // 
+                                await this.service.db.userModel.findById(firstParent).update({ $inc: { totalMoney: firstMoney, todayMoney: firstMoney, historyMoney: firstMoney } }).exec();
+                                // await user.update({ $inc: { todayMoney: taskAllMoney, totalMoneyMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                await this.service.dbDo.returnMoney([
+                                    { userId: userId, money: taskAllMoney, task: taskId },
+                                    { userId: firstParent, money: firstMoney, task: taskId }
+                                ], task.shareMoney);
+                                break;
+                            //两个师傅  5% 10%     本人 85%
+                            case 2:
+                                let oneParent = parents[0];
+                                let twoParent = parents[1];
+                                let oneMoney = 0.05 * taskAllMoney;
+                                let twoMoney = 0.10 * taskAllMoney;
+                                // 余额
+                                taskAllMoney *= 0.85;
+                                // await service.db.userModel.findByIdAndUpdate(oneParent._id.toString(), { $inc: { totalMoney: oneMoney, todayMoney: oneMoney, historyMoney: oneMoney } }).exec();
+                                // await service.db.userModel.findByIdAndUpdate(twoParent._id.toString(), { $inc: { totalMoney: twoMoney, todayMoney: twoMoney, historyMoney: twoMoney } }).exec();
+                                // await user.update({ $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                await this.service.dbDo.returnMoney([
+                                    { money: taskAllMoney, task: taskId, userId: userId },
+                                    { money: oneMoney, task: taskId, userId: oneParent },
+                                    { money: twoMoney, task: taskId, userId: twoParent },
+                                ], task.shareMoney);
+                                break;
+                            case 3:
+                                let iParent = parents[0];
+                                let iiParent = parents[1];
+                                let iiiParent = parents[2];
+                                let iMoney = 0.05 * taskAllMoney;
+                                let iiMoney = 0.10 * taskAllMoney;
+                                let iiiMoney = 0.15 * taskAllMoney;
+                                // 余额
+                                taskAllMoney *= 0.70;
+                                // await service.db.userModel.findByIdAndUpdate(iParent._id.toString(), { $inc: { totalMoney: iMoney, todayMoney: iMoney, historyMoney: iMoney } }).exec();
+                                // await service.db.userModel.findByIdAndUpdate(iiParent._id.toString(), { $inc: { totalMoney: iiMoney, todayMoney: iiMoney, historyMoney: iiMoney } }).exec();
+                                // await service.db.userModel.findByIdAndUpdate(iiiParent._id.toString(), { $inc: { totalMoney: iiiMoney, todayMoney: iiiMoney, historyMoney: iiiMoney } }).exec();
+                                // await service.db.userModel.findByIdAndUpdate(user._id.toString(), { $inc: { totalMoney: taskAllMoney, todayMoney: taskAllMoney, historyMoney: taskAllMoney } }).exec();
+                                await this.service.dbDo.returnMoney([
+                                    { task: taskId, userId, money: taskAllMoney },
+                                    { task: taskId, userId: iParent, money: iMoney },
+                                    { task: taskId, userId: iiParent, money: iiMoney },
+                                    { task: taskId, userId: iiiParent, money: iiiMoney }
+                                ], task.shareMoney);
+                                break;
                         }
                     }
                 }
@@ -287,8 +264,26 @@ class ShareRoute extends route_1.Route.BaseRoute {
     async myMoney(req, res) {
         res.render('share/myMoney', {});
     }
+    /**
+     *
+     *
+     * 提现
+     */
     async getMoney(req, res) {
         res.render('share/getMoney', { user: req.session.user });
+    }
+    async getMoneyDo() {
+        let money = this.req.body.money;
+        let ip = this.service.tools.pureIp(this.req.ip);
+        var payargs = await this.service.wechat.wechatReturnMoney({
+            attach: '用户体现',
+            spbill_create_ip: ip,
+            out_trade_no: '' + new Date().getTime(),
+            trade_type: 'JSAPI',
+            openid: this.req.session.user.openid, body: '用户体现', total_fee: money
+        });
+        console.log(payargs);
+        this.res.json(payargs);
     }
     async guide(req, res) {
         res.render('share/guide', {});

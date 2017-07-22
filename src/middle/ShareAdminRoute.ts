@@ -9,7 +9,6 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
         switch (action) {
             case 'task-list':
                 return this.taskList;
-
             case 'task-detail':
                 return this.taskDetail;
             case 'task-delete':

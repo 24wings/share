@@ -4,6 +4,12 @@ const path = require("path");
 const fs = require("fs");
 exports.CONFIG = {
     port: 80,
+    //随机字符串
+    randomStr: 'random',
+    /**
+     * 商户名称
+     */
+    wechatName: '武汉铭禄科技有限公司',
     oldAuth: 'shop.xxbuy.net',
     uploadDir: path.resolve(__dirname, '../../public/upload'),
     newAuth: '',
@@ -23,6 +29,14 @@ exports.CONFIG = {
         mchId: "1447627402",
         notifyUrl: "http://wq8.youqulexiang.com/payment/",
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
+    },
+    wechatPayment: {
+        appid: 'wx8bdcc982b8477839',
+        mch_id: '1447627402',
+        apiKey: 'minglu12minglu12minglu12minglu12',
+        notify_url: 'http://wq8.youqulexiang.com/payment/',
+        trade_type: 'APP',
+        pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12')) //微信商户平台证书 (optional，部分API需要使用) 
     },
     jssdk: {
         "wechatToken": "sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR",
