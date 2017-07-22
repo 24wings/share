@@ -30,6 +30,7 @@ class ShareRoute extends route_1.Route.BaseRoute {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
+        // this.service.wechat.payRedpackOne({ money: 100, openid: user._id.toString() });
         console.log('user', user);
         if (openid) {
             console.log('openid :', openid);

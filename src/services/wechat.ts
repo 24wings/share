@@ -1,9 +1,10 @@
 import { CONFIG } from './config';
 import WechatPayment from 'wechat-payment-node';
 import tools = require('./tools');
+import fetch from 'node-fetch';
 import fs = require('fs');
 
-let wechatPaymentInstance = new WechatPayment(CONFIG.wechatPay);
+// let wechatPaymentInstance = new WechatPayment(CONFIG.wechatPay);
 const WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 import crypto = require('crypto');
@@ -217,11 +218,43 @@ class WeChatService {
 只支持一个人微信红包
      *      */
 
-    payRedpackOne(order: { money: number, openid: string, wishing?: string }) {
+    async payRedpackOne(order: { money: number, openid: string, wishing?: string }) {
+        var str = '';
+        var options = {
+            act_name: '新年红包',
+            client_ip: tools.getIPAdress(),
+            mch_billno: new Date().getTime(),
+            nonce_str: CONFIG.randomStr,
+            re_openid: order.openid,
+            remark: '新年红包',
+            scene_id: 'PRODUCT_8'
+
+
+        }
+        str += 'act_name=' + '新年红包';
+        str += '&client_ip=' + tools.getIPAdress();
+        str += '&mch_billno=' + options.mch_billno;
+        str += '&nonce_str=' + CONFIG.randomStr;
+        str += '&re_openid=' + order.openid;
+        str += '&remark=' + '新年红包';
+        str += '&scene_id=' + 'PRODUCT_8';
+        str += '&send_name=' + CONFIG.wechatName;
+        str += '&total_amount=' + order.money;
+        str += '&total_num=' + 1;
+        str += '&wishing=' + order.wishing ? order.wishing : '恭喜发财';
+        str += '&wxappid=' + CONFIG.wechat.appid;
+
+
+
+        console.log('str:' + str);
+        var sha1 = crypto.createHash('sha1');
+
+        var signatrue = sha1.update(str).digest('hex');
+        console.log('signature:', signatrue);
         var body = `
-<xml>
-<sign><![CDATA[E1EE61A91C8E90F299DE6AE075D60A2D]]></sign>
-<mch_billno><![CDATA[${new Date().getTime()}]]></mch_billno>
+<xml> 
+<sign><![CDATA[${signatrue}]]></sign>
+<mch_billno><![CDATA[${options.mch_billno}}]]></mch_billno>
 <mch_id><![CDATA[${CONFIG.wechatPay.mchId}]]></mch_id>
 <wxappid><![CDATA[${CONFIG.wechat.appid}]]></wxappid>
 <send_name><![CDATA[${CONFIG.wechatName}]]></send_name>
@@ -233,13 +266,17 @@ class WeChatService {
 <act_name><![CDATA[新年红包]]></act_name>
 <remark><![CDATA[新年红包]]></remark>
 <scene_id><![CDATA[PRODUCT_8]]></scene_id>
-<consume_mch_id><![CDATA[10000097]]></consume_mch_id>
-<nonce_str><![CDATA[50780e0cca98c8c8e814883e5caa672e]]></nonce_str>
-
+<nonce_str><![CDATA[${CONFIG.randomStr}]]></nonce_str>
 </xml>
 
-`
+`;
 
+        let res = await fetch('https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack', {
+            method: 'POST',
+            body
+        });
+        let xml = await res.text();
+        console.log('xml:', xml)
     }
 
 
