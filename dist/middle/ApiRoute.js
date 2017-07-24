@@ -13,6 +13,8 @@ class ApiRoute extends route_1.Route.BaseRoute {
     constructor() {
         super();
     }
+    before() { }
+    after() { }
     async uploadBase64(req, res) {
         let base64 = req.body.base64;
         var ctrl = this;

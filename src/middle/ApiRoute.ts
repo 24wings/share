@@ -12,6 +12,8 @@ export class ApiRoute extends Route.BaseRoute implements Route.IRoute {
     constructor() {
         super();
     }
+    before() { }
+    after() { }
     async  uploadBase64(req: Route.Request, res: Route.Response) {
         let base64 = req.body.base64;
         var ctrl = this;

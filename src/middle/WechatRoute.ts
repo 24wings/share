@@ -12,6 +12,12 @@ export class WechatRoute extends Route.BaseRoute implements Route.IRoute {
         }
 
     }
+    before() {
+
+    }
+    after() {
+
+    }
     constructor() {
         super();
         // console.log('Wechat Service', service);

@@ -34,6 +34,17 @@ class ShareAdminRoute extends route_1.Route.BaseRoute {
                 return this.index;
         }
     }
+    before() {
+        if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
+            this.next();
+        }
+        else {
+            this.res.redirect('/share-admin/login');
+        }
+    }
+    after() {
+        this.next();
+    }
     index(req, res) {
         res.render(`${this.VIEWDIR}/index`);
     }

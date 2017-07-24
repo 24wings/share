@@ -35,6 +35,17 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
 
     }
 
+    before() {
+        if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
+            this.next();
+        } else {
+            this.res.redirect('/share-admin/login')
+        }
+    }
+    after() {
+        this.next();
+    }
+
     index(req: Request, res: Response) {
         res.render(`${this.VIEWDIR}/index`);
     }

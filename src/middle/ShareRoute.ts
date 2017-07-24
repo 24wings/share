@@ -1,5 +1,7 @@
 import { Route } from '../route';
 
+
+@Route.Views('share')
 export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     doAction(action: string, method: string) {
         switch (action) {
@@ -25,8 +27,14 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     constructor() {
         super();
     }
-
+    before() {
+        this.next();
+    }
+    after() {
+        this.next();
+    }
     async index(req: Route.Request, res: Route.Response) {
+        // req.query
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;

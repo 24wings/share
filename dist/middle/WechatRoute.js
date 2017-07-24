@@ -12,6 +12,10 @@ class WechatRoute extends route_1.Route.BaseRoute {
             default: return this.notFound;
         }
     }
+    before() {
+    }
+    after() {
+    }
     constructor() {
         super();
         // console.log('Wechat Service', service);

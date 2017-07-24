@@ -1,7 +1,16 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const route_1 = require("../route");
-class ShareRoute extends route_1.Route.BaseRoute {
+let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
+    constructor() {
+        super();
+    }
     doAction(action, method) {
         switch (action) {
             case 'index': return this.index;
@@ -23,10 +32,14 @@ class ShareRoute extends route_1.Route.BaseRoute {
             default: return this.index;
         }
     }
-    constructor() {
-        super();
+    before() {
+        this.next();
+    }
+    after() {
+        this.next();
     }
     async index(req, res) {
+        // req.query
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
@@ -310,5 +323,8 @@ class ShareRoute extends route_1.Route.BaseRoute {
     async moneyLog(req, res) {
         res.render('share/money-log', {});
     }
-}
+};
+ShareRoute = __decorate([
+    route_1.Route.Views('share')
+], ShareRoute);
 exports.ShareRoute = ShareRoute;
