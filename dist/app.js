@@ -14,22 +14,16 @@ var njk = nunjucks.configure(path.resolve(__dirname, '../views'), {
     express: app,
     noCache: true,
 });
-//
-njk.addFilter('time', function (obj) {
-    return moment(obj).format('YYYY-MM-DD');
-});
-njk.addFilter('json', function (obj) {
-    return JSON.stringify(obj);
-});
-njk.addFilter('money', function (money) {
-    return money.toFixed(2);
-});
-njk.addFilter('boolean', function (ok) {
-    return !!ok;
-});
-njk.addFilter('myFault', function (ok) {
-    return !ok;
-});
+var filters = {
+    time: (date) => moment(date).format('YYYY-MM-DD'),
+    json: (obj) => JSON.stringify(obj),
+    money: (money) => money.toFixed(2),
+    boolean: (ok) => !!ok,
+    myFault: (ok) => !ok
+};
+for (let key in filters) {
+    njk.addFilter(key, filters[key]);
+}
 // app.set('trust proxy', 1) // trust first proxy 
 app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(middle_1.CommonMiddle))
     .set('view engine', 'html')

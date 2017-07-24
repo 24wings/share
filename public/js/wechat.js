@@ -3,7 +3,7 @@
  * @param  callbakc 回调函数
  */
 function wechatPay(payargs, successCallback, errorCallback) {
-
+    alert(JSON.stringify(payargs));
     WeixinJSBridge.invoke('getBrandWCPayRequest', payargs, function(res) {
         if (res.err_msg == "get_brand_wcpay_request:ok") {
             successCallback()

@@ -21,8 +21,21 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
             case 'get-money-record': return this.getMoneyRecord;
             case 'fansMoney': return this.fansMoney;
             case 'money-log': return this.moneyLog;
+            case 'share-money': return this.shareMoney;
             default: return this.index;
         }
+    }
+    async shareMoney() {
+        let taskRecords = await this.db.taskRecordModel
+            .find({ 'shareDetail.user': this.req.session.user._id.toString() })
+            .populate('task').exec();
+        if (taskRecords.length > 0) {
+            console.log(JSON.stringify(taskRecords[0].shareDetail));
+        } else {
+            console.log('taskRecords')
+        }
+
+        this.render('share-money', { taskRecords });
     }
     constructor() {
         super();
@@ -38,8 +51,8 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
-        // this.service.wechat.payRedpackOne({ money: 100, openid: user._id.toString() });
-        console.log('user', user);
+        // this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
+        // console.log('user', user);
         if (openid) {
             console.log('openid :', openid);
             user = await this.service.db.userModel.findOne({ openid }).exec();
@@ -130,15 +143,18 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     }
 
     async  payTaskMoney(req: Route.Request, res: Route.Response) {
-        let ip = req.ip.indexOf('::ffff:') == 0 ? req.ip.substring(req.ip.indexOf('::ffff:') + 7) : req.ip;
+        let ip = this.service.tools.pureIp(this.req.ip);
         console.log(ip);
         var payargs = await this.service.wechat.wechatPay({
             body: '支付活动费用',
             spbill_create_ip: ip,
-            openid: req.session.user.openid,
+            openid: this.req.session.user.openid,
             trade_type: 'JSAPI',
-            total_fee: req.body.totalMoney * 100, attach: '任务费用', out_trade_no: 'kfc' + (+new Date)
+            total_fee: req.body.totalMoney * 100,
+            attach: '任务费用',
+            out_trade_no: 'kfc' + (+new Date),
         });
+        console.log(JSON.stringify(payargs));
         res.json({ ok: true, data: payargs });
     }
 

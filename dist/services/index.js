@@ -1,6 +1,6 @@
 "use strict";
 const config_1 = require("./config");
-const models_1 = require("./models");
+const models_1 = require("../models");
 const wechat = require("./wechat");
 const tools = require("./tools");
 const dbDo = require("./dbDo");

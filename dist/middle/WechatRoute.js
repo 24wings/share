@@ -12,10 +12,8 @@ class WechatRoute extends route_1.Route.BaseRoute {
             default: return this.notFound;
         }
     }
-    before() {
-    }
-    after() {
-    }
+    before() { this.next(); }
+    after() { }
     constructor() {
         super();
         // console.log('Wechat Service', service);
@@ -28,7 +26,9 @@ class WechatRoute extends route_1.Route.BaseRoute {
             spbill_create_ip: ip,
             out_trade_no: '' + new Date().toString(),
             trade_type: 'JSAPI',
-            openid: this.req.session.user.openid, body: '', total_fee: money
+            openid: this.req.session.user.openid,
+            body: '',
+            total_fee: money
         });
         console.log(payargs);
         this.res.end(payargs);
@@ -76,6 +76,7 @@ class WechatRoute extends route_1.Route.BaseRoute {
                     res.redirect('/share/index?openid=' + openid);
                 }
             });
+        }, (err, result) => {
         });
     }
     notFound(req, res) {

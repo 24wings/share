@@ -24,23 +24,19 @@ var njk = nunjucks.configure(path.resolve(__dirname, '../views'), { // 设置模
     express: app,
     noCache: true,
 })
-//
-njk.addFilter('time', function (obj: Date) {
-    return moment(obj).format('YYYY-MM-DD');
-})
-njk.addFilter('json', function (obj) {
-    return JSON.stringify(obj)
-})
-njk.addFilter('money', function (money: number) {
-    return money.toFixed(2);
-})
-njk.addFilter('boolean', function (ok) {
-    return !!ok;
-});
-njk.addFilter('myFault', function (ok: boolean) {
-    return !ok;
 
-})
+var filters = {
+    time: (date: Date) => moment(date).format('YYYY-MM-DD'),
+    json: (obj) => JSON.stringify(obj),
+    money: (money: number) => money.toFixed(2),
+    boolean: (ok: boolean) => !!ok,
+    myFault: (ok: boolean) => !ok
+}
+
+for (let key in filters) {
+    njk.addFilter(key, filters[key]);
+
+}
 
 // app.set('trust proxy', 1) // trust first proxy 
 

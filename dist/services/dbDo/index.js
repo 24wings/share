@@ -1,5 +1,5 @@
 "use strict";
-const models_1 = require("../models");
+const models_1 = require("../../models");
 module.exports = {
     /**
      * 返还佣金

@@ -1,6 +1,8 @@
 import path = require('path');
 import fs = require('fs');
 
+// var str = fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'), 'utf-8');
+// console.log('pfx:', str);
 export const CONFIG = {
     port: 80,
     //随机字符串

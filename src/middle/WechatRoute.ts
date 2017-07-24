@@ -10,14 +10,9 @@ export class WechatRoute extends Route.BaseRoute implements Route.IRoute {
             case 'payment': return this.service.wechat.getPayReply();
             default: return this.notFound;
         }
-
     }
-    before() {
-
-    }
-    after() {
-
-    }
+    before() { this.next(); }
+    after() { }
     constructor() {
         super();
         // console.log('Wechat Service', service);
@@ -30,7 +25,9 @@ export class WechatRoute extends Route.BaseRoute implements Route.IRoute {
             spbill_create_ip: ip,
             out_trade_no: '' + new Date().toString(),
             trade_type: 'JSAPI',
-            openid: this.req.session.user.openid, body: '', total_fee: money
+            openid: this.req.session.user.openid,
+            body: '',
+            total_fee: money
         });
         console.log(payargs);
         this.res.end(payargs);
@@ -77,7 +74,10 @@ export class WechatRoute extends Route.BaseRoute implements Route.IRoute {
                     res.redirect('/share/index?openid=' + openid);
                 }
             });
+        }, (err, result) => {
+
         });
+
     }
     notFound(req, res) {
         res.render('error')

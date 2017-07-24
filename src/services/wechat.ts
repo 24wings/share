@@ -1,8 +1,11 @@
 import { CONFIG } from './config';
-import WechatPayment from 'wechat-payment-node';
+import https = require('https');
 import tools = require('./tools');
 import fetch from 'node-fetch';
 import fs = require('fs');
+import url = require('url');
+import md5 = require('md5');
+import sha1 = require('sha1');
 
 // let wechatPaymentInstance = new WechatPayment(CONFIG.wechatPay);
 const WechatAPI = require('wechat-api');
@@ -12,12 +15,23 @@ var OAuth = require('wechat-oauth');
 var middleware = require('wechat-pay').middleware;
 
 var api = new WechatAPI(CONFIG.wechat.appid, CONFIG.wechat.appsecret);
-var client = new OAuth(CONFIG.wechat.appid, CONFIG.wechat.appsecret);
+var client = new OAuth(CONFIG.wechat.appid, CONFIG.wechat.appsecret, function (openid, callback) {
+    // 传入一个根据openid获取对应的全局token的方法 
+    // 在getUser时会通过该方法来获取token 
+    fs.readFile(openid + ':access_token.txt', 'utf8', function (err, txt) {
+        if (err) { return callback(err); }
+        callback(null, JSON.parse(txt));
+    });
+}, function (openid, token, callback) {
+    // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等 
+    // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例 
+    // 持久化时请注意，每个openid都对应一个唯一的token! 
+    fs.writeFile(openid + ':access_token.txt', JSON.stringify(token), callback);
+});
 
 var wx = require('wechat-jssdk');
 var Payment = require('wechat-pay').Payment;
-
-var payment = new Payment(CONFIG.wechatPayment);
+var payment = new Payment(CONFIG.wechatPay);
 
 interface WeixinOrder {
     body: string;
@@ -50,6 +64,7 @@ class WeChatService {
      * 返回订单json
      */
     wechatPay(order: WeixinOrder) {
+        console.log('order:', order);
         return new Promise((resovle, reject) => {
             payment.getBrandWCPayRequestParams(order, function (err, payargs) {
                 if (err) console.error(err)
@@ -218,66 +233,85 @@ class WeChatService {
 只支持一个人微信红包
      *      */
 
+    bulildXml(obj: Object) {
+        let xml = ``
+        for (let key in obj) {
+            xml += `<${key}>${obj[key]}</${key}>
+            `;
+        }
+        xml = `<xml>
+            ${xml}
+            </xml>
+            `;
+        return xml
+    }
+    buildSignStr(obj: Object) {
+        var str = '';
+        for (let key in obj) {
+            str += `&${key}=${obj[key]}`;
+        }
+        str = str.startsWith(`&`) ? str.substring(1) : str;
+        return str;
+    }
+
     async payRedpackOne(order: { money: number, openid: string, wishing?: string }) {
         var str = '';
         var options = {
-            act_name: '新年红包',
-            client_ip: tools.getIPAdress(),
-            mch_billno: new Date().getTime(),
+            amount: 100,
+            check_name: 'NO_CHECK',
+            desc: '节日快乐',
+            mch_appid: CONFIG.wechatPay.appId,
+            mchid: CONFIG.wechatPay.mchId,
             nonce_str: CONFIG.randomStr,
-            re_openid: order.openid,
-            remark: '新年红包',
-            scene_id: 'PRODUCT_8'
-
-
-        }
-        str += 'act_name=' + '新年红包';
-        str += '&client_ip=' + tools.getIPAdress();
-        str += '&mch_billno=' + options.mch_billno;
-        str += '&nonce_str=' + CONFIG.randomStr;
-        str += '&re_openid=' + order.openid;
-        str += '&remark=' + '新年红包';
-        str += '&scene_id=' + 'PRODUCT_8';
-        str += '&send_name=' + CONFIG.wechatName;
-        str += '&total_amount=' + order.money;
-        str += '&total_num=' + 1;
-        str += '&wishing=' + order.wishing ? order.wishing : '恭喜发财';
-        str += '&wxappid=' + CONFIG.wechat.appid;
-
+            openid: order.openid,
+            partner_trade_no: Date.now(),
+            re_user_name: '影月',
+            spbill_create_ip: tools.getIPAdress()
+        };
+        str = this.buildSignStr(options);
+        str += `&key=${CONFIG.wechatPay.partnerKey}`;
 
 
         console.log('str:' + str);
-        var sha1 = crypto.createHash('sha1');
+        var signatrue = md5(str).toUpperCase();
 
-        var signatrue = sha1.update(str).digest('hex');
+        // var signatrue = sha1.update(str).digest('hex');
         console.log('signature:', signatrue);
-        var body = `
-<xml> 
-<sign><![CDATA[${signatrue}]]></sign>
-<mch_billno><![CDATA[${options.mch_billno}}]]></mch_billno>
-<mch_id><![CDATA[${CONFIG.wechatPay.mchId}]]></mch_id>
-<wxappid><![CDATA[${CONFIG.wechat.appid}]]></wxappid>
-<send_name><![CDATA[${CONFIG.wechatName}]]></send_name>
-<re_openid><![CDATA[${order.openid}]]></re_openid>
-<total_amount><![CDATA[${order.money}]]></total_amount>
-<total_num><![CDATA[1]]></total_num>
-<wishing><![CDATA[${order.wishing ? order.wishing : '恭喜发财'}]]></wishing>
-<client_ip><![CDATA[${tools.getIPAdress()}]]></client_ip>
-<act_name><![CDATA[新年红包]]></act_name>
-<remark><![CDATA[新年红包]]></remark>
-<scene_id><![CDATA[PRODUCT_8]]></scene_id>
-<nonce_str><![CDATA[${CONFIG.randomStr}]]></nonce_str>
-</xml>
-
-`;
-
-        let res = await fetch('https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack', {
+        options['sign'] = signatrue;
+        if (signatrue.length > 32) console.log('-----------------签名过长--------------------')
+        let data = this.bulildXml(options);
+        console.log(data);
+        var parsed_url = url.parse('https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers');
+        console.log(`parsed_url`, parsed_url);
+        var req = https.request({
+            protocol: parsed_url.protocol,
+            host: parsed_url.host,
+            port: 443,
+            path: parsed_url.path,
+            pfx: CONFIG.wechatPay.pfx,
+            passphrase: CONFIG.wechatPay.mchId,
             method: 'POST',
-            body
+
+        }, function (res) {
+            var content = '';
+            res.on('data', function (chunk) {
+                content += chunk;
+            });
+            res.on('end', function () {
+                console.log('end', content);
+            });
         });
-        let xml = await res.text();
-        console.log('xml:', xml)
+
+        req.on('error', function (e) {
+            console.log('error:', e)
+        });
+        req.write(data);
+        req.end();
+
+
+        console.log('xml:', data)
     }
+
 
 
 }

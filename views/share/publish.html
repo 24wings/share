@@ -16,7 +16,7 @@
         <div class="release-box">
             <label for="">文章栏目:</label>
             <ul class="tags">
-                {%for taskTag,index in taskTags%}
+                {%for taskTag in taskTags%}
                 <li onclick="selectTaskTag(this)" {%if loop.index==1 %} class="active" {%endif%} taskTag="{{taskTag._id.toString()}}">{{taskTag.name}}</li>
                 {%endfor%}
             </ul>
@@ -25,7 +25,7 @@
         <div class="release-box">
             <label for="">总出价:</label>
             <span>具有吸引力的价格能让更多人推广</span>
-            <input type="number" name="totalMoney" min="0.1" max="100000" value="8" id="totalMoney">
+            <input type="number" name="totalMoney" max="100000" value="8" id="totalMoney">
         </div>
         <div class="release-box">
             <label for="">单条出价:</label>
@@ -66,7 +66,7 @@
                         document.forms[0].submit();
                     })
                 } else {
-                    // alert(rtn.data);
+                    alert('error:', rtn.data);
                 }
             }
         })

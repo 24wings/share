@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs = require("fs");
+// var str = fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'), 'utf-8');
+// console.log('pfx:', str);
 exports.CONFIG = {
     port: 80,
     //随机字符串

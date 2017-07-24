@@ -1,5 +1,5 @@
-import { db } from '../models';
-import { TaskRecord } from '../models/TaskRecord';
+import { db } from '../../models';
+import { TaskRecord } from '../../models/TaskRecord';
 export ={
     /**
      * 返还佣金
