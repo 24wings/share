@@ -1,0 +1,38 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">今日文章转发收益:<span>￥3.00</span></p>
+            <div class="id">账户余额:<span>{{user.totalMoney}}</span></div>
+        </div>
+    </div>
+    <div class="tixianye">
+        <div class="tixianye-box">
+            <p>24小时内收益详情</p>
+        </div>
+    </div>
+    <table class="biao1">
+        <tr>
+            <th>流水号</th>
+            <th>标题</th>
+            <th>收益</th>
+        </tr>
+        <tr>
+            <td>201707150016</td>
+            <td>优趣乐享:一学就会的小魔术</td>
+            <td>￥2.00</td>
+        </tr>
+        <tr>
+            <td>201707150017</td>
+            <td>优趣乐享:一学就会的小魔术</td>
+            <td>￥2.00</td>
+        </tr>
+
+    </table>
+</div>
+{%endblock%}

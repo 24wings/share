@@ -143,7 +143,8 @@ class WeChatService {
         var queryStr = `?`;
         queryStr += query.parent ? 'parent=' + query.parent : '';
         queryStr += query.taskId ? "&taskId=" + query.taskId : '';
-        return client.getAuthorizeURL(`${config_1.CONFIG.domain}${config_1.CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
+        return this.client.getAuthorizeURL(`${config_1.CONFIG.domain}${config_1.CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
+        // return this.client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
     }
     async wechatReturnMoney(order) {
         return new Promise(resolve => payment.getBrandWCPayRequestParams(order, function (err, payargs) {

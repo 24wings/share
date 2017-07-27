@@ -73,7 +73,7 @@ body {
     width: 100%;
     height: 60px;
     border-top: 1px solid #edefee;
-    background: #fff;
+    background: #037ce7;
     position: fixed;
     z-index: 99;
     bottom: 0;
@@ -94,7 +94,7 @@ body {
 .footer-box i,
 .footer-box span {
     display: block;
-    color: #4c4c4c;
+    color: #fff;
 }
 
 .footer-box span {
@@ -102,7 +102,24 @@ body {
 }
 
 .active {
-    color: #fd6c00!important;
+    font-weight: 700;
+}
+
+.actives {
+    color: #fdfe72!important;
+}
+
+.swiper-container {
+    margin-top: 40px;
+    width: 100%;
+    height: 9.3rem;
+}
+
+.banner {}
+
+.swiper-container img {
+    width: 100%;
+    height: 100%;
 }
 
 .nav {
@@ -121,17 +138,17 @@ body {
     line-height: 40px;
     font-size: 0.9rem;
     display: inline-block;
+    color: #458eea;
 }
 
 .center {
     width: 100%;
-    padding-top: 40px;
     padding-bottom: 60px;
 }
 
 .center-box {
     width: 100%;
-    height: 5rem;
+    height: 6rem;
     border-bottom: 1px solid #ccc;
 }
 
@@ -146,14 +163,14 @@ body {
     width: 30%;
     height: 3.825rem;
     float: left;
-    margin-top: 0.625rem;
+    margin-top: 1.3rem;
 }
 
 .center-box-cr>p {
     font-size: 0.9rem;
-    line-height: 20px;
+    line-height: 25px;
     color: #4d4d4d;
-    margin-top: 0.625rem;
+    margin-top: 1rem;
     float: left;
     width: 65%;
     margin-left: 3%;
@@ -180,7 +197,7 @@ body {
 .click {
     margin-left: 1%;
     font-size: 0.8rem;
-    color: #999999;
+    color: #ff5152;
 }
 
 .icon {
@@ -201,7 +218,7 @@ body {
     width: 4.4rem;
     height: 4.4rem;
     border-radius: 50%;
-    border: 1px solid #fab57c;
+    border: 1px solid #037ce7;
     float: left;
     margin-top: 1.8rem;
 }
@@ -241,7 +258,7 @@ body {
     margin-left: 0.2rem;
 }
 
-.icon-box>i {
+.icon-box i {
     font-size: 1rem;
     color: #fff;
     position: absolute;
@@ -253,7 +270,7 @@ body {
 .bill {
     width: 100%;
     height: 6.75rem;
-    border-bottom: 1px solid #ffa463;
+    border-bottom: 1px solid #037ce7;
 }
 
 .bill-box {
@@ -281,7 +298,7 @@ body {
 .bill-box i {
     display: block;
     font-size: 1.6rem;
-    color: #fca464;
+    color: #037ce7;
     margin-top: -1.6rem;
 }
 
@@ -354,10 +371,10 @@ body {
     width: 100%;
     height: 2rem;
     line-height: 2rem;
-    color: #fda462;
+    color: #ffa4a7;
     font-size: 0.8rem;
     text-indent: 1rem;
-    background: #feeedf;
+    background: #fff;
     position: fixed;
     bottom: 61px;
 }
@@ -410,17 +427,17 @@ body {
     border-radius: 10px;
     text-align: center;
     margin: 0 auto;
-    background: #f5ce39;
+    background: #ef2324;
     margin-top: 30px;
-    box-shadow: 0 3px 0 #c68429;
+    box-shadow: 0 3px 0 #bc0203;
     font-weight: bold;
-    color: #333;
+    color: #fdff73;
 }
 
 .title-box {
     width: 100%;
     height: 2rem;
-    background: #ff9140;
+    background: #037ce7;
 }
 
 .title {
@@ -434,8 +451,8 @@ body {
 
 .shuju {
     width: 100%;
-    height: 12.8rem;
-    background: #ff9140;
+    height: 14.8rem;
+    background: #037ce7;
     text-align: center;
 }
 
@@ -494,16 +511,16 @@ body {
 }
 
 .liebiao li {
-    height: 3rem;
+    height: 3.4rem;
     width: 100%;
-    line-height: 3rem;
+    line-height: 3.4rem;
     font-size: 0.9rem;
     overflow: hidden;
 }
 
 .liebiao li i {
     font-size: 1.2rem;
-    line-height: 3rem;
+    line-height: 3.4rem;
     float: left;
 }
 
@@ -653,7 +670,7 @@ body {
 }
 
 .co1 {
-    color: #fe9041!important;
+    color: #037ce7!important;
 }
 
 .ba1 {
@@ -687,7 +704,7 @@ body {
     height: 2rem;
     border: none;
     line-height: 2rem;
-    border: 1px solid #ff9240;
+    border: 1px solid #037ce7;
     border-radius: 0;
     text-indent: 3.5rem;
     -webkit-appearance: none;
@@ -710,9 +727,9 @@ body {
     top: 0.5rem;
     z-index: 2;
     font-size: 0.9rem;
-    border-right: 1px solid #ff9140;
+    border-right: 1px solid #037ce7;
     padding-right: 0.5rem;
-    color: #ff9140;
+    color: #037ce7;
 }
 
 .form-box button {
@@ -720,8 +737,8 @@ body {
     height: 2rem;
     border: none;
     line-height: 2rem;
-    background: #ff9240;
-    border: 1px solid #ff9240;
+    background: #a3d4ff;
+    border: 1px solid #a3d4ff;
     border-radius: 0;
     text-align: center;
     -webkit-appearance: none;
@@ -786,11 +803,11 @@ body {
     height: 1rem;
     line-height: 1rem;
     text-indent: 1rem;
-    color: #ff9142;
+    color: #037ce7;
     margin-top: 0.5125rem;
     float: left;
     overflow: hidden;
-    border-left: 3px solid #ff9142;
+    border-left: 3px solid #037ce7;
 }
 
 .zhifufangshi-box span {
@@ -855,14 +872,12 @@ body {
 .tixianfangshi2 button {
     width: 90%;
     height: 2rem;
-    background: #ff9140;
+    background: #a3d4ff;
     color: #fff;
     border-radius: 15px;
     margin: 0 auto;
     border: none;
-    line-height: 2rem;
-    background: #ff9240;
-    border: 1px solid #ff9240;
+    border: 1px solid #a3d4ff;
     border-radius: 0;
     border-radius: 15px;
     text-align: center;
@@ -975,7 +990,7 @@ body {
 }
 
 .cs {
-    background: #ff9140!important;
+    background: #a3d4ff!important;
 }
 
 .text {
@@ -1001,7 +1016,7 @@ body {
     text-align: center;
     line-height: 2rem;
     color: #fff;
-    background: #ff9140;
+    background: #a3d4ff;
     margin: 0 auto;
     border-radius: 15px;
     margin-top: 1rem;
@@ -1103,7 +1118,7 @@ body {
     width: 100%;
     height: 3rem;
     background: #fff;
-    border-bottom: 1px solid #ff9140;
+    border-bottom: 1px solid #037ce7;
     padding: 0.5rem 0;
 }
 
@@ -1133,7 +1148,7 @@ body {
 .tixianye-box a {
     width: 5rem;
     height: 1.8rem;
-    background: #ff9140;
+    background: #a3d4ff;
     color: #fff;
     text-align: center;
     line-height: 1.8rem;
@@ -1180,7 +1195,7 @@ body {
 .tf {
     width: 3rem;
     height: 1.5rem;
-    background: #ff9140;
+    background: #a3d4ff;
     color: #fff;
     text-align: center;
     line-height: 1.5rem;

@@ -8,18 +8,31 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="font_8ojbete1vduhxgvi/iconfont.css">
+    <link rel="stylesheet" href="font_ygoh247veso47vi/iconfont.css">
+    <link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+
 </head>
 
 <body oncontextmenu="return false;" onselectstart="return false">
     <nav class="nav">
-        <a href="" class="active">推荐</a>
-        <a href="">热门</a>
-        <a href="">搞笑</a>
-        <a href="">视频</a>
-        <a href="">两性</a>
-        <a href="">社会</a>
+        <a href="" class="active">金融</a>
+        <a href="">医疗</a>
+        <a href="">教育</a>
+        <a href="">餐饮</a>
+        <a href="">旅游</a>
+        <a href="">加盟</a>
     </nav>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="images/banner1.jpg" alt=""></div>
+            <div class="swiper-slide"><img src="images/banner2.jpg" alt=""></div>
+            <div class="swiper-slide"><img src="images/banner3.jpg" alt=""></div>
+            <div class="swiper-slide"><img src="images/banner4.jpg" alt=""></div>
+            <div class="swiper-slide"><img src="images/banner5.jpg" alt=""></div>
+            <div class="swiper-slide"><img src="images/banner6.jpg" alt=""></div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
     <div class="animated fadeInRight">
         <div class="center">
             <div class="center-box">
@@ -100,8 +113,8 @@
     <footer class="footer">
         <div class="footer-box">
             <a href="index.html">
-                <i class="iconfont active">&#xe617;</i>
-                <span class="active">分享赚钱</span>
+                <i class="iconfont actives">&#xe617;</i>
+                <span class="actives">分享赚钱</span>
             </a>
         </div>
         <div class="footer-box">
@@ -112,8 +125,8 @@
         </div>
         <div class="footer-box">
             <a href="cleanUp.html">
-                <i class="iconfont">&#xe600;</i>
-                <span>微商中心</span>
+                <i class="iconfont">&#xe699;</i>
+                <span>广告主</span>
             </a>
         </div>
         <div class="footer-box">
@@ -123,6 +136,15 @@
             </a>
         </div>
     </footer>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/swiper-3.4.2.jquery.min.js"></script>
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+            autoplay: 3000,
+            speed: 300,
+            pagination: '.swiper-pagination',
+        })
+    </script>
 </body>
 
 </html>

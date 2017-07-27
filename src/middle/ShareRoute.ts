@@ -1,6 +1,6 @@
 import { Route } from '../route';
 import { WeixinOrder } from '../services/wechat';
-
+import service = require('../services');
 @Route.Views('share')
 export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     doAction(action: string, method: string) {
@@ -22,10 +22,9 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
                 case 'post': return this.taskList;
                 case 'put': return this.taskList;
                 default: return this.taskList;
-            }
-
+            };
             case 'get-money-record': return this.getMoneyRecord;
-            case 'fansMoney': return this.fansMoney;
+            case 'fans-money': return this.fansMoney;
             case 'money-log': return this.moneyLog;
             case 'share-money': return this.shareMoney;
             default: return this.index;
@@ -40,7 +39,6 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
         } else {
             console.log('taskRecords')
         }
-
         this.render('share-money', { taskRecords });
     }
     constructor() {
@@ -57,7 +55,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
-        this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
+        // this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
         // console.log('user', user);
         if (openid) {
             console.log('openid :', openid);
@@ -74,11 +72,13 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
     }
 
     async recruitStudent(req: Route.Request, res: Route.Response) {
-        // var user = req.session.user;
-        // var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
+        var user = req.session.user;
+        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
+
+        console.log(`authUrl:` + authUrl);
         await res.render('share/recruit-student', {
-            // authUrl,
-            // user
+            authUrl,
+            user
         });
     }
 
@@ -158,7 +158,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
             total_fee: req.body.totalMoney * 100,
             attach: '任务费用',
             out_trade_no: 'kfc' + (+new Date),
-        }
+        };
         var payargs = await this.service.wechat.wechatPay(order);
         if (payargs) {
             order.user = this.req.session.user._id.toString();
@@ -190,6 +190,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
             var params = await this.service.wechat.getJSSDKApiParams({ url: 'http://' + req.hostname + req.originalUrl });
             var userId = req.session.user._id.toString();
             let task = await this.service.db.taskModel.findById(taskId).exec();
+
             // let user = await service.db.userModel.findById(userId).populate('parent').exec();;
             var isHaveVisited = task.users.some(visitedUser => {
                 return user._id.toString() == visitedUser;

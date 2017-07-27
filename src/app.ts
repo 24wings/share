@@ -7,6 +7,7 @@ import session = require('express-session');
 import bodyParser = require('body-parser');
 import middle = require('./middle');
 import nunjucks = require('nunjucks');
+import { CONFIG } from './services/config';
 import service = require('./services');
 import { Route } from './route';
 import { Middleware } from './middleware';
@@ -47,6 +48,7 @@ app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
         var parent = req.query.parent;
         console.log(req.query)
         var url = service.wechat.client.getAuthorizeURL(`${service.CONFIG.domain}/wechat/oauth` + (parent ? '?parent=' + parent : ''), '', 'snsapi_userinfo');
+
         res.reply({ content: url, type: 'text' });
     }))
     .use('/wechat/:action', Route.RouteBuilder.buildRoute(WechatRoute))

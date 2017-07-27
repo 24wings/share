@@ -48,6 +48,7 @@ class WeChatService {
     wx = wx;
     client = client;
     wechat = wechat;
+
     payment = payment;
     /**
      * 微信公众平台支付接口
@@ -155,8 +156,8 @@ class WeChatService {
         var queryStr = `?`;
         queryStr += query.parent ? 'parent=' + query.parent : '';
         queryStr += query.taskId ? "&taskId=" + query.taskId : '';
-
-        return client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
+        return this.client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
+        // return this.client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
     }
     async  wechatReturnMoney(order: WeixinOrder) {
         return new Promise(resolve =>

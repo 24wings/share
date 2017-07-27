@@ -53,7 +53,7 @@ export class CommonMiddle extends Middleware.BaseMiddleware {
     /**
      * 本地缓存用户数据
      * @param req
-     * @param res 
+     * @param res  
      * @param next 
      */
     storeUser(req: Middleware.Request, res: Middleware.Response, next) {

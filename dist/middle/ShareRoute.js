@@ -25,14 +25,16 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
             case 'taskDetail': return this.taskDetail;
             case 'getMoney': return this.GET == method ? this.getMoney : this.getMoneyDo;
             case 'guide': return this.guide;
-            case 'task-list': switch (method) {
-                case 'delete': return this.taskList;
-                case 'post': return this.taskList;
-                case 'put': return this.taskList;
-                default: return this.taskList;
-            }
+            case 'task-list':
+                switch (method) {
+                    case 'delete': return this.taskList;
+                    case 'post': return this.taskList;
+                    case 'put': return this.taskList;
+                    default: return this.taskList;
+                }
+                ;
             case 'get-money-record': return this.getMoneyRecord;
-            case 'fansMoney': return this.fansMoney;
+            case 'fans-money': return this.fansMoney;
             case 'money-log': return this.moneyLog;
             case 'share-money': return this.shareMoney;
             default: return this.index;
@@ -61,7 +63,7 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
-        this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
+        // this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
         // console.log('user', user);
         if (openid) {
             console.log('openid :', openid);
@@ -78,9 +80,13 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
         await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
     }
     async recruitStudent(req, res) {
-        // var user = req.session.user;
-        // var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
-        await res.render('share/recruit-student', {});
+        var user = req.session.user;
+        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: req.session.user._id.toString() });
+        console.log(`authUrl:` + authUrl);
+        await res.render('share/recruit-student', {
+            authUrl,
+            user
+        });
     }
     /**个人中心 */
     async personCenter(req, res) {

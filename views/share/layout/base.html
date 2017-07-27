@@ -3,48 +3,51 @@
 
 <head>
     <meta charset="UTF-8"> {%block title%}
-    <title>分享赚钱</title>
-    {%endblock%}
-
+    <title>分享赚钱</title>{%endblock%}
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-    <link rel="stylesheet" href="/share1/css/reset.css">
-    <link rel="stylesheet" href="/share1/css/animate.min.css">
-    <link rel="stylesheet" href="/share1/css/style.css">
-    <link rel="stylesheet" href="/share1/font_ygoh247veso47vi/iconfont.css">
-    <link rel="stylesheet" href="/share1/css/swiper-3.4.2.min.css"> {%block head%}{%endblock%}
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/animate.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/font_ygoh247veso47vi/iconfont.css">
+    <link rel="stylesheet" href="/css/swiper-3.4.2.min.css"> {%block head%}{%endblock%}
 </head>
 
 <body oncontextmenu="return false;" onselectstart="return false">
-    {%block content%} {%endblock%}
+
+    {%block content%}{%endblock%}
+
     <div class="padding"></div>
     <footer class="footer">
         <div class="footer-box">
-            <a href="index.html">
+            <a href="/share/index">
                 <i class="iconfont actives">&#xe617;</i>
                 <span class="actives">分享赚钱</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="mycenter.html">
+            <a href="/share/person-center">
                 <i class="iconfont">&#xe619;</i>
                 <span>个人中心</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="cleanUp.html">
+            <a href="/share/shop-center">
                 <i class="iconfont">&#xe699;</i>
                 <span>广告主</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="recruit.html">
+            <a href="/share/recruit-student">
                 <i class="iconfont">&#xe6ce;</i>
                 <span>我要收徒</span>
             </a>
         </div>
     </footer>
-    <script src="/share1/js/jquery-1.9.1.min.js"></script>
-    <script src="/share1/js/swiper-3.4.2.jquery.min.js"></script>
+    <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/js/swiper-3.4.2.jquery.min.js"></script>
+    <script src="/lib/jquery.qrcode.js"></script>
+    <script src="/lib/qrocde.js"></script>
+
     <script>
         var mySwiper = new Swiper('.swiper-container', {
             autoplay: 3000,
@@ -52,8 +55,7 @@
             pagination: '.swiper-pagination',
         })
     </script>
-
-    {%block script%} {%block script%}
+    {%block script%}{%endblock%}
 </body>
 
 </html>

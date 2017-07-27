@@ -1,0 +1,13 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="biaotio">
+    <h3>{{task.title}}</h3>
+    <div class="shij">
+        <span>发布时间:</span>
+        <span>{{task.createDt | time}}</span>
+    </div>
+</div>
+<div class="con">
+    <p>{{task.description}}</p>
+    <img src="{{task.imageUrl}}" alt="">
+</div>
+<iframe src="{{task.websiteUrl}}" style="width:100vw;height:100vh;border:none; "></iframe> {%endblock%}
