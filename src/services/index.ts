@@ -1,6 +1,6 @@
 import { CONFIG } from './config';
 import { db } from '../models';
-import wechat = require('./wechat');
+import { wechatService as wechat, WeixinOrder } from './wechat';
 import tools = require('./tools')
 import dbDo = require('./dbDo');
 export ={

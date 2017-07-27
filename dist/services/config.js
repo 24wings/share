@@ -5,7 +5,7 @@ const fs = require("fs");
 // var str = fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'), 'utf-8');
 // console.log('pfx:', str);
 exports.CONFIG = {
-    port: 80,
+    port: 8080,
     //随机字符串
     randomStr: 'random',
     /**
@@ -39,6 +39,9 @@ exports.CONFIG = {
         notify_url: 'http://wq8.youqulexiang.com/payment/',
         trade_type: 'APP',
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12')) //微信商户平台证书 (optional，部分API需要使用) 
+    },
+    servicePayment: {
+        much_appId: 1447732502,
     },
     jssdk: {
         "wechatToken": "sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR",

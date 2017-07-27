@@ -33,7 +33,7 @@ var wx = require('wechat-jssdk');
 var Payment = require('wechat-pay').Payment;
 var payment = new Payment(CONFIG.wechatPay);
 
-interface WeixinOrder {
+export interface WeixinOrder {
     body: string;
     attach: string;
     out_trade_no: string;
@@ -41,6 +41,7 @@ interface WeixinOrder {
     spbill_create_ip: string;
     openid: string;
     trade_type: string | 'JSAPI';
+    user?: string;
 }
 
 class WeChatService {
@@ -67,7 +68,7 @@ class WeChatService {
         console.log('order:', order);
         return new Promise((resovle, reject) => {
             payment.getBrandWCPayRequestParams(order, function (err, payargs) {
-                if (err) console.error(err)
+                if (err) { console.error(err); resovle(false) }
                 resovle(payargs);
             });
         });
@@ -260,11 +261,12 @@ class WeChatService {
             amount: 100,
             check_name: 'NO_CHECK',
             desc: '节日快乐',
-            mch_appid: CONFIG.wechatPay.appId,
+            mch_appid: CONFIG.servicePayment.much_appId,
             mchid: CONFIG.wechatPay.mchId,
             nonce_str: CONFIG.randomStr,
             openid: order.openid,
-            partner_trade_no: Date.now(),
+            partner_trade_no: new Date().getTime(),
+
             re_user_name: '影月',
             spbill_create_ip: tools.getIPAdress()
         };
@@ -316,4 +318,4 @@ class WeChatService {
 
 }
 
-export = new WeChatService();
+export var wechatService = new WeChatService();

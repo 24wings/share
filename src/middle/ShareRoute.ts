@@ -1,5 +1,5 @@
 import { Route } from '../route';
-
+import { WeixinOrder } from '../services/wechat';
 
 @Route.Views('share')
 export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
@@ -17,7 +17,13 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
             case 'taskDetail': return this.taskDetail;
             case 'getMoney': return this.GET == method ? this.getMoney : this.getMoneyDo;
             case 'guide': return this.guide;
-            case 'task-list': return this.taskList;
+            case 'task-list': switch (method) {
+                case 'delete': return this.taskList;
+                case 'post': return this.taskList;
+                case 'put': return this.taskList;
+                default: return this.taskList;
+            }
+
             case 'get-money-record': return this.getMoneyRecord;
             case 'fansMoney': return this.fansMoney;
             case 'money-log': return this.moneyLog;
@@ -51,7 +57,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
         let { taskTag, openid } = req.query;
         taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
-        // this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
+        this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
         // console.log('user', user);
         if (openid) {
             console.log('openid :', openid);
@@ -144,8 +150,7 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
 
     async  payTaskMoney(req: Route.Request, res: Route.Response) {
         let ip = this.service.tools.pureIp(this.req.ip);
-        console.log(ip);
-        var payargs = await this.service.wechat.wechatPay({
+        var order: WeixinOrder = {
             body: '支付活动费用',
             spbill_create_ip: ip,
             openid: this.req.session.user.openid,
@@ -153,9 +158,18 @@ export class ShareRoute extends Route.BaseRoute implements Route.IRoute {
             total_fee: req.body.totalMoney * 100,
             attach: '任务费用',
             out_trade_no: 'kfc' + (+new Date),
-        });
-        console.log(JSON.stringify(payargs));
-        res.json({ ok: true, data: payargs });
+        }
+        var payargs = await this.service.wechat.wechatPay(order);
+        if (payargs) {
+            order.user = this.req.session.user._id.toString();
+            let newRechgaregeRecord = await new this.db.wxRechargeRecordModel(order).save();
+            res.json({ ok: true, data: payargs });
+
+        } else {
+            res.json({ ok: false, data: '微信支付失败,查找系统 shareRoute  payTaskMoney 错误' })
+        }
+
+
     }
 
     /**

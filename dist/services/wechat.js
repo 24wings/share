@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const https = require("https");
 const tools = require("./tools");
@@ -56,8 +57,10 @@ class WeChatService {
         console.log('order:', order);
         return new Promise((resovle, reject) => {
             payment.getBrandWCPayRequestParams(order, function (err, payargs) {
-                if (err)
+                if (err) {
                     console.error(err);
+                    resovle(false);
+                }
                 resovle(payargs);
             });
         });
@@ -239,11 +242,11 @@ class WeChatService {
             amount: 100,
             check_name: 'NO_CHECK',
             desc: '节日快乐',
-            mch_appid: config_1.CONFIG.wechatPay.appId,
+            mch_appid: config_1.CONFIG.servicePayment.much_appId,
             mchid: config_1.CONFIG.wechatPay.mchId,
             nonce_str: config_1.CONFIG.randomStr,
             openid: order.openid,
-            partner_trade_no: Date.now(),
+            partner_trade_no: new Date().getTime(),
             re_user_name: '影月',
             spbill_create_ip: tools.getIPAdress()
         };
@@ -285,4 +288,4 @@ class WeChatService {
         console.log('xml:', data);
     }
 }
-module.exports = new WeChatService();
+exports.wechatService = new WeChatService();

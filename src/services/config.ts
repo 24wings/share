@@ -4,7 +4,7 @@ import fs = require('fs');
 // var str = fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'), 'utf-8');
 // console.log('pfx:', str);
 export const CONFIG = {
-    port: 80,
+    port: 8080,
     //随机字符串
     randomStr: 'random',
     /**
@@ -41,6 +41,9 @@ export const CONFIG = {
         trade_type: 'APP', //APP, JSAPI, NATIVE etc. 
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12')) //微信商户平台证书 (optional，部分API需要使用) 
 
+    },
+    servicePayment: {
+        much_appId: 1447732502,
     },
     jssdk: {
         "wechatToken": "sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR",

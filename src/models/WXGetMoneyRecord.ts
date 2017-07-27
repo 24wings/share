@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import { IUser } from './User';
 
-var getMoneySchema = new mongoose.Schema({
+var wxGetMoneyRecordSchema = new mongoose.Schema({
     // 提现人
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     money: { type: Number, default: 0 },
@@ -17,7 +17,7 @@ export interface IGetMoneyRecord extends mongoose.Document {
     errorMsg: string;
     createDt: Date;
 }
-export var getMoneyRecordModel = mongoose.model<IGetMoneyRecord>('GetMoneyRecord', getMoneySchema);
+export var wxGetMoneyRecordModel = mongoose.model<IGetMoneyRecord>('WXGetMoneyRecord', wxGetMoneyRecordSchema);
 
 
 

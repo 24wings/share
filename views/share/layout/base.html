@@ -3,51 +3,57 @@
 
 <head>
     <meta charset="UTF-8"> {%block title%}
-    <title>分享赚钱</title> {%endblock%}
+    <title>分享赚钱</title>
+    {%endblock%}
+
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/animate.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/font_8ojbete1vduhxgvi/iconfont.css">
-    <link rel="stylesheet" href="/css/tools.css"> {%block head%} {%endblock%}
+    <link rel="stylesheet" href="/share1/css/reset.css">
+    <link rel="stylesheet" href="/share1/css/animate.min.css">
+    <link rel="stylesheet" href="/share1/css/style.css">
+    <link rel="stylesheet" href="/share1/font_ygoh247veso47vi/iconfont.css">
+    <link rel="stylesheet" href="/share1/css/swiper-3.4.2.min.css"> {%block head%}{%endblock%}
 </head>
 
 <body oncontextmenu="return false;" onselectstart="return false">
-
     {%block content%} {%endblock%}
+    <div class="padding"></div>
     <footer class="footer">
         <div class="footer-box">
-            <a href="/share/index">
-                <i class="iconfont  {%if path=='/share/index' %} active {%endif%}">&#xe617;</i>
-                <span class=" {%if path=='/share/index' %} active {%endif%}">分享赚钱</span>
+            <a href="index.html">
+                <i class="iconfont actives">&#xe617;</i>
+                <span class="actives">分享赚钱</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="/share/person-center">
-                <i class="iconfont {%if path=='/share/person-center' %}  active  {%endif%}">&#xe619;</i>
-                <span class=" {%if path=='/share/person-center' %}  active  {%endif%}">个人中心</span>
+            <a href="mycenter.html">
+                <i class="iconfont">&#xe619;</i>
+                <span>个人中心</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="/share/shop-center">
-                <i class="iconfont {%if path=='/share/shop-center' %} active {%endif%}">&#xe600;</i>
-                <span class=" {%if path=='/share/shop-center' %} active {%endif%}">微商中心</span>
+            <a href="cleanUp.html">
+                <i class="iconfont">&#xe699;</i>
+                <span>广告主</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="/share/recruit-student">
-                <i class="iconfont {%if path=='/share/recruit-student' %} active {%endif%}">&#xe6ce;</i>
-                <span class="{%if path=='/share/recruit-student' %} active {%endif%}">我要收徒</span>
+            <a href="recruit.html">
+                <i class="iconfont">&#xe6ce;</i>
+                <span>我要收徒</span>
             </a>
         </div>
     </footer>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
-    <script src="/js/jquery.qrcode.js"></script>
-    <script src="/js/qrcode.js"></script>
-    <script src="/js/wechat.js"></script>
+    <script src="/share1/js/jquery-1.9.1.min.js"></script>
+    <script src="/share1/js/swiper-3.4.2.jquery.min.js"></script>
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+            autoplay: 3000,
+            speed: 300,
+            pagination: '.swiper-pagination',
+        })
+    </script>
 
-    {%block script%} {%endblock%}
+    {%block script%} {%block script%}
 </body>
 
 </html>

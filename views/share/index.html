@@ -1,22 +1,95 @@
- {%extends './layout/base.html'%}{%block content%}
 <nav class="nav">
-    <a href="/share/index" {%if queryTaskTag | myFault %} class="active" {%endif%}>推荐</a> {% for tag in taskTags%}
-    <a href="/share/index?taskTag={{tag._id.toString()}}" {%if queryTaskTag==tag._id.toString() %} class="active" {%endif%}>{{tag.name}}</a> {%endfor%}
+    <a href="" class="active">金融</a>
+    <a href="">医疗</a>
+    <a href="">教育</a>
+    <a href="">餐饮</a>
+    <a href="">旅游</a>
+    <a href="">加盟</a>
 </nav>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="images/banner1.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="images/banner2.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="images/banner3.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="images/banner4.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="images/banner5.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="images/banner6.jpg" alt=""></div>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
 <div class="animated fadeInRight">
     <div class="center">
-        {%for task in tasks%}
-        <a class="center-box" href="/share/taskDetail?taskId={{task._id.toString()}}&shareUserId={{user._id.toString()}}">
+        <div class="center-box">
             <div class="center-box-cr">
-                <img src="{{task.imageUrl}}" alt="">
-                <p>{{task.title}}</p>
-                <span class="time">{{task.createDt | time}}</span>
-                <span class="cost"><i class="iconfont">&#xe60e;</i>￥{{task.shareMoney}}元</span>
-                <span class="click"><i class="iconfont">&#xe662;</i>{{task.clickNum}}</span>
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
             </div>
-        </a>
-        {%endfor%}
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
+        <div class="center-box">
+            <div class="center-box-cr">
+                <img src="/images/img1.jpg" alt="">
+                <p>为什么华人神探李昌裕认为章莹颖仍认为有生还的可能性?</p>
+                <span class="time">2017-07-13</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥0.2元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>7762</span>
+            </div>
+        </div>
     </div>
 </div>
-
-{%endblock%}
