@@ -5,6 +5,9 @@ import { taskTagModel } from './TaskTag';
 import { taskRecordModel } from './TaskRecord';
 import { wxRechargeRecordModel } from './WXRechargeRecord';
 import { wxGetMoneyRecordModel } from './WXGetMoneyRecord';
+import { getMoneyRequestModel } from './GetMoneyRequest';
+import { boardModel } from './Board';
+import { boardRecordModel } from './BoardRecord';
 mongoose.connect('mongodb://localhost:27017/test');
 
 
@@ -14,5 +17,6 @@ export var db = {
     taskTagModel,
     taskRecordModel,
     wxGetMoneyRecordModel,
-    wxRechargeRecordModel
+    wxRechargeRecordModel,
+    getMoneyRequestModel
 }

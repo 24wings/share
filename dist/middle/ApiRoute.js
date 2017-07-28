@@ -31,6 +31,7 @@ class ApiRoute extends route_1.Route.BaseRoute {
             });
         }
         let url = await uploadFile(base64, req.body.filename || 'test.png');
+        console.log('上传图片:' + url);
         res.json({ ok: true, data: this.service.CONFIG.IP + url });
     }
     /**

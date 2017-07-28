@@ -74,7 +74,44 @@ class WeChatService {
             });
         });
     }
+    createMenu(menu) {
+        menu = menu ? menu : {
+            "button": [
+                {
+                    "type": "view",
+                    "name": "商户指南",
+                    "url": "http://www.baidu.com"
 
+                },
+                {
+                    "type": "view",
+                    "name": "赚钱指南",
+                    "url": "http://www.baidu.com"
+
+                }, {
+                    "type": "view",
+                    "name": "我要赚钱",
+                    "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8bdcc982b8477839&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect"
+
+                }]
+        };
+        return new Promise((resolve, reject) => {
+            api.createMenu(menu, (err, result) => {
+                if (err) console.error('创建微信错误');
+                resolve(result);
+            });
+        })
+    }
+
+    removeMenu() {
+        return new Promise((resolve, reject) => {
+            api.removeMenu((err, result) => {
+                if (err) console.error(err);
+                resolve(result)
+            });
+
+        })
+    }
     getSDKParams(param?) {
         var param = param || {
             debug: false,
@@ -213,26 +250,26 @@ class WeChatService {
     /**
      * 微信发送商户平台的接口
      <xml>
-<sign><![CDATA[E1EE61A91C8E90F299DE6AE075D60A2D]]></sign>
-<mch_billno><![CDATA[0010010404201411170000046545]]></mch_billno>
-<mch_id><![CDATA[888]]></mch_id>
-<wxappid><![CDATA[wxcbda96de0b165486]]></wxappid>
-<send_name><![CDATA[send_name]]></send_name>
-<re_openid><![CDATA[onqOjjmM1tad-3ROpncN-yUfa6uI]]></re_openid>
-<total_amount><![CDATA[200]]></total_amount>
-<total_num><![CDATA[1]]></total_num>
-<wishing><![CDATA[恭喜发财]]></wishing>
-<client_ip><![CDATA[127.0.0.1]]></client_ip>
-<act_name><![CDATA[新年红包]]></act_name>
-<remark><![CDATA[新年红包]]></remark>
-<scene_id><![CDATA[PRODUCT_2]]></scene_id>
-<consume_mch_id><![CDATA[10000097]]></consume_mch_id>
-<nonce_str><![CDATA[50780e0cca98c8c8e814883e5caa672e]]></nonce_str>
-<risk_info>posttime%3d123123412%26clientversion%3d234134%26mobile%3d122344545%26deviceid%3dIOS</risk_info>
-</xml>
-
-
-只支持一个人微信红包
+    <sign><![CDATA[E1EE61A91C8E90F299DE6AE075D60A2D]]></sign>
+    <mch_billno><![CDATA[0010010404201411170000046545]]></mch_billno>
+    <mch_id><![CDATA[888]]></mch_id>
+    <wxappid><![CDATA[wxcbda96de0b165486]]></wxappid>
+    <send_name><![CDATA[send_name]]></send_name>
+    <re_openid><![CDATA[onqOjjmM1tad-3ROpncN-yUfa6uI]]></re_openid>
+    <total_amount><![CDATA[200]]></total_amount>
+    <total_num><![CDATA[1]]></total_num>
+    <wishing><![CDATA[恭喜发财]]></wishing>
+    <client_ip><![CDATA[127.0.0.1]]></client_ip>
+    <act_name><![CDATA[新年红包]]></act_name>
+    <remark><![CDATA[新年红包]]></remark>
+    <scene_id><![CDATA[PRODUCT_2]]></scene_id>
+    <consume_mch_id><![CDATA[10000097]]></consume_mch_id>
+    <nonce_str><![CDATA[50780e0cca98c8c8e814883e5caa672e]]></nonce_str>
+    <risk_info>posttime%3d123123412%26clientversion%3d234134%26mobile%3d122344545%26deviceid%3dIOS</risk_info>
+    </xml>
+    
+    
+    只支持一个人微信红包
      *      */
 
     bulildXml(obj: Object) {

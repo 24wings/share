@@ -16,6 +16,8 @@
             <input type="text" name="tastTag" value="{{taskTags[0]._id.toString()}}" hidden style="display:none;">
         </div>
 
+
+
         <!--  <div class="release-box">
             <label for="">区域选择:</label>
             <ul>
@@ -26,21 +28,28 @@
                 <li>仙桃</li>          
         </div>
                </ul> -->
+        <div class="release-box">
+            <label for="">预览图片</label>
+            <input type="file" onchange="previewImage(this.files[0])">
+            <img src="" alt="" id="preview" style="max-width:100%;">
+            <input type="text" name="imageUrl" style="display:none;">
+        </div>
+
 
         <div class="release-box">
             <label for="">总出价:</label>
             <span>具有吸引力的价格能让更多人推广</span>
-            <input min="0" type="number" name="totalMoney" value="2">
+            <input min="0" type="number" name="totalMoney" value="2" required="required">
         </div>
         <div class="release-box">
             <label for="">单条出价:</label>
             <span>具有吸引力的价格能让更多人推广</span>
-            <input type="number" name="shareMoney" value="0.2">
+            <input type="number" name="shareMoney" value="0.2" required="required">
         </div>
         <div class="release-box">
             <label for="">推广地址:</label>
             <span>你要推广什么就推广什么，记住是网址</span>
-            <input type="text" name="websiteUrl">
+            <input type="text" name="websiteUrl" required="required">
         </div>
         <div class="release-box">
             <label for="">正文:</label>
@@ -94,6 +103,43 @@
                 alert("支付失败，请重试");
             }
         });
+    };
+
+    /**
+     * 
+     */
+    function previewImage(file) {
+        // alert(file.name);
+        if (!file) return;
+
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var base64 = event.target.result;
+            try {
+                $('#preview').attr('src', base64);
+                $.ajax({
+                    url: "/api/uploadBase64",
+                    method: 'POST',
+                    data: {
+                        base64: base64
+                    },
+                    success: function(rtn) {
+                        if (rtn.ok) {
+                            alert(rtn.data);
+                            $('input[name=imageUrl]').val(rtn.data);
+                        } else {
+                            alert(rtn.data)
+                        }
+
+                    }
+                })
+            } catch (e) {
+                if (e) alert(e);
+
+            }
+        }
+        reader.readAsDataURL(file);
+
     }
 </script>
 

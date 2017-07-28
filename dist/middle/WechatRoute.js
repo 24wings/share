@@ -9,14 +9,27 @@ class WechatRoute extends route_1.Route.BaseRoute {
             case 'oauth': return this.oauth;
             case 'jssdk': return this.getJSSDKSignature;
             case 'payment': return this.service.wechat.getPayReply();
+            case 'create-menu': return this.createMenu;
+            case 'remove-menu': return this.removeMenu;
             default: return this.notFound;
         }
+    }
+    /**创建微信公众号按钮 */
+    async createMenu() {
+        let action = await this.service.wechat.createMenu('');
+        this.res.json({ ok: true, data: action });
     }
     before() { this.next(); }
     after() { }
     constructor() {
         super();
         // console.log('Wechat Service', service);
+    }
+    async removeMenu() {
+        let action = await this.service.wechat.removeMenu();
+        this.res.json({
+            ok: true, data: action
+        });
     }
     async payment() {
         let money = this.req.body;

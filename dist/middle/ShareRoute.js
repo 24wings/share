@@ -37,8 +37,21 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
             case 'fans-money': return this.fansMoney;
             case 'money-log': return this.moneyLog;
             case 'share-money': return this.shareMoney;
+            case 'task-page': return this.taskPage;
             default: return this.index;
         }
+    }
+    async taskPage() {
+        let page = this.req.query.page || 0;
+        let taskTag = this.req.query.taskTag;
+        let tasks = [];
+        if (taskTag) {
+            tasks = await this.db.taskModel.find({ taskTag }).skip(10 * page).limit(10).exec();
+        }
+        else {
+            tasks = await this.db.taskModel.find().skip(10 * page).limit(10).exec();
+        }
+        this.res.json({ ok: true, data: tasks });
     }
     async shareMoney() {
         let taskRecords = await this.db.taskRecordModel
@@ -61,7 +74,6 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
     async index(req, res) {
         // req.query
         let { taskTag, openid } = req.query;
-        taskTag = taskTag ? taskTag : false;
         let user = req.session.user;
         // this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
         // console.log('user', user);
@@ -72,10 +84,10 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
         let taskTags = await this.service.db.taskTagModel.find().exec();
         let tasks = [];
         if (taskTag) {
-            tasks = await this.service.db.taskModel.find({ taskTag }).limit(100).exec();
+            tasks = await this.service.db.taskModel.find({ taskTag }).limit(10).exec();
         }
         else {
-            tasks = await this.service.db.taskModel.find().limit(100).exec();
+            tasks = await this.service.db.taskModel.find().limit(10).exec();
         }
         await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
     }
@@ -140,7 +152,12 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
     }
     async publishTask(req, res) {
         let { title, content, imageUrl, taskTag, shareMoney, totalMoney, websiteUrl } = req.body;
-        let newTask = await new this.service.db.taskModel({ title, taskTag, content, imageUrl, totalMoney, fee: totalMoney, shareMoney, websiteUrl, publisher: req.session.user._id.toString(), active: true, msg: '审核通过' }).save();
+        let newTask = await new this.service.db.taskModel({
+            title, taskTag,
+            content, imageUrl, totalMoney,
+            fee: totalMoney, shareMoney, websiteUrl,
+            publisher: this.req.session.user._id.toString(), active: true, msg: '审核通过'
+        }).save();
         res.redirect('/share/index');
     }
     async payTaskMoney(req, res) {
@@ -320,17 +337,28 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
         res.render('share/getMoney', { user: req.session.user });
     }
     async getMoneyDo() {
-        let money = this.req.body.money;
-        let ip = this.service.tools.pureIp(this.req.ip);
-        var payargs = await this.service.wechat.wechatReturnMoney({
-            attach: '用户体现',
-            spbill_create_ip: ip,
-            out_trade_no: '' + new Date().getTime(),
-            trade_type: 'JSAPI',
-            openid: this.req.session.user.openid, body: '用户体现', total_fee: money
-        });
-        console.log(payargs);
-        this.res.json(payargs);
+        let { money, alipay, alipayName } = this.req.body;
+        let userId = this.req.session.user._id.toString();
+        let user = await this.db.userModel.findById(userId).exec();
+        if (user.totalMoney > money && alipay && alipayName) {
+            // 请求,钱就会减少
+            let newRequest = await new this.db.getMoneyRequestModel({ user: userId, money, alipay, alipayName }).save();
+            let action = await this.db.userModel.findByIdAndUpdate(userId, { $inc: { totalMoney: -money, } }).exec();
+            this.req.session.user = this.res.locals.user = await this.db.userModel.findById(userId).exec();
+            this.render('getMoney', { successMsg: '进入审核状态' });
+        }
+        else {
+            this.render('getMoney', { errorMsg: '金额不足' });
+        }
+        // let ip = this.service.tools.pureIp(this.req.ip);
+        /* var payargs = await this.service.wechat.wechatReturnMoney({
+             attach: '用户体现',
+             spbill_create_ip: ip,
+             out_trade_no: '' + new Date().getTime(),
+             trade_type: 'JSAPI',
+             openid: this.req.session.user.openid, body: '用户体现', total_fee: money
+         });
+ */
     }
     async guide(req, res) {
         res.render('share/guide', {});
@@ -347,14 +375,77 @@ let ShareRoute = class ShareRoute extends route_1.Route.BaseRoute {
         res.render('share/task-list', { tasks });
     }
     /**钱的记录 */
-    getMoneyRecord(req, res) {
-        res.render('share/get-money-record', { user: req.session.user });
+    async getMoneyRecord(req, res) {
+        let getMoneyRecords = await this.db.getMoneyRequestModel.find({ user: this.req.session.user._id }).exec();
+        this.render('get-money-record', { user: req.session.user, getMoneyRecords });
     }
     async fansMoney(req, res) {
-        res.render('share/fans-money', { user: req.session.user, });
+        let now = new Date().getTime();
+        let before24h = now - 24 * 60 * 60 * 1000;
+        let taskRecords = await this.db.taskRecordModel
+            .find({ 'shareDetail.user': { $in: [this.req.session.user._id.toString()] } })
+            .where('createDt').gt(before24h).lt(now).sort({ createDt: -1 }).populate('task').exec();
+        /** 总收益 */
+        let allMoney = 0;
+        // 本身收益 
+        let allMyMoney = 0;
+        // 1级收益
+        let level1 = {
+            num: 0,
+            money: 0
+        };
+        let level2 = {
+            num: 0,
+            money: 0
+        };
+        let level3 = {
+            num: 0,
+            money: 0
+        };
+        taskRecords.forEach(taskRecord => {
+            let order = taskRecord.shareDetail.find(order => order.user == this.req.session.user._id);
+            allMyMoney += taskRecord.shareDetail[0].user == this.req.session.user._id ? taskRecord.shareDetail[0].money : 0;
+            let index = taskRecord.shareDetail.indexOf(order);
+            //
+            switch (index) {
+                case 0:
+                    break;
+                case 1:
+                    level1.money += taskRecord.shareDetail[0].money;
+                    level1.num++;
+                    break;
+                case 2:
+                    level1.money += taskRecord.shareDetail[0].money;
+                    level2.money += taskRecord.shareDetail[1].money;
+                    level1.num++;
+                    level2.num++;
+                    break;
+                case 3:
+                    level1.money += taskRecord.shareDetail[0].money;
+                    level2.money += taskRecord.shareDetail[1].money;
+                    level3.money += taskRecord.shareDetail[2].money;
+                    level1.num++;
+                    level2.num++;
+                    level3.num++;
+                    break;
+            }
+            allMoney += order.money;
+        });
+        res.render('share/fans-money', {
+            user: req.session.user,
+            allMoney, allMyMoney,
+            level1,
+            level2,
+            level3
+        });
     }
     async moneyLog(req, res) {
-        res.render('share/money-log', {});
+        let now = new Date().getTime();
+        let before24h = now - 24 * 60 * 60 * 1000;
+        let taskRecords = await this.db.taskRecordModel
+            .find({ 'shareDetail.user': { $in: [this.req.session.user._id.toString()] } })
+            .where('createDt').gt(before24h).lt(now).sort({ createDt: -1 }).populate('task').exec();
+        res.render('share/money-log', { taskRecords });
     }
 };
 ShareRoute = __decorate([
