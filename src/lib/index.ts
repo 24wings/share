@@ -97,7 +97,7 @@ export namespace Core {
                                 `)
                             console.log(routeObj);
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`, data) });
-                            routeObj.before.bind(temp, req, res, next)
+                            routeObj.before.bind(temp)(req, res, next);
                         } else {
                             throw Error('路由不存咋')
                         }

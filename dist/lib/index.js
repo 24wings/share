@@ -16,9 +16,9 @@ exports.CHECKBODY = Symbol('CHECKBODY');
  *
  */
 var Core;
-(function(Core) {
+(function (Core) {
     let Route;
-    (function(Route) {
+    (function (Route) {
         function Controller(config) {
             return (target) => {
                 target.prototype[exports.VIEWPATH] = config.viewPath;
@@ -35,7 +35,8 @@ var Core;
                 let service = routeClass.prototype[exports.SERVICEPATH];
                 if (this.route.get(service)) {
                     throw Error('重复添加路由器' + service);
-                } else {
+                }
+                else {
                     let routeObj = new routeClass();
                     this.route.set(service, routeObj);
                     console.log('添加路由', service);
@@ -65,7 +66,8 @@ var Core;
                             console.log(routeObj);
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[exports.VIEWPATH]}/${filename}`, data) });
                             routeObj.before.bind(temp)(req, res, next);
-                        } else {
+                        }
+                        else {
                             throw Error('路由不存咋');
                         }
                     },
@@ -75,7 +77,8 @@ var Core;
                             // 参数检验
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[exports.VIEWPATH]}/${filename}`, data) });
                             routeObj.doAction(req.params.action, req.method.toLowerCase(), next).bind(temp)(req, res, next);
-                        } else {
+                        }
+                        else {
                             throw Error('路由不存在');
                         }
                         // let query = method.prototype[CHECKQUERY];
@@ -86,7 +89,8 @@ var Core;
                         if (routeObj) {
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[exports.VIEWPATH]}/${filename}`, data) });
                             routeObj.after.bind(temp)(req, res, next);
-                        } else {
+                        }
+                        else {
                             throw Error('路由不存在');
                         }
                     }
@@ -108,7 +112,8 @@ var Core;
                         this.addRoute(routeClass);
                     });
                     return this.getRoute();
-                } else {
+                }
+                else {
                     throw Error('please input a  directiory to be a scannerRoute Directory');
                 }
             }
@@ -136,7 +141,7 @@ var Core;
         Route.BaseRoute = BaseRoute;
     })(Route = Core.Route || (Core.Route = {}));
     let Check;
-    (function(Check) {
+    (function (Check) {
         function Query(key) {
             return (target, propertyKey, descriptor) => {
                 let method = target[propertyKey];
@@ -144,8 +149,8 @@ var Core;
             };
         }
         Check.Query = Query;
-
-        function Body() {}
+        function Body() {
+        }
         Check.Body = Body;
     })(Check = Core.Check || (Core.Check = {}));
 })(Core = exports.Core || (exports.Core = {}));
