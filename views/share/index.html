@@ -24,7 +24,7 @@
         {%for task in tasks%}
         <a class="center-box" href="/share/taskDetail?shareUserId={{user._id.toString()}}&taskId={{task._id.toString()}}">
             <div class="center-box-cr">
-                <img src="{{task.imageUrl}}" alt="">
+                <img src="{%if task.imageUrl%}{{task.imageUrl}} {%else%} /images/bg.jpg{%endif%}" alt="">
                 <p>{{task.title}}</p>
                 <span class="time">{{task.createDt | time}}</span>
                 <span class="cost"><i class="iconfont">&#xe60e;</i>￥{{task.shareMoney | money}}元</span>

@@ -5,16 +5,18 @@ import logger = require('morgan');
 import cookieParser = require('cookie-parser');
 import session = require('express-session');
 import bodyParser = require('body-parser');
-import middle = require('./middle');
+import { CommonMiddle } from './CommonMiddle';
+import service = require('./services');
+
 import nunjucks = require('nunjucks');
 import { CONFIG } from './services/config';
-import service = require('./services');
-import { Route } from './route';
+
+import { Core } from './lib';
 import { Middleware } from './middleware';
 
 import moment = require('moment');
 
-import { ShareRoute, CommonMiddle, WechatRoute, ApiRoute, ShareAdminRoute } from './middle';
+
 
 
 
@@ -51,10 +53,7 @@ app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
 
         res.reply({ content: url, type: 'text' });
     }))
-    .use('/wechat/:action', Route.RouteBuilder.buildRoute(WechatRoute))
-    .use('/share/:action', Route.RouteBuilder.buildRoute(ShareRoute))
-    .use('/api/:action', Route.RouteBuilder.buildRoute(ApiRoute))
-    .use('/share-admin/:action', Route.RouteBuilder.buildRoute(ShareAdminRoute))
+    .use('/:service/:action', Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {
         // set locals, only providing error in development
         res.locals.message = err.message;

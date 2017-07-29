@@ -2,12 +2,12 @@
 const express = require("express");
 const path = require("path");
 var favicon = require('serve-favicon');
-const nunjucks = require("nunjucks");
+const CommonMiddle_1 = require("./CommonMiddle");
 const service = require("./services");
-const route_1 = require("./route");
+const nunjucks = require("nunjucks");
+const lib_1 = require("./lib");
 const middleware_1 = require("./middleware");
 const moment = require("moment");
-const middle_1 = require("./middle");
 var app = express();
 var njk = nunjucks.configure(path.resolve(__dirname, '../views'), {
     autoescape: true,
@@ -25,7 +25,7 @@ for (let key in filters) {
     njk.addFilter(key, filters[key]);
 }
 // app.set('trust proxy', 1) // trust first proxy 
-app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(middle_1.CommonMiddle))
+app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle_1.CommonMiddle))
     .set('view engine', 'html')
     .all('/', service.wechat.wechat(service.CONFIG.wechat, (req, res, next) => {
     var parent = req.query.parent;
@@ -33,10 +33,7 @@ app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(middle_1.Commo
     var url = service.wechat.client.getAuthorizeURL(`${service.CONFIG.domain}/wechat/oauth` + (parent ? '?parent=' + parent : ''), '', 'snsapi_userinfo');
     res.reply({ content: url, type: 'text' });
 }))
-    .use('/wechat/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.WechatRoute))
-    .use('/share/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.ShareRoute))
-    .use('/api/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.ApiRoute))
-    .use('/share-admin/:action', route_1.Route.RouteBuilder.buildRoute(middle_1.ShareAdminRoute))
+    .use('/:service/:action', lib_1.Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {
     // set locals, only providing error in development
     res.locals.message = err.message;
