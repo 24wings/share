@@ -21,21 +21,21 @@ exports.CONFIG = {
     IP: 'http://47.92.87.28',
     wechat: {
         token: 'minglu12minglu12minglu12minglu12',
-        appid: 'wx07a1ef24ca488840',
+        appid: 'wx8bdcc982b8477839',
         appsecret: '104da80e8df8c613cb5e9534d38eeb74',
         encodingAESKey: 'liqKdvtzTCxBfFIUekZ5qhgvMUqaueTkNn7VuCZuOYY',
         checkSignature: true // 可选，默认为true。由于微信公众平台接口调试工具在明文模式下不发送签名，所以如要使用该测试工具，请将其设置为false
     },
     wechatPay: {
         partnerKey: "minglu12minglu12minglu12minglu12",
-        appId: 'wx07a1ef24ca488840',
-        mchId: "1485776572",
+        appId: 'wx8bdcc982b8477839',
+        mchId: "1447732502",
         notifyUrl: "http://wq8.youqulexiang.com/payment/",
         pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
     },
     wechatPayment: {
-        appid: 'wx07a1ef24ca488840',
-        mch_id: '1485776572',
+        appid: 'wx8bdcc982b8477839',
+        mch_id: '1447732502',
         apiKey: 'minglu12minglu12minglu12minglu12',
         notify_url: 'http://wq8.youqulexiang.com/payment/',
         trade_type: 'APP',

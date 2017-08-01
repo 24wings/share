@@ -17,6 +17,8 @@
     "@types/node": "^8.0.10",
     "@types/node-fetch": "^1.6.7",
     "@types/nunjucks": "^0.0.32",
+    "@types/request": "^2.0.0",
+    "@types/xml2js": "^0.4.0",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
@@ -37,7 +39,8 @@
     "wechat-nodejs": "^1.0.1",
     "wechat-oauth": "^1.2.1",
     "wechat-pay": "^0.2.5",
-    "wechat-payment-node": "^2.3.2"
+    "wechat-payment-node": "^2.3.2",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

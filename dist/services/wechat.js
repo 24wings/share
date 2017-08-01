@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
-const tools = require("./tools");
 const fs = require("fs");
 const crypto = require("crypto");
 var OAuth = require('wechat-oauth');
-const wechat_pay_1 = require("./wechat-pay");
+// import WechatPayment from './wechat-pay';
 var options = {
     appid: config_1.CONFIG.wechat.appid,
     mch_id: config_1.CONFIG.wechatPay.mchId,
@@ -14,7 +13,7 @@ var options = {
     trade_type: 'JSAPI',
     pfx: config_1.CONFIG.wechatPay.pfx //微信商户平台证书 (optional，部分API需要使用)
 };
-var wechatPaymentInstance = new wechat_pay_1.default(options);
+// var wechatPaymentInstance = new WechatPayment(options);
 const WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 var middleware = require('wechat-pay').middleware;
@@ -280,25 +279,27 @@ class WeChatService {
         return str;
     }
     toOne(order) {
-        let orderData = {
-            partner_trade_no: new Date().getTime(),
-            openid: order.openid,
-            check_name: 'NO_CHECK',
-            re_user_name: 'Mr Ma',
-            amount: 100,
-            desc: '红包',
-            spbill_create_ip: tools.getIPAdress()
-        };
-        wechatPaymentInstance.transfers(orderData)
-            .then(result => {
-            console.log(result);
-        })
-            .catch(err => {
-            console.log(err);
-        });
+        /*
+                let orderData = {
+                    partner_trade_no: new Date().getTime(), //商户订单号，需保持唯一性
+                    openid: order.openid,
+                    check_name: 'NO_CHECK',
+                    re_user_name: 'Mr Ma',
+                    amount: 100,
+                    desc: '红包',
+                    spbill_create_ip: tools.getIPAdress()
+                }
+                wechatPaymentInstance.transfers(orderData)
+                    .then(result => {
+                        console.log(result);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                    */
     }
     async payRedpackOne(order) {
-        this.toOne(order);
+        // this.toOne(order)
         return;
         /*
         var str = '';

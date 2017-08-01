@@ -9,7 +9,7 @@ import sha1 = require('sha1');
 import crypto = require('crypto');
 var OAuth = require('wechat-oauth');
 
-import WechatPayment from './wechat-pay';
+// import WechatPayment from './wechat-pay';
 var options = {
     appid: CONFIG.wechat.appid,
     mch_id: CONFIG.wechatPay.mchId,
@@ -19,7 +19,7 @@ var options = {
     pfx: CONFIG.wechatPay.pfx //微信商户平台证书 (optional，部分API需要使用)
 };
 
-var wechatPaymentInstance = new WechatPayment(options);
+// var wechatPaymentInstance = new WechatPayment(options);
 const WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 
@@ -303,26 +303,27 @@ class WeChatService {
         return str;
     }
     toOne(order: { money: number, openid: string, wishing?: string }) {
-
-        let orderData = {
-            partner_trade_no: new Date().getTime(), //商户订单号，需保持唯一性
-            openid: order.openid,
-            check_name: 'NO_CHECK',
-            re_user_name: 'Mr Ma',
-            amount: 100,
-            desc: '红包',
-            spbill_create_ip: tools.getIPAdress()
-        }
-        wechatPaymentInstance.transfers(orderData)
-            .then(result => {
-                console.log(result);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        /*
+                let orderData = {
+                    partner_trade_no: new Date().getTime(), //商户订单号，需保持唯一性
+                    openid: order.openid,
+                    check_name: 'NO_CHECK',
+                    re_user_name: 'Mr Ma',
+                    amount: 100,
+                    desc: '红包',
+                    spbill_create_ip: tools.getIPAdress()
+                }
+                wechatPaymentInstance.transfers(orderData)
+                    .then(result => {
+                        console.log(result);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                    */
     }
     async payRedpackOne(order: { money: number, openid: string, wishing?: string }) {
-        this.toOne(order)
+        // this.toOne(order)
         return;
         /*
         var str = '';

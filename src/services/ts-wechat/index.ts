@@ -1,0 +1,1 @@
+export { default as WechatPay } from './wechat-pay';
