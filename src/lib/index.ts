@@ -95,7 +95,7 @@ export namespace Core {
                                 action:${req.params.action}
                                 
                                 `)
-                            console.log(routeObj);
+                            // console.log(routeObj);
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`, data) });
                             routeObj.before.bind(temp)(req, res, next);
                         } else {
@@ -107,7 +107,13 @@ export namespace Core {
                         let routeObj = this.route.get(req.params.service);
                         if (routeObj) {
                             // 参数检验
-                            let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`, data) });
+                            let temp = Object.assign({}, ctrl, {
+                                req,
+                                res,
+                                next,
+                                render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`),
+                                display: (data?) => res.render(`${routeObj[VIEWPATH]}/${req.params.action}`, data)
+                            });
                             routeObj.doAction(req.params.action, req.method.toLowerCase(), next).bind(temp)(req, res, next);
                         } else {
                             throw Error('路由不存在');
@@ -176,12 +182,22 @@ export namespace Core {
             req: Request;
             next: express.NextFunction;
             render: (filename: string, data?: any) => void;
+            /**
+             * 
+             * 根据 service 自动渲染    /:service/:action.thml
+             */
+            display: (data?) => void;
             doAction(action, method, next) {
                 return next;
             }
 
             constructor() {
+
                 super();
+                delete this.service;
+                delete this.db;
+                delete this.CONFIG;
+
             }
 
         }

@@ -13,7 +13,7 @@
                 <li {% if loop.index0==0%} class=" active" {%endif%} _id="{{taskTag._id.toString()}}">{{taskTag.name}}</li>
                 {%endfor%}
             </ul>
-            <input type="text" name="tastTag" value="{{taskTags[0]._id.toString()}}" hidden style="display:none;">
+            <input type="text" name="taskTag" value="{{taskTags[0]._id.toString()}}" hidden style="display:none;">
         </div>
 
 
@@ -115,31 +115,73 @@
         var reader = new FileReader();
         reader.onload = function(event) {
             var base64 = event.target.result;
-            try {
-                $('#preview').attr('src', base64);
-                $.ajax({
-                    url: "/api/uploadBase64",
-                    method: 'POST',
-                    data: {
-                        base64: base64
-                    },
-                    success: function(rtn) {
-                        if (rtn.ok) {
-                            alert(rtn.data);
-                            $('input[name=imageUrl]').val(rtn.data);
-                        } else {
-                            alert(rtn.data)
+            convertImgToBase64(base64, function(data) {
+                try {
+                    $('#preview').attr('src', base64);
+                    $.ajax({
+                        url: "/api/uploadBase64",
+                        method: 'POST',
+                        data: {
+                            base64: data
+                        },
+                        success: function(rtn) {
+                            if (rtn.ok) {
+                                alert(rtn.data);
+                                $('input[name=imageUrl]').val(rtn.data);
+                            } else {
+                                alert(rtn.data)
+                            }
+
                         }
+                    })
+                } catch (e) {
+                    if (e) alert(e);
 
-                    }
-                })
-            } catch (e) {
-                if (e) alert(e);
+                }
+            })
 
-            }
         }
         reader.readAsDataURL(file);
 
+    }
+
+    function convertImgToBase64(url, callback, outputFormat) {
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        var img = new Image;
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+            var width = img.width;
+            var height = img.height;
+            let compress = 1;
+            // 按比例压缩4倍
+            console.log(width * height);
+            if (width * height > 40000) {
+                var rate = Math.ceil(width * height / 40000);
+
+
+            }
+            // var rate = (width < height ? width / height : height / width) / 4;
+            compress = 1 / rate;
+            // var ratio;
+            // if ((ratio = width * height / 40000) > 1) {
+            // ratio = Math.sqrt(ratio);
+            // width /= ratio;
+            // height /= ratio;
+            // } else {
+            // ratio = 1;
+            // }
+
+            canvas.width = width * compress;
+            canvas.height = height * compress;
+            ctx.drawImage(img, 0, 0, width, height, 0, 0, width * compress, height * compress);
+            // ctx.drawImage(img, 0, 0, width, height, 0, 0, width * ratio, height * ratio);
+
+            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+            callback.call(this, dataURL);
+            canvas = null;
+        };
+        img.src = url;
     }
 </script>
 

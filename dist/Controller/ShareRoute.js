@@ -75,7 +75,7 @@ let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
         // req.query
         let { taskTag, openid } = this.req.query;
         let user = this.req.session.user;
-        // this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
+        this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
         // console.log('user', user);
         if (openid) {
             console.log('openid :', openid);
@@ -83,13 +83,14 @@ let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
         }
         let taskTags = await this.service.db.taskTagModel.find().exec();
         let tasks = [];
+        let banners = await this.service.db.bannerModel.find({ active: true }).populate('task').exec();
         if (taskTag) {
             tasks = await this.service.db.taskModel.find({ taskTag }).limit(10).exec();
         }
         else {
             tasks = await this.service.db.taskModel.find().limit(10).exec();
         }
-        await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user });
+        await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user, banners });
     }
     async recruitStudent() {
         var user = this.req.session.user;

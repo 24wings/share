@@ -10,12 +10,12 @@
 </nav>
 <div class="swiper-container">
     <div class="swiper-wrapper">
-        <div class="swiper-slide"><img src="/images/banner1.jpg" alt=""></div>
-        <div class="swiper-slide"><img src="/images/banner2.jpg" alt=""></div>
-        <div class="swiper-slide"><img src="/images/banner3.jpg" alt=""></div>
-        <div class="swiper-slide"><img src="/images/banner4.jpg" alt=""></div>
-        <div class="swiper-slide"><img src="/images/banner5.jpg" alt=""></div>
-        <div class="swiper-slide"><img src="/images/banner6.jpg" alt=""></div>
+        {%for banner in banners%}
+        <div class="swiper-slide">
+            <a href="/share/taskDetail?shareUserId={{user._id.toString()}}&taskId={{banner.task._id.toString()}}"><img src="{% if banner.task.imageUrl %}{{banner.task.imageUrl }}{%else%}{{banner.bannerImg}}{%endif%}" alt=""></a>
+        </div>
+        {%endfor%}
+
     </div>
     <div class="swiper-pagination"></div>
 </div>

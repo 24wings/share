@@ -63,7 +63,7 @@ var Core;
                                 action:${req.params.action}
                                 
                                 `);
-                            console.log(routeObj);
+                            // console.log(routeObj);
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[exports.VIEWPATH]}/${filename}`, data) });
                             routeObj.before.bind(temp)(req, res, next);
                         }
@@ -75,7 +75,13 @@ var Core;
                         let routeObj = this.route.get(req.params.service);
                         if (routeObj) {
                             // 参数检验
-                            let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[exports.VIEWPATH]}/${filename}`, data) });
+                            let temp = Object.assign({}, ctrl, {
+                                req,
+                                res,
+                                next,
+                                render: (filename, data) => res.render(`${routeObj[exports.VIEWPATH]}/${filename}`),
+                                display: (data) => res.render(`${routeObj[exports.VIEWPATH]}/${req.params.action}`, data)
+                            });
                             routeObj.doAction(req.params.action, req.method.toLowerCase(), next).bind(temp)(req, res, next);
                         }
                         else {
@@ -133,6 +139,9 @@ var Core;
                 this.service = service;
                 this.db = service.db;
                 this.CONFIG = service.CONFIG;
+                delete this.service;
+                delete this.db;
+                delete this.CONFIG;
             }
             doAction(action, method, next) {
                 return next;

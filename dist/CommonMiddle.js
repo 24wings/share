@@ -12,6 +12,7 @@ class CommonMiddle extends middleware_1.Middleware.BaseMiddleware {
         for (var dir of this.service.CONFIG.publicDirs) {
             middlewares.push(this.staticServer(dir));
         }
+        middlewares.push(this.crossDomain);
         middlewares.push(logger('dev'));
         middlewares.push(bodyParser.json({ limit: '50mb' }));
         middlewares.push(bodyParser.urlencoded({ extended: false }));

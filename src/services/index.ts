@@ -10,13 +10,3 @@ export ={
     tools,
     dbDo
 }
-
-
-async function test() {
-    let taskRecords = await db.taskRecordModel.find({ 'shareDetail.user': { $in: ['5979aa66f97b400ef876681d'] } });
-    console.log(taskRecords);
-
-}
-
-
-test();

@@ -1,16 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
-const https = require("https");
 const tools = require("./tools");
 const fs = require("fs");
-const url = require("url");
-const md5 = require("md5");
-// let wechatPaymentInstance = new WechatPayment(CONFIG.wechatPay);
-const WechatAPI = require('wechat-api');
-var wechat = require('wechat');
 const crypto = require("crypto");
 var OAuth = require('wechat-oauth');
+const wechat_pay_1 = require("./wechat-pay");
+var options = {
+    appid: config_1.CONFIG.wechat.appid,
+    mch_id: config_1.CONFIG.wechatPay.mchId,
+    apiKey: config_1.CONFIG.wechat.appsecret,
+    notify_url: config_1.CONFIG.wechatPay.notifyUrl,
+    trade_type: 'JSAPI',
+    pfx: config_1.CONFIG.wechatPay.pfx //微信商户平台证书 (optional，部分API需要使用)
+};
+var wechatPaymentInstance = new wechat_pay_1.default(options);
+const WechatAPI = require('wechat-api');
+var wechat = require('wechat');
 var middleware = require('wechat-pay').middleware;
 var api = new WechatAPI(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret);
 var client = new OAuth(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.appsecret, function (openid, callback) {
@@ -80,7 +86,7 @@ class WeChatService {
                 }, {
                     "type": "view",
                     "name": "我要赚钱",
-                    "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8bdcc982b8477839&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect"
+                    "url": `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07a1ef24ca488840&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect`
                 }
             ]
         };
@@ -273,41 +279,67 @@ class WeChatService {
         str = str.startsWith(`&`) ? str.substring(1) : str;
         return str;
     }
+    toOne(order) {
+        let orderData = {
+            partner_trade_no: new Date().getTime(),
+            openid: order.openid,
+            check_name: 'NO_CHECK',
+            re_user_name: 'Mr Ma',
+            amount: 100,
+            desc: '红包',
+            spbill_create_ip: tools.getIPAdress()
+        };
+        wechatPaymentInstance.transfers(orderData)
+            .then(result => {
+            console.log(result);
+        })
+            .catch(err => {
+            console.log(err);
+        });
+    }
     async payRedpackOne(order) {
+        this.toOne(order);
+        return;
+        /*
         var str = '';
         var options = {
             amount: 100,
             check_name: 'NO_CHECK',
             desc: '节日快乐',
-            mch_appid: config_1.CONFIG.servicePayment.much_appId,
-            mchid: config_1.CONFIG.wechatPay.mchId,
-            nonce_str: config_1.CONFIG.randomStr,
+            mch_appid: CONFIG.wechat.appid,
+            mchid: CONFIG.wechatPay.mchId,
+            nonce_str: CONFIG.randomStr,
             openid: order.openid,
             partner_trade_no: new Date().getTime(),
+
             re_user_name: '影月',
             spbill_create_ip: tools.getIPAdress()
         };
         str = this.buildSignStr(options);
-        str += `&key=${config_1.CONFIG.wechatPay.partnerKey}`;
+        str += `&key=${CONFIG.wechatPay.partnerKey}`;
+
+
         console.log('str:' + str);
         var signatrue = md5(str).toUpperCase();
+
         // var signatrue = sha1.update(str).digest('hex');
         console.log('signature:', signatrue);
         options['sign'] = signatrue;
-        if (signatrue.length > 32)
-            console.log('-----------------签名过长--------------------');
+        if (signatrue.length > 32) console.log('-----------------签名过长--------------------')
         let data = this.bulildXml(options);
         console.log(data);
         var parsed_url = url.parse('https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers');
-        console.log(`parsed_url`, parsed_url);
+        // console.log(`parsed_url`, parsed_url);
         var req = https.request({
             protocol: parsed_url.protocol,
             host: parsed_url.host,
             port: 443,
             path: parsed_url.path,
-            pfx: config_1.CONFIG.wechatPay.pfx,
-            passphrase: config_1.CONFIG.wechatPay.mchId,
+            pfx: CONFIG.wechatPay.pfx,
+            passphrase:// 'password',//''
+            CONFIG.wechatPay.mchId,//'password',
             method: 'POST',
+
         }, function (res) {
             var content = '';
             res.on('data', function (chunk) {
@@ -317,12 +349,16 @@ class WeChatService {
                 console.log('end', content);
             });
         });
+
         req.on('error', function (e) {
-            console.log('error:', e);
+            console.log('error:', e)
         });
         req.write(data);
         req.end();
-        console.log('xml:', data);
+
+
+        console.log('xml:', data)
+        */
     }
 }
 exports.wechatService = new WeChatService();

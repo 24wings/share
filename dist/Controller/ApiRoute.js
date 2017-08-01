@@ -19,7 +19,7 @@ let ApiRoute = class ApiRoute extends lib_1.Core.Route.BaseRoute {
                 return this.uploadBase64;
         }
     }
-    before() { }
+    before() { this.next(); }
     after() { }
     async uploadBase64() {
         let base64 = this.req.body.base64;

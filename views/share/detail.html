@@ -30,7 +30,7 @@
 <div id="qrcode"></div>
 <img alt="" id="codeImg" style="display:none;">
 <button onclick="toggleQrcode()" style="width:70px;height:70px;border-radius:50%;background:#a3d4ff;color:#fff;position:fixed;bottom:80px;right:30px;border:none;">显示二维码</button>
-<iframe src="{{task.websiteUrl}}" style="width:100vw;height:100vh;border:none; "></iframe> {%endblock%} {%block script%}
+<iframe src="{% if task.websiteUrl.startsWith('http://') %} {{task.websiteUrl}} {%else %}{{'http://'+task.websiteUrl}} {%endif%}" style="width:100vw;height:100vh;border:none; "></iframe> {%endblock%} {%block script%}
 <script>
     var showing = false;
 
@@ -50,4 +50,4 @@
         showing = !showing;
     }
 </script>
-{%endblock%}0
+{%endblock%}

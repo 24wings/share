@@ -17,7 +17,7 @@ export default class ApiRoute extends Core.Route.BaseRoute implements Core.Route
     constructor() {
         super();
     }
-    before() { }
+    before() { this.next() }
     after() { }
     async  uploadBase64() {
         let base64 = this.req.body.base64;
