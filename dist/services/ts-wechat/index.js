@@ -1,4 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var wechat_pay_1 = require("./wechat-pay");
-exports.WechatPay = wechat_pay_1.default;
+var WechatPay_1 = require("./WechatPay");
+exports.WechatPay = WechatPay_1.default;
+var WechatOauth_1 = require("./WechatOauth");
+exports.WechatOauth = WechatOauth_1.default;

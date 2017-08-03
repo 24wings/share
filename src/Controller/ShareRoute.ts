@@ -2,6 +2,7 @@ import { Core } from '../lib';
 import { WeixinOrder } from '../services/wechat';
 import service = require('../services');
 import { ITaskRecord } from '../models/TaskRecord';
+import { default as config } from '../services/config';
 
 
 @Core.Route.Controller({
@@ -36,9 +37,10 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
             case 'task-page': return this.taskPage;
 
             default: return this.index;
-
         }
     }
+
+
 
     async taskPage() {
 
@@ -180,7 +182,8 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
     }
 
     async  payTaskMoney() {
-        let ip = this.service.tools.pureIp(this.req.ip);
+        let ip = this.service.tools.getClientIp(this.req);
+        console.log(`ip:` + ip, this.req.ip);
         var order: WeixinOrder = {
             body: '支付活动费用',
             spbill_create_ip: ip,
@@ -189,11 +192,21 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
             total_fee: this.req.body.totalMoney * 100,
             attach: '任务费用',
             out_trade_no: 'kfc' + (+new Date),
+
         };
-        var payargs = await this.service.wechat.wechatPay(order);
+
+        let payargs = await config.wxPay.getBrandWCPayRequestParams({
+            body: '支付活动费用',
+            openid: this.req.session.user.openid,
+            spbill_create_ip: ip,
+            total_fee: this.req.body.totalMoney * 100
+        });
+        console.log(payargs);
+
         if (payargs) {
             order.user = this.req.session.user._id.toString();
             let newRechgaregeRecord = await new this.db.wxRechargeRecordModel(order).save();
+
             this.res.json({ ok: true, data: payargs });
 
         } else {
@@ -373,6 +386,12 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
 
             let action = await this.db.userModel.findByIdAndUpdate(userId, { $inc: { totalMoney: -money, } }).exec();
             this.req.session.user = this.res.locals.user = await this.db.userModel.findById(userId).exec();
+            await this.service.pay.payToOne({
+                partner_trade_no: new Date().getTime().toString(),
+                amount: money * 100,
+                openid: user.openid,
+                desc: '提现'
+            });
             this.render('getMoney', { successMsg: '进入审核状态' })
 
 

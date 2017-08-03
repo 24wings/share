@@ -10,12 +10,27 @@ exports.default = new class {
              */
             transfers: 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers',
             /**微信授权认证  */
-            oauth: 'https://open.weixin.qq.com/connect/oauth2/authorize'
+            oauth: 'https://open.weixin.qq.com/connect/oauth2/authorize',
+            PAY: {
+                UNIFIED_ORDER: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
+                ORDER_QUERY: 'https://api.mch.weixin.qq.com/pay/orderquery',
+                REFUND: 'https://api.mch.weixin.qq.com/secapi/pay/refund',
+                REFUND_QUERY: 'https://api.mch.weixin.qq.com/pay/refundquery',
+                DOWNLOAD_BILL: 'https://api.mch.weixin.qq.com/pay/downloadbill',
+                SHORT_URL: 'https://api.mch.weixin.qq.com/tools/shorturl',
+                CLOSE_ORDER: 'https://api.mch.weixin.qq.com/pay/closeorder'
+            }
         };
     }
-    parseXml(xml) {
-        let parser = new xml2js.Parser();
-        return parser.parseString(xml);
+    async parseXml(xml) {
+        return new Promise((resolve, reject) => {
+            let parser = new xml2js.Parser();
+            parser.parseString(xml, (err, xml) => {
+                if (err)
+                    console.log(err);
+                resolve(xml);
+            });
+        });
     }
     bulildXml(obj) {
         let builder = new xml2js.Builder();
@@ -54,5 +69,21 @@ exports.default = new class {
         if (length > 32)
             length = 32;
         return (Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2)).substr(0, length);
+    }
+    /** 获取部署机器的IP地址 */
+    getSelfIp() {
+        var interfaces = require('os').networkInterfaces();
+        for (var devName in interfaces) {
+            var iface = interfaces[devName];
+            for (var i = 0; i < iface.length; i++) {
+                var alias = iface[i];
+                if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                    return alias.address;
+                }
+            }
+        }
+    }
+    generateTimestamp() {
+        return parseInt((new Date().getTime() / 1000).toString(), 10) + '';
     }
 };

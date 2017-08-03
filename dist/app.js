@@ -5,9 +5,12 @@ var favicon = require('serve-favicon');
 const CommonMiddle_1 = require("./CommonMiddle");
 const service = require("./services");
 const nunjucks = require("nunjucks");
+const config_1 = require("./services/config");
 const lib_1 = require("./lib");
 const middleware_1 = require("./middleware");
 const moment = require("moment");
+// test.testPayRequest();
+// test.testWechatPayRequest()
 var app = express();
 var njk = nunjucks.configure(path.resolve(__dirname, '../views'), {
     autoescape: true,
@@ -24,14 +27,13 @@ var filters = {
 for (let key in filters) {
     njk.addFilter(key, filters[key]);
 }
-// app.set('trust proxy', 1) // trust first proxy 
+app.set('trust proxy', false); // trust first proxy 
 app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle_1.CommonMiddle))
     .set('view engine', 'html')
     .all('/', service.wechat.wechat(service.CONFIG.wechat, (req, res, next) => {
-    var parent = req.query.parent;
-    console.log(req.query);
-    var url = service.wechat.client.getAuthorizeURL(`${service.CONFIG.domain}/wechat/oauth` + (parent ? '?parent=' + parent : ''), '', 'snsapi_userinfo');
-    res.reply({ content: url, type: 'text' });
+    console.log(`ip:`, req.ip);
+    let oauthUrl = config_1.default.wxOauth.getOauthUrl(`${service.CONFIG.domain}/wechat/oauth`, req.query);
+    res.reply({ content: oauthUrl, type: 'text' });
 }))
     .use('/:service/:action', lib_1.Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {

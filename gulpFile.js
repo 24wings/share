@@ -11,7 +11,7 @@ var gulp = require('gulp');
 
 var tsProject = ts.createProject('./tsconfig.json');
 
-gulp.task("default", ["compile", "watch", "nodemon", 'sass:watch']);
+gulp.task("default", ["compile", 'nodemon', "watch", 'sass:watch']);
 
 
 gulp.task("watch", function() {

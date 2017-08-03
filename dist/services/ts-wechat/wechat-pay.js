@@ -7,6 +7,10 @@ class WechatPay {
     constructor(wechatConfig) {
         this.wechatConfig = wechatConfig;
     }
+    /**
+     * 商家支付到个人
+     * @param order Object
+     */
     payToOne(order) {
         return new Promise((resolve, reject) => {
             order.check_name = order.check_name ? order.check_name : 'NO_CHECK';
@@ -30,7 +34,7 @@ class WechatPay {
                 if (err)
                     console.log(err);
                 // let result = wechatTool.parseXml(body);
-                console.log(res.body);
+                resolve(body);
             });
         });
     }

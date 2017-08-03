@@ -13,16 +13,30 @@ let pay = new ts_wechat_1.WechatPay({
     pfx: config_1.CONFIG.wechatPay.pfx,
     trade_type: 'APP',
 });
+/*
 pay.payToOne({
     openid: 'ovMVW1sJAw2eGoiOiBHoZgxOE0cE',
     partner_trade_no: new Date().getTime().toString(),
-    amount: 500,
+    amount: 50,
     desc: '商户支付'
 });
+*/
+async function getOfficeUser() {
+    let user = await models_1.db.userModel.findOne({ nickname: 'admin', openid: 'admin' }).exec();
+    if (user) {
+        return user;
+    }
+    else {
+        user = await new models_1.db.userModel({ nickname: 'admin', openid: 'admin' }).save();
+        return user;
+    }
+}
 module.exports = {
     CONFIG: config_1.CONFIG,
     db: models_1.db,
     wechat: wechat_1.wechatService,
     tools,
-    dbDo
+    dbDo,
+    pay,
+    getOfficeUser
 };

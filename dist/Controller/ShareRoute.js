@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lib_1 = require("../lib");
+const config_1 = require("../services/config");
 let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
     constructor() {
         super();
@@ -162,7 +163,8 @@ let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
         this.res.redirect('/share/index');
     }
     async payTaskMoney() {
-        let ip = this.service.tools.pureIp(this.req.ip);
+        let ip = this.service.tools.getClientIp(this.req);
+        console.log(`ip:` + ip, this.req.ip);
         var order = {
             body: '支付活动费用',
             spbill_create_ip: ip,
@@ -172,7 +174,13 @@ let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
             attach: '任务费用',
             out_trade_no: 'kfc' + (+new Date),
         };
-        var payargs = await this.service.wechat.wechatPay(order);
+        let payargs = await config_1.default.wxPay.getBrandWCPayRequestParams({
+            body: '支付活动费用',
+            openid: this.req.session.user.openid,
+            spbill_create_ip: ip,
+            total_fee: this.req.body.totalMoney * 100
+        });
+        console.log(payargs);
         if (payargs) {
             order.user = this.req.session.user._id.toString();
             let newRechgaregeRecord = await new this.db.wxRechargeRecordModel(order).save();
@@ -346,6 +354,12 @@ let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
             let newRequest = await new this.db.getMoneyRequestModel({ user: userId, money, alipay, alipayName }).save();
             let action = await this.db.userModel.findByIdAndUpdate(userId, { $inc: { totalMoney: -money, } }).exec();
             this.req.session.user = this.res.locals.user = await this.db.userModel.findById(userId).exec();
+            await this.service.pay.payToOne({
+                partner_trade_no: new Date().getTime().toString(),
+                amount: money * 100,
+                openid: user.openid,
+                desc: '提现'
+            });
             this.render('getMoney', { successMsg: '进入审核状态' });
         }
         else {

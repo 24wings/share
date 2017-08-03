@@ -1,4 +1,6 @@
 import { Core } from '../lib';
+import fs = require('fs');
+import path = require('path');
 @Core.Route.Controller({
     service: 'share-server',
     viewPath: 'share-server'
@@ -16,8 +18,84 @@ export default class ShareAdminRoute extends Core.Route.BaseRoute implements Cor
             case 'toggle-banner-active':
                 return this.toggleBannerActive;
 
+            case 'office-task':
+                switch (method) {
+                    case 'get': return this.officeTaskGet;
+                    case 'post': return this.officeTaskPost;
+                    case 'put': return this.officeTaskPut;
+                    case 'delete': return this.officeTaskDelete;
+                };
+            case 'uploadBase64': return this.uploadBase64;
             default: return this.index;
         }
+    }
+    async  uploadBase64() {
+        let base64 = this.req.body.base64;
+        var ctrl = this;
+        function uploadFile(file, filename) {
+            return new Promise((resolve, reject) => {
+                if (file.indexOf('base64,') != -1) {
+                    file = file.substring(file.indexOf('base64,') + 7);
+                }
+                let randomFilename = new Date().getTime() + filename;
+                let distpath = path.resolve(ctrl.service.CONFIG.uploadDir + '/' + randomFilename);
+
+                fs.writeFile(distpath, new Buffer(file, 'base64'), (err) => {
+                    err ? resolve(false) : resolve('/upload/' + randomFilename);
+                });
+            })
+        }
+        let url = await uploadFile(base64, this.req.body.filename || 'test.png');
+        console.log('上传图片:' + url);
+        this.res.json({ ok: true, data: this.service.CONFIG.IP + url });
+
+    }
+
+    async officeTaskGet() {
+        let { _id } = this.req.query;
+
+
+        if (_id) {
+            let officeTask = await this.db.taskModel.findById(_id).exec();
+            this.res.json({
+                ok: true,
+                data: officeTask
+            });
+        } else {
+            let office = await this.service.getOfficeUser();
+            let officeTasks = await this.db.taskModel.find({ publisher: office._id.toString() }).exec();
+            this.res.json({
+                ok: true,
+                data: officeTasks
+            });
+        }
+    }
+    async officeTaskPost() {
+        let office = await this.service.getOfficeUser();
+        let task = this.req.body;
+        task.publisher = office._id;
+        task.openid = 'admin';
+        let newTask = await new this.db.taskModel(task).save();
+        this.res.json({
+            ok: true,
+            data: newTask
+        })
+    }
+    async officeTaskPut() {
+
+        let modifyAction = await this.db.taskModel.findByIdAndUpdate(this.req.query._id, this.req.body).exec();
+        this.res.json({
+            ok: true,
+            data: modifyAction
+        });
+    }
+    async officeTaskDelete() {
+        let delAction = await this.db.taskModel.findByIdAndRemove(this.req.query._id).exec();
+        this.res.json({
+            ok: true,
+            data: delAction
+        });
+
     }
     async toggleBannerActive() {
         let banner = await this.db.bannerModel.findById(this.req.query._id).exec();

@@ -9,14 +9,17 @@ import { CommonMiddle } from './CommonMiddle';
 import service = require('./services');
 
 import nunjucks = require('nunjucks');
-import { CONFIG } from './services/config';
+import { CONFIG, default as config } from './services/config';
 
 import { Core } from './lib';
 import { Middleware } from './middleware';
 
 import moment = require('moment');
+import test from './test/indext';
 
 
+// test.testPayRequest();
+// test.testWechatPayRequest()
 
 
 
@@ -41,17 +44,15 @@ for (let key in filters) {
 
 }
 
-// app.set('trust proxy', 1) // trust first proxy 
+app.set('trust proxy', false) // trust first proxy 
 
 app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
 
     .set('view engine', 'html')
     .all('/', service.wechat.wechat(service.CONFIG.wechat, (req, res, next) => {
-        var parent = req.query.parent;
-        console.log(req.query)
-        var url = service.wechat.client.getAuthorizeURL(`${service.CONFIG.domain}/wechat/oauth` + (parent ? '?parent=' + parent : ''), '', 'snsapi_userinfo');
-
-        res.reply({ content: url, type: 'text' });
+        console.log(`ip:`, req.ip);
+        let oauthUrl = config.wxOauth.getOauthUrl(`${service.CONFIG.domain}/wechat/oauth`, req.query);
+        res.reply({ content: oauthUrl, type: 'text' });
     }))
     .use('/:service/:action', Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {
@@ -63,4 +64,10 @@ app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
         res.status(err.status || 500);
         res.render('error');
     });
-export =app;      
+
+
+
+export =app;
+
+
+

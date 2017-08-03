@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const fs = require("fs");
 const crypto = require("crypto");
+const path = require("path");
 var OAuth = require('wechat-oauth');
 // import WechatPayment from './wechat-pay';
 var options = {
@@ -35,7 +36,13 @@ var client = new OAuth(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.apps
 });
 var wx = require('wechat-jssdk');
 var Payment = require('wechat-pay').Payment;
-var payment = new Payment(config_1.CONFIG.wechatPay);
+var payment = new Payment({
+    partnerKey: "minglu12minglu12minglu12minglu12",
+    appId: 'wx8bdcc982b8477839',
+    mchId: "1447627402",
+    notifyUrl: "http://wq8.youqulexiang.com/payment/",
+    pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
+});
 class WeChatService {
     constructor() {
         this.wx = wx;
@@ -61,7 +68,7 @@ class WeChatService {
     wechatPay(order) {
         console.log('order:', order);
         return new Promise((resovle, reject) => {
-            payment.getBrandWCPayRequestParams(order, function (err, payargs) {
+            this.payment.getBrandWCPayRequestParams(order, function (err, payargs) {
                 if (err) {
                     console.error(err);
                     resovle(false);
@@ -85,7 +92,7 @@ class WeChatService {
                 }, {
                     "type": "view",
                     "name": "我要赚钱",
-                    "url": `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07a1ef24ca488840&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect`
+                    "url": `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${config_1.CONFIG.wechat.appid}&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect`
                 }
             ]
         };

@@ -7,19 +7,10 @@ import url = require('url');
 import md5 = require('md5');
 import sha1 = require('sha1');
 import crypto = require('crypto');
+import path = require('path');
 var OAuth = require('wechat-oauth');
 
-// import WechatPayment from './wechat-pay';
-var options = {
-    appid: CONFIG.wechat.appid,
-    mch_id: CONFIG.wechatPay.mchId,
-    apiKey: CONFIG.wechat.appsecret, //微信商户平台API密钥
-    notify_url: CONFIG.wechatPay.notifyUrl,
-    trade_type: 'JSAPI', //APP, JSAPI, NATIVE etc.
-    pfx: CONFIG.wechatPay.pfx //微信商户平台证书 (optional，部分API需要使用)
-};
 
-// var wechatPaymentInstance = new WechatPayment(options);
 const WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 
@@ -41,8 +32,7 @@ var client = new OAuth(CONFIG.wechat.appid, CONFIG.wechat.appsecret, function (o
 });
 
 var wx = require('wechat-jssdk');
-var Payment = require('wechat-pay').Payment;
-var payment = new Payment(CONFIG.wechatPay);
+
 
 export interface WeixinOrder {
     body: string;
@@ -79,7 +69,7 @@ class WeChatService {
     wechatPay(order: WeixinOrder) {
         console.log('order:', order);
         return new Promise((resovle, reject) => {
-            payment.getBrandWCPayRequestParams(order, function (err, payargs) {
+            this.payment.getBrandWCPayRequestParams(order, function (err, payargs) {
                 if (err) { console.error(err); resovle(false) }
                 resovle(payargs);
             });
@@ -102,7 +92,7 @@ class WeChatService {
                 }, {
                     "type": "view",
                     "name": "我要赚钱",
-                    "url": `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07a1ef24ca488840&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect`
+                    "url": `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${CONFIG.wechat.appid}&redirect_uri=http%3A%2F%2Fwq8.youqulexiang.com%2Fwechat%2Foauth&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect`
                 }]
         };
         return new Promise((resolve, reject) => {
