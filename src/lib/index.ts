@@ -99,7 +99,9 @@ export namespace Core {
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`, data) });
                             routeObj.before.bind(temp)(req, res, next);
                         } else {
-                            throw Error('路由不存咋')
+
+                            res.render('error', { errorMsg: '404页面找不到' })
+
                         }
 
                     },
@@ -127,11 +129,9 @@ export namespace Core {
                         if (routeObj) {
                             let temp = Object.assign({}, ctrl, { req, res, next, render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`, data) });
                             routeObj.after.bind(temp)(req, res, next);
-
                         } else {
-                            throw Error('路由不存在')
+                            res.render('error', { errorMsg: '404页面找不到' })
                         }
-
                     }];
             }
 

@@ -10,6 +10,7 @@ import { boardModel } from './Board';
 import { boardRecordModel } from './BoardRecord';
 import { bannerModel } from './Banner';
 import { taskTemplateModel } from './TaskTemplate';
+import { advertModel } from './advert';
 mongoose.connect('mongodb://localhost:27017/test');
 
 
@@ -22,5 +23,6 @@ export var db = {
     wxRechargeRecordModel,
     getMoneyRequestModel,
     bannerModel,
-    taskTemplateModel
+    taskTemplateModel,
+    advertModel
 }
