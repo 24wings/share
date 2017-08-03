@@ -23,13 +23,8 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
     }
 
     before() { this.next(); }
-    after() {
-        this.next();
-    }
-    constructor() {
-        super();
-        // console.log('Wechat Service', service);
-    }
+    after() { this.next(); }
+    constructor() { super(); }
 
     async removeMenu() {
         let action = await this.service.wechat.removeMenu();
@@ -49,7 +44,6 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
             body: '',
             total_fee: money
         });
-        console.log(payargs);
         this.res.end(payargs);
     }
 
@@ -60,15 +54,11 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
         // console.log(this.req.query, code);
 
         this.service.wechat.client.getAccessToken(code, (err, result) => {
-            // console.dir(err);
-            // console.dir(result); 
+
             var accessToken = result.data.access_token;
             var openid = result.data.openid;
-            // console.log('token=' + accessToken);
             this.req.session.accessToken = accessToken;
             this.res.locals.accessToken = accessToken;
-
-            console.log('openid=' + openid);
             this.service.wechat.client.getUser(openid, async (err, result) => {
                 let user = await this.service.db.userModel.findOne({ openid }).exec();
                 if (user) {
@@ -86,7 +76,7 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
                 }
                 this.req.session.user = user;
                 this.res.locals.user = user;
-                // console.log('session user', this.req.session.user);
+
                 if (taskId) {
                     this.res.redirect('/share/index')
                     // res.redirect('/task/' + taskId)
@@ -95,7 +85,6 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
                 }
             });
         }, (err, result) => {
-
         });
 
     }

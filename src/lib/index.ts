@@ -66,7 +66,7 @@ export namespace Core {
                 } else {
                     let routeObj = new routeClass();
                     this.route.set(service, routeObj)
-                    console.log('添加路由', service)
+                    console.log('添加路由', service);
                 }
                 // RouteBuilder.route[SERVICEPATH] = new routeClass();
 
@@ -143,13 +143,13 @@ export namespace Core {
                         let aboFile = path.resolve(dirPath, filename);
 
                         let relative = path.relative(__dirname, aboFile);
-                        // console.log('文件', aboFile, __dirname, relative);
                         relative = relative.replace(/\\/g, '/');
 
                         let routePath = './' + relative;
                         console.log('路由文件:', routePath);
+
                         let routeClass: RouteClass = require(routePath).default;
-                        // console.log('routeClass', routeClass);
+
                         this.addRoute(routeClass)
                     });
 
@@ -192,24 +192,15 @@ export namespace Core {
             }
 
             constructor() {
-
                 super();
                 delete this.service;
                 delete this.db;
                 delete this.CONFIG;
-
             }
 
         }
-
         export type RouteObject = BaseRoute & IRoute;
-
         export type RouteClass = new () => RouteObject;
-
-
-
-
-
     }
 
     export namespace Check {
