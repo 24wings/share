@@ -20,26 +20,26 @@
     <footer class="footer">
         <div class="footer-box">
             <a href="/share/index">
-                <i class="iconfont actives">&#xe617;</i>
-                <span class="actives">分享赚钱</span>
+                <i class="iconfont {%if path=='/share/index'  %}actives {%endif%}  ">&#xe617;</i>
+                <span class="{%if path=='/share/index'  %}actives {%endif%} ">分享赚钱</span>
             </a>
         </div>
         <div class="footer-box">
             <a href="/share/person-center">
-                <i class="iconfont">&#xe619;</i>
-                <span>个人中心</span>
+                <i class="iconfont {%if path=='/share/person-center'  %}actives {%endif%}">&#xe619;</i>
+                <span class=" {%if path=='/share/person-center'  %}actives {%endif%}">个人中心</span>
             </a>
         </div>
         <div class="footer-box">
             <a href="/share/shop-center">
-                <i class="iconfont">&#xe699;</i>
-                <span>广告主</span>
+                <i class="iconfont {%if path=='/share/shop-center'  %}actives {%endif%}">&#xe699;</i>
+                <span class=" {%if path=='/share/shop-center'  %}actives {%endif%}">广告主</span>
             </a>
         </div>
         <div class="footer-box">
-            <a href="/share/recruit-student">
-                <i class="iconfont">&#xe6ce;</i>
-                <span>我要收徒</span>
+            <a href="/share/recruit-student?userId={{user._id.toString()}}">
+                <i class="iconfont {%if path=='/share/recruit-student'  %}actives {%endif%}">&#xe6ce;</i>
+                <span class=" {%if path=='/share/recruit-student'  %}actives {%endif%}">我要收徒</span>
             </a>
         </div>
     </footer>

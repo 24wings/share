@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs = require("fs");
 const ts_wechat_1 = require("./ts-wechat");
-// var str = fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'), 'utf-8');
-// console.log('pfx:', str);
 exports.CONFIG = {
     port: 8080,
     adverster: {},
@@ -73,7 +71,8 @@ exports.default = new class {
             appid: this.wechat.appid,
             trade_type: 'APP',
             notify_url: this.wechat.notifyUrl,
-            mch_id: this.wechat.mchId, pfx: this.wechat.pfx
+            mch_id: this.wechat.mchId,
+            pfx: this.wechat.pfx
         });
     }
 };

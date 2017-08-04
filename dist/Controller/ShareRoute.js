@@ -94,8 +94,8 @@ let ShareRoute = class ShareRoute extends lib_1.Core.Route.BaseRoute {
         await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user, banners });
     }
     async recruitStudent() {
-        var user = this.req.session.user;
-        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: this.req.session.user._id.toString() });
+        var user = await this.db.userModel.findById(this.req.query.userId).exec();
+        var authUrl = await this.service.wechat.getAuthorizeURL({ parent: this.req.query.userId });
         console.log(`authUrl:` + authUrl);
         await this.res.render('share/recruit-student', {
             authUrl,

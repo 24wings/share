@@ -32,7 +32,7 @@
 <div class="animated fadeInRight base-page">
 
     <div class="shuoming">
-        <img src="/images/st.jpg" alt="">
+        <img src="/images/st.jpg" alt="" style="width:100vw;height:32vh;">
     </div>
     <div class="sm">
         <p class="a1">目前我们的微赚每天平均收入为7元，一个月收入210元；一个活跃的徒弟，每月会额外给你增加61元，想赚更多，看这里↓</p>
@@ -46,9 +46,9 @@
             <span>{{user._id.toString().substring(0,5) }}</span>
         </p>
         <li onclick="toggleQrcode()">收徒拿奖励</li>
-        <div id="qrcode" style="display:none"></div>
-        <img src="{{user.headimgurl}}" alt="" id="codeImage" style="max-width:50%;margin-left:auto;margin-right:auto;display:block;border-radius:50%;">
+        <img src="{{user.headimgurl}}" alt="" id="codeImage" style="max-width:40%;margin-left:auto;margin-right:auto;display:block;border-radius:50%;margin-top:5%;margin-bottom:5%">
         <li onclick="toggleQrcode();">二维码收徒</li>
+        <div id="qrcode" style="display:none"></div>
     </div>
     <div id="images">
 

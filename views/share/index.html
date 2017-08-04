@@ -12,7 +12,7 @@
     <div class="swiper-wrapper">
         {%for banner in banners%}
         <div class="swiper-slide">
-            <a href="/share/taskDetail?shareUserId={{user._id.toString()}}&taskId={{banner.task._id.toString()}}"><img src="{% if banner.task.imageUrl %}{{banner.task.imageUrl }}{%else%}{{banner.bannerImg}}{%endif%}" alt=""></a>
+            <a href="/share/taskDetail?shareUserId={{user._id.toString()}}&taskId={{banner.task._id.toString()}}"><img src="{% if banner.bannerImg %}{{banner.bannerImg }}{%else%}{{banner.task.imageUrl}}{%endif%}" alt=""></a>
         </div>
         {%endfor%}
 

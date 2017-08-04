@@ -10,6 +10,7 @@ const WXGetMoneyRecord_1 = require("./WXGetMoneyRecord");
 const GetMoneyRequest_1 = require("./GetMoneyRequest");
 const Banner_1 = require("./Banner");
 const TaskTemplate_1 = require("./TaskTemplate");
+const advert_1 = require("./advert");
 mongoose.connect('mongodb://localhost:27017/test');
 exports.db = {
     userModel: User_1.userModel,
@@ -20,5 +21,6 @@ exports.db = {
     wxRechargeRecordModel: WXRechargeRecord_1.wxRechargeRecordModel,
     getMoneyRequestModel: GetMoneyRequest_1.getMoneyRequestModel,
     bannerModel: Banner_1.bannerModel,
-    taskTemplateModel: TaskTemplate_1.taskTemplateModel
+    taskTemplateModel: TaskTemplate_1.taskTemplateModel,
+    advertModel: advert_1.advertModel
 };

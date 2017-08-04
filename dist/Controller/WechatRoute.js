@@ -8,10 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const lib_1 = require("../lib");
 let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
-    constructor() {
-        super();
-        // console.log('Wechat Service', service);
-    }
+    constructor() { super(); }
     doAction(action, method, next) {
         console.log(action);
         switch (action) {
@@ -29,9 +26,7 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
         this.res.json({ ok: true, data: action });
     }
     before() { this.next(); }
-    after() {
-        this.next();
-    }
+    after() { this.next(); }
     async removeMenu() {
         let action = await this.service.wechat.removeMenu();
         this.res.json({
@@ -50,7 +45,6 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
             body: '',
             total_fee: money
         });
-        console.log(payargs);
         this.res.end(payargs);
     }
     oauth() {
@@ -59,14 +53,10 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
         var taskId = this.req.query.taskId;
         // console.log(this.req.query, code);
         this.service.wechat.client.getAccessToken(code, (err, result) => {
-            // console.dir(err);
-            // console.dir(result); 
             var accessToken = result.data.access_token;
             var openid = result.data.openid;
-            // console.log('token=' + accessToken);
             this.req.session.accessToken = accessToken;
             this.res.locals.accessToken = accessToken;
-            console.log('openid=' + openid);
             this.service.wechat.client.getUser(openid, async (err, result) => {
                 let user = await this.service.db.userModel.findOne({ openid }).exec();
                 if (user) {
@@ -86,7 +76,6 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
                 }
                 this.req.session.user = user;
                 this.res.locals.user = user;
-                // console.log('session user', this.req.session.user);
                 if (taskId) {
                     this.res.redirect('/share/index');
                     // res.redirect('/task/' + taskId)
@@ -101,10 +90,9 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
     notFound() {
         this.res.render('error');
     }
-    getJSSDKSignature() {
-        this.service.wechat.wx.jssdk.getSignatureByURL(this.req.query.url, (signatureData) => {
-            this.res.json(signatureData);
-        });
+    async getJSSDKSignature() {
+        let json = await this.service.wechat.getJSSDKApiParams({ url: this.req.url });
+        this.res.json(json);
     }
 };
 WechatRoute = __decorate([

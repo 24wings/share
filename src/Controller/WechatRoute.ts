@@ -92,10 +92,9 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
         this.res.render('error')
     }
 
-    getJSSDKSignature() {
-        this.service.wechat.wx.jssdk.getSignatureByURL(this.req.query.url, (signatureData) => {
-            this.res.json(signatureData);
-        });
-    }
+    async getJSSDKSignature() {
+        let json = await this.service.wechat.getJSSDKApiParams({ url: this.req.url });
+        this.res.json(json);
 
+    }
 }

@@ -30,8 +30,25 @@ let ShareAdminRoute = class ShareAdminRoute extends lib_1.Core.Route.BaseRoute {
                 }
                 ;
             case 'uploadBase64': return this.uploadBase64;
+            case 'taskTag':
+                switch (method) {
+                    case 'get': return this.getTaskTag;
+                    case 'post': return this.postTaskTag;
+                    default: return this.getTaskTag;
+                }
             default: return this.index;
         }
+    }
+    async getTaskTag() {
+        let { _id, page, pageSize } = this.req.query;
+        if (_id) {
+            let taskTag = await this.db.taskTagModel.findById(_id).exec();
+            this.res.json({ ok: true, data: taskTag });
+        }
+        else {
+        }
+    }
+    postTaskTag() {
     }
     async uploadBase64() {
         let base64 = this.req.body.base64;

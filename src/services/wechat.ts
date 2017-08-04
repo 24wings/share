@@ -31,7 +31,14 @@ var client = new OAuth(CONFIG.wechat.appid, CONFIG.wechat.appsecret, function (o
     fs.writeFile('temp/access_token/' + openid + ':access_token.txt', JSON.stringify(token), callback);
 });
 
-var wx = require('wechat-jssdk');
+var Wechat = require('wechat-jssdk');
+var wx = new Wechat({
+    //set your oauth redirect url, defaults to localhost
+    "wechatRedirectUrl": CONFIG.domain + CONFIG.oauthPath,
+    "wechatToken": CONFIG.wechat.token,
+    "appId": CONFIG.wechat.appid,
+    "appSecret": CONFIG.wechat.appsecret,
+});
 
 
 export interface WeixinOrder {
@@ -50,7 +57,7 @@ class WeChatService {
     client = client;
     wechat = wechat;
 
-    payment = payment;
+    // payment = payment;
     /**
      * 微信公众平台支付接口
      * 参数订单数据
@@ -67,6 +74,7 @@ class WeChatService {
      * 返回订单json
      */
     wechatPay(order: WeixinOrder) {
+        /*
         console.log('order:', order);
         return new Promise((resovle, reject) => {
             this.payment.getBrandWCPayRequestParams(order, function (err, payargs) {
@@ -74,6 +82,7 @@ class WeChatService {
                 resovle(payargs);
             });
         });
+        */
     }
     createMenu(menu) {
         menu = menu ? menu : {
@@ -197,12 +206,15 @@ class WeChatService {
         // return this.client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
     }
     async  wechatReturnMoney(order: WeixinOrder) {
-        return new Promise(resolve =>
-            payment.getBrandWCPayRequestParams(order, function (err, payargs) {
-                err ? console.log(err) : '';
-                resolve(payargs)
-
-            }))
+        /**
+         *       return new Promise(resolve =>
+                  payment.getBrandWCPayRequestParams(order, function (err, payargs) {
+                      err ? console.log(err) : '';
+                      resolve(payargs)
+      
+                  }))
+                  
+         */
     }
     /**
      * 微信支付确认回复
@@ -235,6 +247,7 @@ class WeChatService {
      * 
      */
     refound() {
+        /*
         payment.refund({
             out_trade_no: "kfc001",
             out_refund_no: 'kfc001_refund',
@@ -244,8 +257,9 @@ class WeChatService {
             /**
              * 微信收到正确的请求后会给用户退款提醒
              * 这里一般不用处理，有需要的话有err的时候记录一下以便排查
-             */
+             
         });
+            */
     }
     /**
      * 微信发送商户平台的接口

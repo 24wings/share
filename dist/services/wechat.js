@@ -3,18 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const fs = require("fs");
 const crypto = require("crypto");
-const path = require("path");
 var OAuth = require('wechat-oauth');
-// import WechatPayment from './wechat-pay';
-var options = {
-    appid: config_1.CONFIG.wechat.appid,
-    mch_id: config_1.CONFIG.wechatPay.mchId,
-    apiKey: config_1.CONFIG.wechat.appsecret,
-    notify_url: config_1.CONFIG.wechatPay.notifyUrl,
-    trade_type: 'JSAPI',
-    pfx: config_1.CONFIG.wechatPay.pfx //微信商户平台证书 (optional，部分API需要使用)
-};
-// var wechatPaymentInstance = new WechatPayment(options);
 const WechatAPI = require('wechat-api');
 var wechat = require('wechat');
 var middleware = require('wechat-pay').middleware;
@@ -34,22 +23,21 @@ var client = new OAuth(config_1.CONFIG.wechat.appid, config_1.CONFIG.wechat.apps
     // 持久化时请注意，每个openid都对应一个唯一的token! 
     fs.writeFile('temp/access_token/' + openid + ':access_token.txt', JSON.stringify(token), callback);
 });
-var wx = require('wechat-jssdk');
-var Payment = require('wechat-pay').Payment;
-var payment = new Payment({
-    partnerKey: "minglu12minglu12minglu12minglu12",
-    appId: 'wx8bdcc982b8477839',
-    mchId: "1447627402",
-    notifyUrl: "http://wq8.youqulexiang.com/payment/",
-    pfx: fs.readFileSync(path.resolve(__dirname, '../../temp/apiclient_cert.p12'))
+var Wechat = require('wechat-jssdk');
+var wx = new Wechat({
+    //set your oauth redirect url, defaults to localhost
+    "wechatRedirectUrl": config_1.CONFIG.domain + config_1.CONFIG.oauthPath,
+    "wechatToken": config_1.CONFIG.wechat.token,
+    "appId": config_1.CONFIG.wechat.appid,
+    "appSecret": config_1.CONFIG.wechat.appsecret,
 });
 class WeChatService {
     constructor() {
         this.wx = wx;
         this.client = client;
         this.wechat = wechat;
-        this.payment = payment;
     }
+    // payment = payment;
     /**
      * 微信公众平台支付接口
      * 参数订单数据
@@ -66,16 +54,15 @@ class WeChatService {
      * 返回订单json
      */
     wechatPay(order) {
+        /*
         console.log('order:', order);
         return new Promise((resovle, reject) => {
             this.payment.getBrandWCPayRequestParams(order, function (err, payargs) {
-                if (err) {
-                    console.error(err);
-                    resovle(false);
-                }
+                if (err) { console.error(err); resovle(false) }
                 resovle(payargs);
             });
         });
+        */
     }
     createMenu(menu) {
         menu = menu ? menu : {
@@ -195,10 +182,15 @@ class WeChatService {
         // return this.client.getAuthorizeURL(`${CONFIG.domain}${CONFIG.oauthPath}${queryStr}`, '', 'snsapi_userinfo');
     }
     async wechatReturnMoney(order) {
-        return new Promise(resolve => payment.getBrandWCPayRequestParams(order, function (err, payargs) {
-            err ? console.log(err) : '';
-            resolve(payargs);
-        }));
+        /**
+         *       return new Promise(resolve =>
+                  payment.getBrandWCPayRequestParams(order, function (err, payargs) {
+                      err ? console.log(err) : '';
+                      resolve(payargs)
+      
+                  }))
+                  
+         */
     }
     /**
      * 微信支付确认回复
@@ -229,6 +221,7 @@ class WeChatService {
      *
      */
     refound() {
+        /*
         payment.refund({
             out_trade_no: "kfc001",
             out_refund_no: 'kfc001_refund',
@@ -238,8 +231,9 @@ class WeChatService {
             /**
              * 微信收到正确的请求后会给用户退款提醒
              * 这里一般不用处理，有需要的话有err的时候记录一下以便排查
-             */
+             
         });
+            */
     }
     /**
      * 微信发送商户平台的接口

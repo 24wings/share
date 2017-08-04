@@ -68,7 +68,7 @@ var Core;
                             routeObj.before.bind(temp)(req, res, next);
                         }
                         else {
-                            throw Error('路由不存咋');
+                            res.render('error', { errorMsg: '404页面找不到' });
                         }
                     },
                     (req, res, next) => {
@@ -97,7 +97,7 @@ var Core;
                             routeObj.after.bind(temp)(req, res, next);
                         }
                         else {
-                            throw Error('路由不存在');
+                            res.render('error', { errorMsg: '404页面找不到' });
                         }
                     }
                 ];
@@ -109,12 +109,10 @@ var Core;
                     files.forEach(filename => {
                         let aboFile = path.resolve(dirPath, filename);
                         let relative = path.relative(__dirname, aboFile);
-                        // console.log('文件', aboFile, __dirname, relative);
                         relative = relative.replace(/\\/g, '/');
                         let routePath = './' + relative;
                         console.log('路由文件:', routePath);
                         let routeClass = require(routePath).default;
-                        // console.log('routeClass', routeClass);
                         this.addRoute(routeClass);
                     });
                     return this.getRoute();
