@@ -11,6 +11,7 @@ import { boardRecordModel } from './BoardRecord';
 import { bannerModel } from './Banner';
 import { taskTemplateModel } from './TaskTemplate';
 import { advertModel } from './advert';
+import { projectModel } from './Project';
 mongoose.connect('mongodb://localhost:27017/test');
 
 
@@ -24,5 +25,6 @@ export var db = {
     getMoneyRequestModel,
     bannerModel,
     taskTemplateModel,
-    advertModel
+    advertModel,
+    projectModel
 }

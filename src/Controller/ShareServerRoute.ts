@@ -1,3 +1,4 @@
+import mongoose = require('mongoose');
 import { Core } from '../lib';
 import fs = require('fs');
 import path = require('path');
@@ -14,9 +15,9 @@ export default class ShareAdminRoute extends Core.Route.BaseRoute implements Cor
                 switch (method) {
                     case 'get': return this.bannerDetail;
                     case 'put': return this.bannerUpdate;
+                    case 'delete': return this.bannerDelete;
                 }
-            case 'toggle-banner-active':
-                return this.toggleBannerActive;
+            case 'toggle-banner-active': return this.toggleBannerActive;
 
             case 'office-task':
                 switch (method) {
@@ -32,8 +33,78 @@ export default class ShareAdminRoute extends Core.Route.BaseRoute implements Cor
                     case 'post': return this.postTaskTag;
                     default: return this.getTaskTag
                 }
+            case 'task-record':
+                switch (method) {
+                    case 'get': return this.getTaskRecord;
+                };
+            case 'rest': switch (method) {
+                case 'get': return this.restGet;
+                case 'post': return this.restPost;
+                case 'put': return this.restPut;
+                case 'delete': return this.restDelete;
+            }
+
+
             default: return this.index;
+
         }
+    }
+    async restGet() {
+        //
+        let { model, page = 0, pageSize = 10, keyword, key, _id } = this.req.query;
+
+        if (this.db[model]) {
+            let table: mongoose.Model<any> = this.db[model];
+            //详情
+            if (_id) {
+                let item = await table.findById(_id);
+                this.res.json({ ok: true, data: item });
+            }
+            // 列表
+            else {
+                // 查询搜索
+                if (keyword && key) {
+
+                } else {
+
+                }
+
+            }
+
+
+
+        } else {
+            this.res.json({
+                ok: true,
+                data: '数据库表不存在'
+            });
+        }
+
+
+    }
+    restPost() { }
+    restPut() { }
+    restDelete() { }
+
+    async getTaskRecord() {
+        let { page = 0, pageSize = 10 } = this.req.query;
+        if (typeof pageSize == 'string') pageSize = parseInt(pageSize);
+        let data = await this.db.taskRecordModel.find().skip(page * pageSize).limit(pageSize).populate('shareDetail.user').exec();
+
+        let count = await this.db.taskRecordModel.count({}).exec();
+        data['count'] = count;
+        this.res.json({
+            ok: true,
+            data: { rows: data, count }
+        });
+
+    }
+
+    async bannerDelete() {
+        let banner = await this.db.bannerModel.findByIdAndRemove(this.req.query._id).exec();
+        this.res.json({
+            ok: true, data: banner
+        });
     }
     async getTaskTag() {
         let { _id, page, pageSize } = this.req.query;

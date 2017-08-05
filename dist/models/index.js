@@ -11,6 +11,7 @@ const GetMoneyRequest_1 = require("./GetMoneyRequest");
 const Banner_1 = require("./Banner");
 const TaskTemplate_1 = require("./TaskTemplate");
 const advert_1 = require("./advert");
+const Project_1 = require("./Project");
 mongoose.connect('mongodb://localhost:27017/test');
 exports.db = {
     userModel: User_1.userModel,
@@ -22,5 +23,6 @@ exports.db = {
     getMoneyRequestModel: GetMoneyRequest_1.getMoneyRequestModel,
     bannerModel: Banner_1.bannerModel,
     taskTemplateModel: TaskTemplate_1.taskTemplateModel,
-    advertModel: advert_1.advertModel
+    advertModel: advert_1.advertModel,
+    projectModel: Project_1.projectModel
 };

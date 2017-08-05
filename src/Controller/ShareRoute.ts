@@ -43,7 +43,6 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
 
 
     async taskPage() {
-
         let page = this.req.query.page || 0;
         let taskTag = this.req.query.taskTag;
         let tasks = [];
@@ -53,8 +52,6 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
             tasks = await this.db.taskModel.find().skip(10 * page).limit(10).exec();
         }
         this.res.json({ ok: true, data: tasks });
-
-
 
     }
     async shareMoney() {
@@ -79,15 +76,9 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
     }
     async index() {
         // req.query
-        let { taskTag, openid } = this.req.query;
+        let { taskTag } = this.req.query;
 
-        let user = this.req.session.user;
-        this.service.wechat.payRedpackOne({ money: 100, openid: user.openid });
-        // console.log('user', user);
-        if (openid) {
-            console.log('openid :', openid);
-            user = await this.service.db.userModel.findOne({ openid }).exec();
-        }
+
         let taskTags = await this.service.db.taskTagModel.find().exec();
         let tasks = [];
         let banners = await this.service.db.bannerModel.find({ active: true }).populate('task').exec();
@@ -96,14 +87,12 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
         } else {
             tasks = await this.service.db.taskModel.find().limit(10).exec();
         }
-        await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, user, banners });
+        await this.res.render('share/index', { queryTaskTag: taskTag, tasks, taskTags, banners });
     }
 
     async recruitStudent() {
         var user = await this.db.userModel.findById(this.req.query.userId).exec();
-
         var authUrl = await this.service.wechat.getAuthorizeURL({ parent: this.req.query.userId });
-
         console.log(`authUrl:` + authUrl);
         await this.res.render('share/recruit-student', {
             authUrl,
@@ -270,14 +259,20 @@ export default class ShareRoute extends Core.Route.BaseRoute implements Core.Rou
                          */
                         if (user.parent) {
                             // 有师傅
-                            user.populate('parent').execPopulate();
                             console.log('第一位师傅id:', user.parent);
+
+                            await user.populate('parent').execPopulate();
+
                             parents.push(user.parent);
                             if (user.parent.parent) {
+                                console.log('第二级师傅id:', user.parent.parent);
+
                                 parents.push(user.parent.parent);
                                 await user.parent.populate('parent').execPopulate();
-                                console.log('第二级师傅id:', user.parent.parent)
+
+
                                 if (user.parent.parent.parent) {
+                                    await user.parent.parent.execPopulate();
                                     console.log('第三为师傅id:', user.parent.parent);
                                     parents.push(user.parent.parent.parent);
                                 }

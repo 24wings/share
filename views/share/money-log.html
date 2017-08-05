@@ -26,7 +26,7 @@
         <tr>
             <td>{{taskRecord.createDt | time}}</td>
             <td>{{taskRecord.task.title}}</td>
-            <td>￥ {%for order in taskRecord.shareDetail %} {%if order.user == user._id.toString()%} {{order.money}} {%endif%} {%endfor%}
+            <td>￥ {%for order in taskRecord.shareDetail %} {%if order.user == user._id.toString()%} {{order.money | money}} {%endif%} {%endfor%}
             </td>
         </tr>
         {%endfor%}
