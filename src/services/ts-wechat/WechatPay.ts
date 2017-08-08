@@ -30,7 +30,7 @@ export default class WechatPay {
         mch_appid?: string,
         mchid?: string,
         sign?: string
-    }) {
+    }): Promise<{ ok: boolean, data: string }> {
         return new Promise((resolve, reject) => {
             order.check_name = order.check_name ? order.check_name : 'NO_CHECK';
             order.spbill_create_ip = order.spbill_create_ip ? order.spbill_create_ip : tools.getIPAdress();
@@ -39,7 +39,9 @@ export default class WechatPay {
             order.mchid = this.wechatConfig.mch_id;
             let sign = wechatTool.sign(order, this.wechatConfig.apiKey);
             order.sign = sign;
+
             let body = wechatTool.bulildXml({ xml: order });
+            console.log(body);
             request(wechatTool.urls.transfers, {
                 method: 'POST',
                 body: body,
@@ -47,11 +49,18 @@ export default class WechatPay {
                     pfx: this.wechatConfig.pfx,
                     passphrase: this.wechatConfig.mch_id
                 }
-            }, (err, res, body) => {
+            }, async (err, res, data) => {
                 if (err) console.error(err);
                 // let result = wechatTool.parseXml(body);
-                console.log(body);
-                resolve(body)
+
+                let json = await wechatTool.parseXml(data)
+                console.log(json);
+                let isSuccess = json.xml.result_code[0] == 'SUCCESS';
+                data = isSuccess ? json.xml.partner_trade_no[0] : json.xml.err_code_des[0]
+
+                resolve({ ok: isSuccess, data })
+
+
             })
         });
     }

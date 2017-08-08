@@ -12,6 +12,7 @@ import { bannerModel } from './Banner';
 import { taskTemplateModel } from './TaskTemplate';
 import { advertModel } from './advert';
 import { projectModel } from './Project';
+import { wxPayToOneModel } from './WXPayToOne';
 mongoose.connect('mongodb://localhost:27017/test');
 
 
@@ -26,5 +27,6 @@ export var db = {
     bannerModel,
     taskTemplateModel,
     advertModel,
-    projectModel
+    projectModel,
+    wxPayToOneModel
 }

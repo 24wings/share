@@ -39,8 +39,6 @@ var wx = new Wechat({
     "appId": CONFIG.wechat.appid,
     "appSecret": CONFIG.wechat.appsecret,
 });
-
-
 export interface WeixinOrder {
     body: string;
     attach: string;
@@ -125,11 +123,11 @@ class WeChatService {
         var param = param || {
             debug: false,
             jsApiList: ['checkJsApi',
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo',
-                'onMenuShareQZone',
+                'onMenuShareTimeline',//分享到朋友圈
+                'onMenuShareAppMessage',//分享给朋友
+                'onMenuShareQQ',//分享到QQ
+                'onMenuShareWeibo',//分享到腾讯微博
+                'onMenuShareQZone',//分享到QQ空间
                 'hideMenuItems',
                 'showMenuItems',
                 'hideAllNonBaseMenuItem',

@@ -113,7 +113,7 @@ export namespace Core {
                                 req,
                                 res,
                                 next,
-                                render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`),
+                                render: (filename, data) => res.render(`${routeObj[VIEWPATH]}/${filename}`, data),
                                 display: (data?) => res.render(`${routeObj[VIEWPATH]}/${req.params.action}`, data)
                             });
                             routeObj.doAction(req.params.action, req.method.toLowerCase(), next).bind(temp)(req, res, next);

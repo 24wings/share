@@ -7,8 +7,8 @@
                     <img src="{{user.headimgurl}}" alt="">
                 </div>
             </div>
-            <p class="name">今日文章转发收益:<span>￥3.00</span></p>
-            <div class="id">账户余额:<span>{{user.totalMoney}}</span></div>
+            <p class="name">今日文章转发收益:<span>{{user.todayMoney|money}}</span></p>
+            <div class="id">账户余额:<span>{{user.totalMoney|money}}</span></div>
         </div>
     </div>
     <div class="tixianye">

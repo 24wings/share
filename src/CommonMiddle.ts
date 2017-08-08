@@ -10,8 +10,6 @@ import logger = require('morgan');
 export class CommonMiddle extends Middleware.BaseMiddleware {
     buildMiddlewares(): Middleware.RequestHandler[] {
         var middlewares: Middleware.RequestHandler[] = [];
-
-
         for (var dir of this.service.CONFIG.publicDirs) {
             middlewares.push(this.staticServer(dir))
         }

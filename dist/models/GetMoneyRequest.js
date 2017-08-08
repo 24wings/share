@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 let getMoneyRequestSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    money: { type: Number, default: 0 },
+    money: { type: Number },
     createDt: { type: Date, default: Date.now },
     alipay: { type: String, default: '' },
     alipayName: { type: String, default: '' },

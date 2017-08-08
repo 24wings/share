@@ -20,7 +20,8 @@ var njk = nunjucks.configure(path.resolve(__dirname, '../views'), {
 var filters = {
     time: (date) => moment(date).format('YYYY-MM-DD'),
     json: (obj) => JSON.stringify(obj),
-    money: (money) => money.toFixed(2),
+    money: (money) => { if (typeof money == 'string')
+        money = parseFloat(money); return money.toFixed(2); },
     boolean: (ok) => !!ok,
     myFault: (ok) => !ok
 };

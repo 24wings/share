@@ -5,10 +5,6 @@
         height: 100vh;
     }
     
-    .qrcode-page {
-        /* position: relative; */
-    }
-    
     .qrcode-img h2 {
         position: absolute;
         top: 40vh;
@@ -27,15 +23,12 @@
 </style>
 {%endblock%} {%block content%}
 
-
-
 <div class="animated fadeInRight base-page">
-
     <div class="shuoming">
         <img src="/images/st.jpg" alt="" style="width:100vw;height:32vh;">
     </div>
     <div class="sm">
-        <p class="a1">目前我们的微赚每天平均收入为7元，一个月收入210元；一个活跃的徒弟，每月会额外给你增加61元，想赚更多，看这里↓</p>
+        <p class="a1">目前我们的狠享赚平台每天平均收入为7元，一个月收入210元；一个活跃的徒弟，每月会额外给你增加61元，想赚更多，看这里↓</p>
         <p>每月赚1830元：只需招收30个徒弟</p>
         <p>每月赚3660元：只需招收60个徒弟</p>
         <p>每月赚5490元：只需招收90个徒弟</p>
@@ -51,7 +44,6 @@
         <div id="qrcode" style="display:none"></div>
     </div>
     <div id="images">
-
     </div>
 </div>
 <h1 id="authUrl" style="display:none">{{authUrl }}</h1>
@@ -80,7 +72,6 @@
     $('.qrcode-page').click(function() {
         toggleQrcode();
     })
-
     var showQrcode = false;
 
     function toggleQrcode() {
@@ -93,7 +84,6 @@
             $('.qrcode-page, .qrcode-img').show();
         }
         showQrcode = !showQrcode;
-
     }
 </script>
 {%endblock%}

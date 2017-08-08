@@ -21,44 +21,20 @@
         <span>金鱼的7秒记忆里`</span>
     </div>
     <div class="yue">
-        {% if errorMsg %}<b>{{errorMsg}}</b>{%endif%} {% if successMsg %}<b>{{successMsg}}</b>{%endif%}
-
-        <b>￥{{user.totalMoney}}</b>
+        <b>￥{{user.totalMoney | money}}</b>
+        <span style="font-size:12px;"> {% if msg %}<b>{{msg}}</b>{%endif%}</span>
     </div>
-    <!-- <div class="tixianfangshi"> -->
-    <!-- <div class="zhifufangshi-box"> -->
-    <!-- <p>支付宝提现</p> -->
-    <!-- <span>(三个工作日到账)</span> -->
-    <!-- </div> -->
-    <!-- </div> -->
     <form method="POST">
-        <!-- <div class="tixianfangshi1">
-            <div class="tixian-form">
-                <label for="">提现账号:</label>
-                <input type="text" name="alipay" placeholder="请输入您要提现的支付宝号" required="required">
-            </div>
-        </div>
         <div class="tixianfangshi1">
-
-            <div class="tixian-form">
-                <label for="">提现姓名:</label>
-                <input type="text" name="alipayName" placeholder="支付宝绑定者姓名" required="required">
-            </div>
-
-        </div> -->
-        <div class="tixianfangshi1">
-
             <div class="tixian-form">
                 <label for="">提现金额:</label>
-                <input type="number" name="money" placeholder="每天限额10元" min="0">
+                <input type="number" name="money" placeholder="只要你有，都可提现(●'◡'●)" min="0" max="999" step="0.001">
             </div>
-
         </div>
         <div class="tixianfangshi2">
             <button type="submit">提现</button>
         </div>
     </form>
-
 </div>
 {% if user.isFinish | myFault %}
 <a href="/share/full-info">

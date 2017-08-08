@@ -16,7 +16,6 @@ export namespace Route {
     export type Request = express.Request;
     export type Response = express.Response;
     export type RequestHandler = express.RequestHandler;
-
     export interface IRoute {
         req: Request;
         res: Response;

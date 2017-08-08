@@ -23,6 +23,7 @@ class WechatPay {
             let sign = WechatTool_1.default.sign(order, this.wechatConfig.apiKey);
             order.sign = sign;
             let body = WechatTool_1.default.bulildXml({ xml: order });
+            console.log(body);
             request(WechatTool_1.default.urls.transfers, {
                 method: 'POST',
                 body: body,
@@ -30,12 +31,15 @@ class WechatPay {
                     pfx: this.wechatConfig.pfx,
                     passphrase: this.wechatConfig.mch_id
                 }
-            }, (err, res, body) => {
+            }, async (err, res, data) => {
                 if (err)
                     console.error(err);
                 // let result = wechatTool.parseXml(body);
-                console.log(body);
-                resolve(body);
+                let json = await WechatTool_1.default.parseXml(data);
+                console.log(json);
+                let isSuccess = json.xml.result_code[0] == 'SUCCESS';
+                data = isSuccess ? json.xml.partner_trade_no[0] : json.xml.err_code_des[0];
+                resolve({ ok: isSuccess, data });
             });
         });
     }

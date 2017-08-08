@@ -7,7 +7,7 @@ import session = require('express-session');
 import bodyParser = require('body-parser');
 import { CommonMiddle } from './CommonMiddle';
 import service = require('./services');
-
+import fs = require('fs');
 import nunjucks = require('nunjucks');
 import { CONFIG, default as config } from './services/config';
 
@@ -34,7 +34,7 @@ var njk = nunjucks.configure(path.resolve(__dirname, '../views'), { // 设置模
 var filters = {
     time: (date: Date) => moment(date).format('YYYY-MM-DD'),
     json: (obj) => JSON.stringify(obj),
-    money: (money: number) => money.toFixed(2),
+    money: (money: number | string) => { if (typeof money == 'string') money = parseFloat(money); return money.toFixed(2) },
     boolean: (ok: boolean) => !!ok,
     myFault: (ok: boolean) => !ok
 }
@@ -54,6 +54,7 @@ app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
         let oauthUrl = config.wxOauth.getOauthUrl(`${service.CONFIG.domain}/wechat/oauth`, req.query);
         res.reply({ content: oauthUrl, type: 'text' });
     }))
+
     .use('/:service/:action', Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {
         // set locals, only providing error in development

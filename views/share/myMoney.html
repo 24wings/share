@@ -13,7 +13,7 @@
     </div>
     <div class="bgc">
         <ul class="liebiao bgf">
-            <li><b></b><span>累计收徒</span><span class="co1">{% if user.totalStudnet  %}{%else%} 0{%endif%}/人</span></li>
+            <li><b></b><span>累计收徒</span><span class="co1">{% if user.totalStudent  %}{{user.totalStudent}}{%else%} 0{%endif%}/人</span></li>
             <li><b></b><span>账户余额</span><span class="co1">￥:{{user.totalMoney | money}}</span></li>
         </ul>
     </div>

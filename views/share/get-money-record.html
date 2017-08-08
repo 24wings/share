@@ -6,7 +6,7 @@
     <div class="tixianye">
         <div class="tixianye-box">
             <span>余额:</span>
-            <p>￥{{user.totalMoney}}元</p>
+            <p>￥{{user.totalMoney | money}}元</p>
             <a href="/share/getMoney">提现</a>
         </div>
     </div>
@@ -21,22 +21,10 @@
         <tr>
             <td>{{record.createDt | time}}</td>
             <td>普通提现</td>
-            <td>{{record.money | money}}</td>
-            <td>{%if record.status ==1 %}审核中{%endif%}</td>
+            <td>{{record.money }}</td>
+            <td>{%if record.status ==1 %}已提现{%endif%}</td>
         </tr>
         {%endfor%}
-        <tr>
-            <td>2017年07月15日</td>
-            <td>普通提现</td>
-            <td>￥2.00</td>
-            <td>审核中</td>
-        </tr>
-        <tr>
-            <td>2017年07月15日</td>
-            <td>普通提现</td>
-            <td>￥2.00</td>
-            <td>审核中</td>
-        </tr>
     </table>
 </div>
 

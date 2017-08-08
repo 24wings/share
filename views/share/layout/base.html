@@ -13,10 +13,11 @@
 </head>
 
 <body oncontextmenu="return false;" onselectstart="return false">
-
-    {%block content%}{%endblock%}
-
+    {%block content%} {%endblock%}
     <div class="padding"></div>
+    <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+        <img src="/images/img1.jpg" width='0' height="0">
+    </div>
     <footer class="footer">
         <div class="footer-box">
             <a href="/share/index">
@@ -47,14 +48,50 @@
     <script src="/js/swiper-3.4.2.jquery.min.js"></script>
     <script src="/lib/jquery.qrcode.js"></script>
     <script src="/lib/qrocde.js"></script>
-
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script>
         var mySwiper = new Swiper('.swiper-container', {
             autoplay: 3000,
             speed: 300,
             pagination: '.swiper-pagination',
         })
+        $.ajax({
+            url: "/wechat/jssdk",
+            success: function(data) {
+                // alert(JSON.stringify(data));
+                // data.debug = true;
+                try {
+
+                    wx.config(data);
+                    wx.ready(function() {
+
+                        wx.onMenuShareTimeline({
+                            title: '222', // 分享标题
+                            desc: '222', // 分享描述
+                            link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            imgUrl: 'http://imgcache.qq.com/bossweb/service/v4/images/logo_x5.png', // 分享图标
+                            type: '', // 分享类型,music、video或link，不填默认为link
+                            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                            success: function() {
+                                // 用户确认分享后执行的回调函数
+                                alert('success');
+                            },
+                            cancel: function() {
+                                // 用户取消分享后执行的回调函数
+                                alert('cancel')
+                            }
+                        });
+
+                    });
+
+                } catch (e) {
+                    if (e) alert(JSON.stringify(e));
+
+                }
+            }
+        })
     </script>
+
     {%block script%}{%endblock%}
 </body>
 
