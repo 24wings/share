@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lib_1 = require("../lib");
+const config_1 = require("../services/config");
 let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
     constructor() { super(); }
     doAction(action, method, next) {
@@ -17,6 +18,7 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
             case 'payment': return this.service.wechat.getPayReply();
             case 'create-menu': return this.createMenu;
             case 'remove-menu': return this.removeMenu;
+            case 'accessToken': return this.accessToken;
             default: return this.notFound;
         }
     }
@@ -24,6 +26,10 @@ let WechatRoute = class WechatRoute extends lib_1.Core.Route.BaseRoute {
     async createMenu() {
         let action = await this.service.wechat.createMenu('');
         this.res.json({ ok: true, data: action });
+    }
+    async accessToken() {
+        let token = await config_1.default.wxApi.accessToken();
+        this.res.json({ ok: true, data: token });
     }
     before() { this.next(); }
     after() { this.next(); }

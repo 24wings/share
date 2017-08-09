@@ -13,7 +13,7 @@ const TaskTemplate_1 = require("./TaskTemplate");
 const advert_1 = require("./advert");
 const Project_1 = require("./Project");
 const WXPayToOne_1 = require("./WXPayToOne");
-mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect('mongodb://moon:moon@localhost:27017/test');
 exports.db = {
     userModel: User_1.userModel,
     taskModel: Task_1.taskModel,

@@ -1,6 +1,6 @@
 import path = require('path');
 import fs = require('fs');
-import { WechatOauth, WechatPay } from './ts-wechat'
+import { WechatOauth, WechatPay, WechatApi } from './ts-wechat'
 
 
 export const CONFIG = {
@@ -83,7 +83,7 @@ export default new class {
         mch_id: this.wechat.mchId,
         pfx: this.wechat.pfx
     });
-
+    public wxApi = new WechatApi(this.wechat.appid, this.wechat.appsecret);
 
 
 }

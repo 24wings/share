@@ -74,6 +74,7 @@ exports.default = new class {
             mch_id: this.wechat.mchId,
             pfx: this.wechat.pfx
         });
+        this.wxApi = new ts_wechat_1.WechatApi(this.wechat.appid, this.wechat.appsecret);
     }
 };
 Object.seal(exports.default);

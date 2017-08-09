@@ -1,5 +1,6 @@
 import md5 = require('md5');
 import xml2js = require('xml2js');
+import https = require('https');
 export default new class {
     urls = {
         /**
@@ -83,6 +84,18 @@ export default new class {
 
     generateTimestamp() {
         return parseInt((new Date().getTime() / 1000).toString(), 10) + '';
+    }
+
+    httpsGet(url: string): Promise<string> {
+        return new Promise((resolve, reject) => https.get(url, (res) => {
+            let content = '';
+            res.on('data', (data) => {
+                content += data;
+            });
+            res.on('end', () => {
+                resolve(content);
+            })
+        }));
 
     }
 }

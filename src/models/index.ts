@@ -13,7 +13,7 @@ import { taskTemplateModel } from './TaskTemplate';
 import { advertModel } from './advert';
 import { projectModel } from './Project';
 import { wxPayToOneModel } from './WXPayToOne';
-mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect('mongodb://moon:moon@localhost:27017/test');
 
 
 export var db = {

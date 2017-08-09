@@ -54,6 +54,12 @@ app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
         let oauthUrl = config.wxOauth.getOauthUrl(`${service.CONFIG.domain}/wechat/oauth`, req.query);
         res.reply({ content: oauthUrl, type: 'text' });
     }))
+    .use('/admin', (req, res) => {
+        fs.readFile(path.resolve(__dirname, '../public/index.html'), (err, data) => {
+            if (err) console.log(err);
+            res.end(data);
+        });
+    })
 
     .use('/:service/:action', Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {

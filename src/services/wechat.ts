@@ -9,7 +9,7 @@ import sha1 = require('sha1');
 import crypto = require('crypto');
 import path = require('path');
 var OAuth = require('wechat-oauth');
-
+import http = require('http');
 
 const WechatAPI = require('wechat-api');
 var wechat = require('wechat');
@@ -192,6 +192,7 @@ class WeChatService {
     async getJSSDKApiParams(opt: { url, }) {
         let params = await this.getSDKParams();
         var signature = await this.getSignature({ noncestr: params['nonceStr'], timestamp: params['timestamp'], url: opt.url });
+
         params['signature'] = signature;
         return params;
     }

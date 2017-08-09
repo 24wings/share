@@ -7,53 +7,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lib_1 = require("../lib");
-//登录页
+const fs = require("fs");
+const path = require("path");
 let default_1 = class extends lib_1.Core.Route.BaseRoute {
     doAction(action, method, next) {
         switch (action) {
-            case 'login': {
-                return this.login;
-            }
-            case 'register':
-                switch (method) {
-                    case 'post': return this.loginDo; //注册 
-                    default: return this.loginDo;
-                }
-            case 'index': return this.index;
+            default: return this.index;
         }
-    }
-    /* 账户：手机号码（phone）
-     * 设置密码：password
-     * 确认密码：password
-     * 地区选择：city
-     * 验证码：  code
-     * 手机验证: verification
-     *
-     */
-    async loginDo() {
-    }
-    login() {
-        this.res.json({
-            ok: true,
-            data: 'uer'
-        });
-        // this.res.json({
-        // ok:false,
-        // data:'用户名'
-        // })
     }
     before() {
         this.next();
     }
-    after() { }
+    after() {
+    }
     index() {
-        this.display();
+        fs.readFile(path.resolve(__dirname, '../../public/index.html'), (err, data) => {
+            if (err)
+                console.log(err);
+            this.res.end(data);
+        });
     }
 };
 default_1 = __decorate([
     lib_1.Core.Route.Controller({
-        service: 'advert',
-        viewPath: 'advert'
+        service: 'admin',
+        viewPath: 'admin'
     })
 ], default_1);
 exports.default = default_1;

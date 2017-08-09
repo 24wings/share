@@ -1,3 +1,4 @@
+import undefined from '../services/config';
 import mongoose = require('mongoose');
 import { Core } from '../lib';
 import fs = require('fs');
@@ -51,40 +52,102 @@ export default class ShareAdminRoute extends Core.Route.BaseRoute implements Cor
     }
     async restGet() {
         //
-        let { model, page = 0, pageSize = 10, keyword, key, _id } = this.req.query;
+        let { model, page = 0, pageSize = 10, keyword, keys, _id, isCount, sort, desc, queryKey, queryValue } = this.req.query;
+        if (typeof pageSize == 'string') pageSize = parseInt(pageSize);
+        if (typeof page == 'string') page = parseInt(page);
+
 
         if (this.db[model]) {
             let table: mongoose.Model<any> = this.db[model];
-            //详情
-            if (_id) {
-                let item = await table.findById(_id);
-                this.res.json({ ok: true, data: item });
+            // 获取总页数
+            if (isCount) {
+                let count = await table.find().count().exec();
+                this.res.json({ ok: true, data: count });
             }
-            // 列表
             else {
-                // 查询搜索
-                if (keyword && key) {
-
-                } else {
-
+                //详情
+                if (_id) {
+                    let item = await table.findById(_id).exec();
+                    this.res.json({ ok: true, data: item });
                 }
+                // 列表
+                else {
+                    let sorter = new Object();
+                    if (sort && desc) {
+                        Object.defineProperty(sorter, sort, { writable: true, enumerable: true, configurable: true, value: desc == 'true' || desc == true ? '1' : '-1' });
+                    }
+                    let query = new Object();
 
+                    // 分类查询
+                    if (queryKey && queryValue) {
+                        Object.defineProperty(query, queryKey, { writable: true, enumerable: true, value: queryValue, configurable: true });
+                    }
+                    // 关键字查询搜索
+                    if (keyword && keys) {
+                        keys = keys.split(',');
+                        for (let key of <string[]>keys) {
+                            Object.defineProperty(query, key, { value: new RegExp(keyword, 'g'), writable: true, configurable: true, enumerable: true });
+                        }
+                        let items = await table.find(query).sort(sorter).skip(page * pageSize).limit(pageSize).exec();
+                        this.res.json({ ok: true, data: items });
+
+                    }
+
+                    // 列表查询
+                    else {
+                        let items = await table.find(query).sort(sorter).skip(pageSize * page).limit(pageSize).exec();
+                        this.res.json({ ok: true, data: items });
+                    }
+                }
             }
-
-
-
         } else {
             this.res.json({
-                ok: true,
+                ok: false,
                 data: '数据库表不存在'
             });
         }
 
+    }
+    async restPost() {
+        let { model } = this.req.query;
+        let item = this.req.body;
+        if (this.db[model]) {
+            let table: mongoose.Model<any> = this.db[model];
+            let action = await new table(item).save();
+            this.res.json({
+                ok: true,
+                data: action
+            });
+        } else {
+            this.res.json({
+                ok: false,
+                data: '数据库表不存在'
+            })
+        }
 
     }
-    restPost() { }
-    restPut() { }
-    restDelete() { }
+    async restPut() {
+        let { _id, model } = this.req.query;
+        let item = this.req.body;
+        if (this.db[model]) {
+            let table = this.db[model];
+            let putAction = await table.findByIdAndUpdate(_id, item).exec();
+            this.res.json({ ok: true, data: putAction });
+        } else {
+            this.res.json({ ok: true, data: '数据表不存在' })
+        }
+    }
+    async restDelete() {
+        let { _id, model } = this.req.query;
+        if (this.db[model]) {
+            let table: mongoose.Model<any> = this.db[model];
+            let delAction = await table.findByIdAndRemove(_id).exec();
+            this.res.json({ ok: true, data: delAction });
+        } else {
+            this.res.json({ ok: true, data: '数据表不存在' });
+        }
+
+    }
 
     async getTaskRecord() {
         let { page = 0, pageSize = 10 } = this.req.query;
@@ -97,7 +160,6 @@ export default class ShareAdminRoute extends Core.Route.BaseRoute implements Cor
             ok: true,
             data: { rows: data, count }
         });
-
     }
 
     async bannerDelete() {

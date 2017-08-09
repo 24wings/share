@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const md5 = require("md5");
 const xml2js = require("xml2js");
+const https = require("https");
 exports.default = new class {
     constructor() {
         this.urls = {
@@ -85,5 +86,16 @@ exports.default = new class {
     }
     generateTimestamp() {
         return parseInt((new Date().getTime() / 1000).toString(), 10) + '';
+    }
+    httpsGet(url) {
+        return new Promise((resolve, reject) => https.get(url, (res) => {
+            let content = '';
+            res.on('data', (data) => {
+                content += data;
+            });
+            res.on('end', () => {
+                resolve(content);
+            });
+        }));
     }
 };

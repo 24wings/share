@@ -4,6 +4,7 @@ const path = require("path");
 var favicon = require('serve-favicon');
 const CommonMiddle_1 = require("./CommonMiddle");
 const service = require("./services");
+const fs = require("fs");
 const nunjucks = require("nunjucks");
 const config_1 = require("./services/config");
 const lib_1 = require("./lib");
@@ -36,6 +37,13 @@ app.use(middleware_1.Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle_1
     let oauthUrl = config_1.default.wxOauth.getOauthUrl(`${service.CONFIG.domain}/wechat/oauth`, req.query);
     res.reply({ content: oauthUrl, type: 'text' });
 }))
+    .use('/admin', (req, res) => {
+    fs.readFile(path.resolve(__dirname, '../public/index.html'), (err, data) => {
+        if (err)
+            console.log(err);
+        res.end(data);
+    });
+})
     .use('/:service/:action', lib_1.Core.Route.RouteBuilder.scannerRoutes(__dirname + '/Controller'))
     .use((err, req, res, next) => {
     // set locals, only providing error in development

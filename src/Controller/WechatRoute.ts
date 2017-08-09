@@ -1,5 +1,5 @@
 import { Core } from '../lib';
-
+import { default as config } from '../services/config';
 @Core.Route.Controller({
     service: 'wechat',
     viewPath: 'wechat'
@@ -13,6 +13,7 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
             case 'payment': return this.service.wechat.getPayReply();
             case 'create-menu': return this.createMenu;
             case 'remove-menu': return this.removeMenu;
+            case 'accessToken': return this.accessToken;
             default: return this.notFound;
         }
     }
@@ -20,6 +21,12 @@ export default class WechatRoute extends Core.Route.BaseRoute implements Core.Ro
     async createMenu() {
         let action = await this.service.wechat.createMenu('');
         this.res.json({ ok: true, data: action });
+    }
+
+    async accessToken() {
+        let token = await config.wxApi.accessToken();
+        this.res.json({ ok: true, data: token });
+
     }
 
     before() { this.next(); }

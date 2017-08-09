@@ -10,9 +10,11 @@ import { Core } from '../lib';
 export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
     doAction(action: string, method: string, next) {
         switch (action) {
+            case 'login': {
+                return this.login;
+            }
             case 'register':
                 switch (method) {
-                    case 'get': return this.login;
                     case 'post': return this.loginDo;//注册 
                     default: return this.loginDo;
                 }
@@ -32,25 +34,21 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
 
     async  loginDo() {
 
-        let { phone, password, city, code, verification } = this.req.body;
-        let phones = await this.db.advertModel.findOne({ phone }).exec();
-
-        if (phones) {
-            this.display({ errorMsg: '手机用户已存在' });
-            this.next();
-        } else {
-            let phones = await new this.db.advertModel({ phone, password }).save();//添加入库
-            // this.res.redirect();
-        }
 
 
     }
+    login() {
+        this.res.json({
+            ok: true,
+            data: 'uer'
+        });
+        // this.res.json({
+        // ok:false,
+        // data:'用户名'
+        // })
+    }
     before() {
-        // if (this.req.session.user || this.req.params.action == 'register') {
-        //     this.next();
-        // } else {
-        //     this.res.redirect('/advert/register');
-        // }
+        this.next();
     }
     after() { }
 
@@ -58,11 +56,6 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         this.display();
     }
 
-    login() {
-
-
-        this.display({});
-    }
 
 
 
